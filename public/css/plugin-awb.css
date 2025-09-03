@@ -1,0 +1,8 @@
+/* ------------------------------------------------------------------
+  AWB Plugin Styles
+ ------------------------------------------------------------------- */
+/* stylelint-disable scss/comment-no-empty */
+.nk-awb img,
+.nk-awb-inner img {
+  border-radius: var(--cpl-border-radius);
+}

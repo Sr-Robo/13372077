@@ -1,0 +1,11 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+	<title>cyber-robo-branco</title>
+	<style>
+		.s0 { fill: #bd00ff } 
+	</style>
+	<path id="ant-dir" fill-rule="evenodd" class="s0" d="m234 33v43h-43v-43z"/>
+	<path id="ant-esq" fill-rule="evenodd" class="s0" d="m111 33v43h-43v-43z"/>
+	<path id="ore-dir" fill-rule="evenodd" class="s0" d="m295 123v62h-37v-62z"/>
+	<path id="ore-esq" fill-rule="evenodd" class="s0" d="m43 123v62h-37v-62z"/>
+	<path id="cabeca" class="s0" d="m239 75v21h-177v-21zm-144 21v89h-33v-89zm-27 5v110h-27v-110zm191 57v26h-191v-26zm-53 26v27h-111v-27zm53-82v109h-26v-109zm-20-27v109h-33v-109zm-63 21v62h-51v-62zm-81 115v55h-27v-55zm138 27v28h-138v-28zm0-27v55h-27v-55zm26-110v13h-26v-13z"/>
+</svg>
