@@ -3,7 +3,7 @@ import React from 'react';
 export default function OnlyHomePage() {
   return (
     <div className="container mx-auto px-4 py-8 bg-gray-100 rounded-lg shadow-md mt-10">
-      <h1 className="font-bold text-center mb-6">Home Page Only</h1>
+      <h1 className="font-bold text-center mb-6">Home Page Only?????</h1>
       <p className=" text-gray-700 text-center">
         This component is only rendered on the home page.
       </p>

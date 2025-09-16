@@ -1,13 +1,18 @@
 {
-  "name": "sample-evershop-theme",
+  "name": "13372077",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Cyberpunk Theme for Evershop",
+  "author": "fxlip",
+  "type": "module",
+  "workspaces": ["themes/*"],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc"
+    "compile": "tsc && copyfiles -u 1 \"src/**/*.{graphql,scss,json}\" dist"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "dependencies": {
+    "@evershop/evershop": "^1.0.0"
+  },
+  "devDependencies": {
+    "postcss-cli": "^8.3.1",
+    "webpack": "^5.64.4"
+  }
 }
