@@ -1,0 +1,86 @@
+// Fonte Purista — licenciada (compra própria da Suitcase Type Foundry via
+// Befonts), self-hosted aqui em vez de depender do CDN da Adobe Fonts.
+// IMPORTANTE: o arquivo de licença atual (public/fonts, comprado em
+// 2026-07-19) diz "Personal Use Only" — uso comercial da loja exige
+// comprar a licença de webfont comercial em suitcasetype.com ou myfonts.com
+// antes de operar a loja comercialmente (ver CLAUDE.md do servidor).
+
+@font-face {
+  font-family: 'Purista';
+  src: url('/fonts/Purista-Thin.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Purista';
+  src: url('/fonts/Purista-ThinItalic.woff2') format('woff2');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Purista';
+  src: url('/fonts/Purista-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Purista';
+  src: url('/fonts/Purista-LightItalic.woff2') format('woff2');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Purista';
+  src: url('/fonts/Purista-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Purista';
+  src: url('/fonts/Purista-MediumItalic.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Purista';
+  src: url('/fonts/Purista-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Purista';
+  src: url('/fonts/Purista-SemiBoldItalic.woff2') format('woff2');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Purista';
+  src: url('/fonts/Purista-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Purista';
+  src: url('/fonts/Purista-BoldItalic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
