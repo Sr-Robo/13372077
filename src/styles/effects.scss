@@ -148,16 +148,15 @@ html.cpk-cursor-active * {
 // ---------------------------------------------------------------------
 // Ruído de fundo (grão animado tipo estática de TV). Estudado na página
 // 502/504 antiga da referência (tinha `.cpl-page-noise`: textura PNG
-// tileable pequena, position:fixed maior que a viewport, animação em
-// `steps()` — não movimento suave, "pula" entre posições) e reimplementado
-// do zero: textura própria via SVG feTurbulence inline (não copiamos o PNG
-// nem o CSS de lá), mesma técnica de animação. Existe pra quebrar a
-// uniformidade do preto sólido `#050505` — em área grande e sem nenhuma
-// variação de pixel, o dithering do monitor (FRC/temporal) fica muito
-// perceptível, como se o fundo "piscasse" sozinho.
-// Alpha do ruído testado visualmente (0.05/0.08/0.12/0.18 lado a lado):
-// 0.05 é imperceptível na prática — 0.12 é o ponto onde o efeito realmente
-// aparece sem prejudicar legibilidade.
+// tileable 100x100, position:fixed maior que a viewport, animação em
+// `steps()` — não movimento suave, "pula" entre posições). A tentativa
+// inicial com SVG feTurbulence ficou visualmente diferente (borrão
+// uniforme, não grão) — a textura real tem ~58% dos pixels totalmente
+// transparentes e o resto com alpha baixo (pico ~0.18, média ~0.03) e RGB
+// em cinza variável, não branco fixo. Reimplementado gerando uma textura
+// PRÓPRIA (`public/img/noise.png`, script Python com `random`, sem nenhum
+// pixel copiado da referência) que reproduz essa MESMA estatística —
+// técnica estudada, dado gerado do zero.
 // ---------------------------------------------------------------------
 .cpk-noise {
   position: fixed;
@@ -170,12 +169,12 @@ html.cpk-cursor-active * {
 .cpk-noise::after {
   content: '';
   position: absolute;
-  top: -9rem;
-  left: -9rem;
-  width: calc(100% + 18rem);
-  height: calc(100% + 18rem);
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") repeat 0 0;
-  background-size: 140px 140px;
+  top: -10rem;
+  left: -10rem;
+  width: calc(100% + 20rem);
+  height: calc(100% + 20rem);
+  background: url('/img/noise.png') repeat 0 0;
+  background-size: 100px 100px;
   animation: cpk-noise 1s steps(3) infinite;
 }
 
