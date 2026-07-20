@@ -29,8 +29,23 @@ export default function Cursor() {
       });
     };
 
+    // Um mouse de alta taxa de polling dispara mousemove centenas de vezes
+    // por segundo — muito mais que os ~60fps que o navegador realmente
+    // pinta. Guarda só a posição mais recente e aplica no próximo frame,
+    // em vez de escrever estilo a cada evento bruto.
+    let rafId: number | null = null;
+    let pendingX = 0;
+    let pendingY = 0;
+
     const handleMouseMove = (event: MouseEvent) => {
-      setPosition(event.clientX, event.clientY);
+      pendingX = event.clientX;
+      pendingY = event.clientY;
+      if (rafId === null) {
+        rafId = requestAnimationFrame(() => {
+          rafId = null;
+          setPosition(pendingX, pendingY);
+        });
+      }
     };
 
     const handleOver = (event: MouseEvent) => {
@@ -52,6 +67,9 @@ export default function Cursor() {
     document.addEventListener('mouseout', handleOut, { passive: true });
 
     return () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
       document.documentElement.classList.remove('cpk-cursor-active');
       window.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseover', handleOver);

@@ -9,11 +9,15 @@
   --cpk-color-brand: #bd00ff;
   --cpk-color-brand-rgb: 189, 0, 255;
 
-  // Superfícies escuras.
-  --cpk-color-bg: #050505;
-  --cpk-color-bg-100: #0d0d0d;
-  --cpk-color-bg-200: #141414;
-  --cpk-color-bg-300: #1c1c1c;
+  // Superfícies escuras — cinza escuro (dark gray), não preto puro.
+  // Pedido do fxlip (2026-07-20): o #050505 original deixava o dithering do
+  // monitor perceptível em áreas grandes sólidas mesmo com o ruído de fundo;
+  // a base subiu de quase-preto pra cinza escuro, mantendo a progressão
+  // relativa entre os 4 tons (fundo → cards → hover).
+  --cpk-color-bg: #1a1a1a;
+  --cpk-color-bg-100: #222222;
+  --cpk-color-bg-200: #2a2a2a;
+  --cpk-color-bg-300: #333333;
   --cpk-color-border: rgba(255, 255, 255, 0.1);
 
   // Texto.

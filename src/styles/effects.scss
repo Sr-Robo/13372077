@@ -106,14 +106,19 @@ html.cpk-cursor-active * {
   background-color: var(--cpk-color-brand);
   box-shadow: var(--cpk-glow-sm);
   pointer-events: none;
+  will-change: transform;
   transform: translate(var(--cpk-cursor-x, -100px), var(--cpk-cursor-y, -100px));
   transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color var(--cpk-transition-duration);
 }
 
 .cpk-cursor.is-hover {
+  // mix-blend-mode: exclusion trocado por glow-lg — blend mode força o
+  // navegador a recompor a camada com tudo por baixo a cada frame (caro,
+  // um dos suspeitos do "delay" reportado); glow dá destaque parecido sem
+  // esse custo.
   transform: translate(var(--cpk-cursor-x, -100px), var(--cpk-cursor-y, -100px)) scale(3);
-  mix-blend-mode: exclusion;
   background-color: var(--cpk-color-contrast);
+  box-shadow: var(--cpk-glow-lg);
 }
 
 .cpk-cursor-line {
@@ -122,6 +127,7 @@ html.cpk-cursor-active * {
   opacity: 0.12;
   background-color: var(--cpk-color-brand);
   pointer-events: none;
+  will-change: transform;
 }
 
 .cpk-cursor-line--h {
@@ -173,6 +179,7 @@ html.cpk-cursor-active * {
   left: -10rem;
   width: calc(100% + 20rem);
   height: calc(100% + 20rem);
+  will-change: transform;
   background: url('/img/noise.png') repeat 0 0;
   background-size: 100px 100px;
   animation: cpk-noise 1s steps(3) infinite;
