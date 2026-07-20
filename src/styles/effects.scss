@@ -106,9 +106,15 @@ html.cpk-cursor-active * {
   background-color: var(--cpk-color-brand);
   box-shadow: var(--cpk-glow-sm);
   pointer-events: none;
-  will-change: transform;
-  transform: translate(var(--cpk-cursor-x, -100px), var(--cpk-cursor-y, -100px));
-  transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color var(--cpk-transition-duration);
+  will-change: translate;
+  // `translate`/`scale` como propriedades próprias (não o `transform`
+  // shorthand) pra poder animar uma sem a outra: posição segue o mouse 1:1,
+  // sem nenhuma suavização por cima (fxlip pediu — a `transition` antiga no
+  // `transform` era uma "máscara" artificial de velocidade, o ponto sempre
+  // ficava correndo atrás do cursor real em vez de estar exatamente nele).
+  // Só o "crescer" no hover tem transição — é um estado, não velocidade.
+  translate: var(--cpk-cursor-x, -100px) var(--cpk-cursor-y, -100px);
+  transition: scale 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color var(--cpk-transition-duration), box-shadow var(--cpk-transition-duration);
 }
 
 .cpk-cursor.is-hover {
@@ -116,7 +122,7 @@ html.cpk-cursor-active * {
   // navegador a recompor a camada com tudo por baixo a cada frame (caro,
   // um dos suspeitos do "delay" reportado); glow dá destaque parecido sem
   // esse custo.
-  transform: translate(var(--cpk-cursor-x, -100px), var(--cpk-cursor-y, -100px)) scale(3);
+  scale: 3;
   background-color: var(--cpk-color-contrast);
   box-shadow: var(--cpk-glow-lg);
 }
