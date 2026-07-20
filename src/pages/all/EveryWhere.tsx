@@ -1,19 +1,29 @@
 import React from 'react';
+import Logo from '../../components/Logo.js';
 
 export default function EveryWhere() {
   return (
-    <div className="container mx-auto px-4 py-8 bg-gray-100 rounded-lg shadow-md mt-10">
-      <h1 className="font-bold text-center mb-6">Everywhere</h1>
-      <p className="text-gray-700 text-center">
-        This component is rendered on every page of the store front.
+    <div className="cpk-card cpk-crop cpk-crop-tl cpk-crop-br container mx-auto px-4 py-8 mt-10">
+      <div className="flex justify-center mb-6">
+        <Logo />
+      </div>
+      <h1
+        className="cpk-glitch text-center mb-6"
+        data-text="Everywhere"
+      >
+        Everywhere
+      </h1>
+      <p className="text-center" style={{ color: 'var(--cpk-color-contrast-muted)' }}>
+        Este componente é renderizado em toda página da loja.
       </p>
-      <p className="text-gray-700 text-center">
-        You can modify this component at{' '}
-        <code>`themes/sample/src/pages/all/EveryWhere.tsx`</code>
+      <p className="text-center" style={{ color: 'var(--cpk-color-contrast-muted)' }}>
+        Edite em <code>`themes/13372077/src/pages/all/EveryWhere.tsx`</code>
       </p>
-      <p className=" text-gray-700 text-center">
-        You can also remove this by disabling the theme `sample`.
-      </p>
+      <div className="flex justify-center mt-6">
+        <button type="button" className="cpk-btn cpk-crop cpk-crop-br">
+          Sr. Robô
+        </button>
+      </div>
     </div>
   );
 }

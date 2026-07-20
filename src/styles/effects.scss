@@ -1,0 +1,202 @@
+// Efeitos cyberpunk — implementação própria em CSS/JS nativo, zero libs.
+// Técnicas (corte de canto paramétrico via clip-path, cursor "mira" via
+// custom property + transform, glitch de texto via pseudo-elemento com
+// clip-path fatiado, overlay de fade) foram estudadas na referência
+// CyberPulse (wp.nkdev.info/cyberpulse) e reimplementadas do zero — nenhum
+// CSS/JS foi copiado, só o conceito.
+
+// ---------------------------------------------------------------------
+// Corte de canto (crop). Cada canto é 0 por padrão; utilitários ligam o(s)
+// canto(s) desejado(s) via as custom properties.
+// ---------------------------------------------------------------------
+.cpk-crop {
+  --cpk-crop-tl: 0px;
+  --cpk-crop-tr: 0px;
+  --cpk-crop-br: 0px;
+  --cpk-crop-bl: 0px;
+  clip-path: polygon(
+    0 var(--cpk-crop-tl),
+    var(--cpk-crop-tl) 0,
+    calc(100% - var(--cpk-crop-tr)) 0,
+    100% var(--cpk-crop-tr),
+    100% calc(100% - var(--cpk-crop-br)),
+    calc(100% - var(--cpk-crop-br)) 100%,
+    var(--cpk-crop-bl) 100%,
+    0 calc(100% - var(--cpk-crop-bl))
+  );
+}
+
+.cpk-crop-tl { --cpk-crop-tl: var(--cpk-crop-md); }
+.cpk-crop-tr { --cpk-crop-tr: var(--cpk-crop-md); }
+.cpk-crop-br { --cpk-crop-br: var(--cpk-crop-md); }
+.cpk-crop-bl { --cpk-crop-bl: var(--cpk-crop-md); }
+
+// ---------------------------------------------------------------------
+// Glow neon.
+// ---------------------------------------------------------------------
+.cpk-glow-sm { box-shadow: var(--cpk-glow-sm); }
+.cpk-glow { box-shadow: var(--cpk-glow-md); }
+.cpk-glow-lg { box-shadow: var(--cpk-glow-lg); }
+
+// ---------------------------------------------------------------------
+// Glitch de texto no hover/focus. Usa attr(data-text) nos pseudo-elementos
+// em vez de duplicar nós reais no DOM — elemento precisa de
+// data-text="mesmo texto do conteúdo".
+// ---------------------------------------------------------------------
+.cpk-glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.cpk-glitch::before,
+.cpk-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cpk-glitch:hover::before,
+.cpk-glitch:focus-visible::before {
+  opacity: 1;
+  color: var(--cpk-color-glitch-1);
+  animation: cpk-glitch-1 0.25s linear;
+}
+
+.cpk-glitch:hover::after,
+.cpk-glitch:focus-visible::after {
+  opacity: 1;
+  color: var(--cpk-color-glitch-2);
+  animation: cpk-glitch-2 0.25s linear;
+}
+
+@keyframes cpk-glitch-1 {
+  0%, 33.9% { clip-path: inset(0 0 62% 0); transform: translateX(2px); }
+  34%, 66.9% { clip-path: inset(55% 0 0 0); transform: translateX(-2px); }
+  67%, 100% { clip-path: inset(38% 0 45% 0); transform: translateX(2px); }
+}
+
+@keyframes cpk-glitch-2 {
+  0%, 33% { clip-path: polygon(0 38%, 100% 38%, 100% 100%, 0 100%); transform: translateX(-2px); }
+  34%, 66% { clip-path: polygon(0 0, 100% 0, 100% 55%, 0 55%); transform: translateX(2px); }
+  67%, 100% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 55%, 100% 55%, 100% 38%, 0 38%);
+    transform: translateX(-2px);
+  }
+}
+
+// ---------------------------------------------------------------------
+// Cursor "mira" (crosshair) — ponto + linhas full-width/height. Posição
+// vem de --cpk-cursor-x/-y, atualizadas via JS com style.setProperty
+// (sem re-render React a cada mousemove).
+// ---------------------------------------------------------------------
+html.cpk-cursor-active,
+html.cpk-cursor-active * {
+  cursor: none !important;
+}
+
+.cpk-cursor {
+  position: fixed;
+  top: -3px;
+  left: -3px;
+  z-index: 99999;
+  width: 6px;
+  height: 6px;
+  background-color: var(--cpk-color-brand);
+  box-shadow: var(--cpk-glow-sm);
+  pointer-events: none;
+  transform: translate(var(--cpk-cursor-x, -100px), var(--cpk-cursor-y, -100px));
+  transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color var(--cpk-transition-duration);
+}
+
+.cpk-cursor.is-hover {
+  transform: translate(var(--cpk-cursor-x, -100px), var(--cpk-cursor-y, -100px)) scale(3);
+  mix-blend-mode: exclusion;
+  background-color: var(--cpk-color-contrast);
+}
+
+.cpk-cursor-line {
+  position: fixed;
+  z-index: 99998;
+  opacity: 0.12;
+  background-color: var(--cpk-color-brand);
+  pointer-events: none;
+}
+
+.cpk-cursor-line--h {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform: translateY(var(--cpk-cursor-y, -100px));
+}
+
+.cpk-cursor-line--v {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  transform: translateX(var(--cpk-cursor-x, -100px));
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cpk-cursor, .cpk-cursor-line { display: none; }
+  html.cpk-cursor-active, html.cpk-cursor-active * { cursor: auto !important; }
+}
+
+// ---------------------------------------------------------------------
+// Fade entre navegações de página. O EverShop não tem router SPA — cada
+// navegação é reload completo — então o overlay cobre a tela antes do
+// unload (fade-out no clique) e revela a página nova no mount (fade-in).
+// ---------------------------------------------------------------------
+.cpk-fade {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background-color: var(--cpk-color-bg);
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity var(--cpk-transition-duration) var(--cpk-transition-easing);
+}
+
+.cpk-fade.is-hidden {
+  opacity: 0;
+}
+
+.cpk-fade.is-leaving {
+  opacity: 1;
+  pointer-events: initial;
+}
+
+// ---------------------------------------------------------------------
+// Logo com troca no hover (cyber-robo ↔ cyber-rob0).
+// ---------------------------------------------------------------------
+.cpk-logo {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+
+.cpk-logo img {
+  display: block;
+  height: 28px;
+  width: auto;
+  transition: opacity var(--cpk-transition-duration) var(--cpk-transition-easing);
+}
+
+.cpk-logo .cpk-logo-alt {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.cpk-logo:hover .cpk-logo-alt,
+.cpk-logo:focus-visible .cpk-logo-alt {
+  opacity: 1;
+}
+
+.cpk-logo:hover img:not(.cpk-logo-alt),
+.cpk-logo:focus-visible img:not(.cpk-logo-alt) {
+  opacity: 0;
+}

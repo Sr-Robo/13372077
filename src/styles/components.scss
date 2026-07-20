@@ -1,0 +1,86 @@
+// Componentes-base cyberpunk: botão, badge, card, input.
+// Combinam os tokens (cores/tipografia) com os efeitos (crop, glow) de
+// effects.scss — ex.: <button className="cpk-btn cpk-crop cpk-crop-br">.
+
+.cpk-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  font-family: var(--cpk-font-family);
+  font-weight: var(--cpk-font-weight-heading);
+  font-size: 0.8125em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.9em 2.2em;
+  background-color: var(--cpk-color-brand);
+  color: var(--cpk-color-bg);
+  border: none;
+  cursor: pointer;
+  transition: box-shadow var(--cpk-transition-duration) var(--cpk-transition-easing),
+    transform var(--cpk-transition-duration) var(--cpk-transition-easing);
+}
+
+.cpk-btn:hover,
+.cpk-btn:focus-visible {
+  box-shadow: var(--cpk-glow-md);
+}
+
+.cpk-btn:active {
+  transform: translateY(1px);
+}
+
+.cpk-btn--outline {
+  background-color: transparent;
+  color: var(--cpk-color-brand);
+  box-shadow: inset 0 0 0 1px var(--cpk-color-brand);
+}
+
+.cpk-btn--outline:hover,
+.cpk-btn--outline:focus-visible {
+  background-color: rgba(var(--cpk-color-brand-rgb), 0.1);
+}
+
+.cpk-badge {
+  display: inline-block;
+  font-family: var(--cpk-font-family);
+  font-size: 0.75em;
+  font-weight: var(--cpk-font-weight-heading);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 0.3em 0.8em;
+  background-color: rgba(var(--cpk-color-brand-rgb), 0.15);
+  color: var(--cpk-color-brand);
+  border: 1px solid rgba(var(--cpk-color-brand-rgb), 0.4);
+}
+
+.cpk-badge--success { color: var(--cpk-color-success); border-color: var(--cpk-color-success); background-color: rgba(46, 204, 113, 0.12); }
+.cpk-badge--danger { color: var(--cpk-color-danger); border-color: var(--cpk-color-danger); background-color: rgba(255, 77, 77, 0.12); }
+.cpk-badge--warning { color: var(--cpk-color-warning); border-color: var(--cpk-color-warning); background-color: rgba(255, 204, 0, 0.12); }
+
+.cpk-card {
+  background-color: var(--cpk-color-bg-100);
+  border: 1px solid var(--cpk-color-border);
+  padding: 2em;
+}
+
+.cpk-input {
+  display: block;
+  width: 100%;
+  background-color: var(--cpk-color-bg-200);
+  border: 1px solid var(--cpk-color-border);
+  color: var(--cpk-color-contrast);
+  font-family: var(--cpk-font-family);
+  font-size: 1em;
+  padding: 0.8em 1em;
+  transition: border-color var(--cpk-transition-duration) var(--cpk-transition-easing);
+}
+
+.cpk-input:focus {
+  border-color: var(--cpk-color-brand);
+  outline: none;
+}
+
+.cpk-input::placeholder {
+  color: var(--cpk-color-contrast-muted);
+}

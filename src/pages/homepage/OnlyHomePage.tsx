@@ -2,18 +2,25 @@ import React from 'react';
 
 export default function OnlyHomePage() {
   return (
-    <div className="container mx-auto px-4 py-8 bg-gray-100 rounded-lg shadow-md mt-10">
-      <h1 className="font-bold text-center mb-6">Home Page Only?????</h1>
-      <p className=" text-gray-700 text-center">
-        This component is only rendered on the home page.
+    <div className="cpk-card cpk-crop cpk-crop-tl cpk-crop-br container mx-auto px-4 py-8 mt-10 cpk-glow-sm">
+      <h1
+        className="cpk-glitch cpk-display text-center mb-6"
+        data-text="Sr. Robô"
+      >
+        Sr. Robô
+      </h1>
+      <p className="text-center" style={{ color: 'var(--cpk-color-contrast-muted)' }}>
+        A loja ainda está em construção — a versão alfa do layout chegou primeiro.
       </p>
-      <p className=" text-gray-700 text-center">
-        You can modify this component at{' '}
-        <code>`themes/sample/src/pages/homepage/OnlyHomePage.tsx`</code>
+      <p className="text-center" style={{ color: 'var(--cpk-color-contrast-muted)' }}>
+        Edite em <code>`themes/13372077/src/pages/homepage/OnlyHomePage.tsx`</code>
       </p>
-      <p className=" text-gray-700 text-center">
-        You can also remove this by disabling the theme `sample`.
-      </p>
+      <div className="flex justify-center gap-4 mt-6">
+        <span className="cpk-badge">alfa</span>
+        <button type="button" className="cpk-btn cpk-btn--outline cpk-crop cpk-crop-tl">
+          Ver progresso
+        </button>
+      </div>
     </div>
   );
 }
