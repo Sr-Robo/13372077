@@ -20,7 +20,8 @@ export default function EveryWhere() {
         Edite em <code>`themes/13372077/src/pages/all/EveryWhere.tsx`</code>
       </p>
       <div className="flex justify-center mt-6">
-        <button type="button" className="cpk-btn cpk-crop cpk-crop-br">
+        <button type="button" className="cpk-btn cpk-glitch cpk-glitch-btn" data-text="Sr. Robô">
+          <span className="cpk-btn-bg" aria-hidden="true" />
           Sr. Robô
         </button>
       </div>
