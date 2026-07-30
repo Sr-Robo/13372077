@@ -260,3 +260,131 @@
     }
   }
 }
+
+// Override para a página de Produto (/product/:slug)
+.product__detail {
+  font-family: var(--cpk-font-family);
+
+  // Nome do produto
+  .product__single__name {
+    font-size: 3rem;
+    font-weight: var(--cpk-font-weight-heading);
+    text-transform: uppercase;
+    color: var(--cpk-color-brand);
+    text-shadow: var(--cpk-glow-sm);
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  // Preço
+  .product__single__price {
+    color: var(--cpk-color-success); // Cor verde de sucesso/sistema para o preço
+    text-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
+    
+    .line-through {
+      color: var(--cpk-color-danger);
+      text-shadow: none;
+    }
+  }
+
+  // Seletor de Variantes (cores, tamanhos) e Inputs
+  .variant-selector select,
+  input[name="qty"] {
+    background: var(--cpk-color-bg-200);
+    border: 1px solid var(--cpk-color-border);
+    color: var(--cpk-color-contrast);
+    border-radius: 0;
+    font-family: var(--cpk-font-family);
+    padding: 0.5em 1em;
+    height: auto;
+
+    &:focus {
+      outline: none;
+      border-color: var(--cpk-color-brand);
+      box-shadow: inset 0 0 5px rgba(189,0,255,0.2);
+    }
+  }
+
+  // Botão "Add To Cart"
+  .space-y-3 > button {
+    background-color: transparent !important;
+    color: var(--cpk-color-brand) !important;
+    border: 1.5px solid var(--cpk-color-brand) !important;
+    border-radius: 0 !important;
+    font-family: var(--cpk-font-family) !important;
+    text-transform: uppercase !important;
+    font-weight: var(--cpk-font-weight-heading) !important;
+    letter-spacing: 0.05em !important;
+    padding: 1.5em 2em !important;
+    transition: all 0.2s !important;
+    position: relative !important;
+    overflow: hidden !important;
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% calc(100% - 15px),
+      calc(100% - 15px) 100%,
+      0 100%
+    );
+
+    &:hover {
+      background: rgba(189,0,255,0.1) !important;
+      box-shadow: var(--cpk-glow-md) !important;
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--cpk-color-brand);
+      box-shadow: var(--cpk-glow-sm);
+      z-index: 2;
+    }
+  }
+
+  // Mídia / Galeria (Foto do produto)
+  .product__detail__left {
+    position: relative;
+    padding: 1rem;
+    border: 1px solid var(--cpk-color-border);
+    background: var(--cpk-color-bg-100);
+    
+    // Brackets cyberpunk
+    &::before {
+      content: '';
+      position: absolute;
+      top: -2px; left: -2px;
+      width: 30px; height: 30px;
+      border-top: 2px solid var(--cpk-color-brand);
+      border-left: 2px solid var(--cpk-color-brand);
+      z-index: 10;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; right: -2px;
+      width: 30px; height: 30px;
+      border-bottom: 2px solid var(--cpk-color-brand);
+      border-right: 2px solid var(--cpk-color-brand);
+      z-index: 10;
+    }
+    
+    // Imagem base
+    img {
+      filter: grayscale(20%) contrast(1.1); // Dá um tom mais áspero cyberpunk
+    }
+  }
+
+  // Descrição do Produto
+  .product__single__description {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: var(--cpk-color-bg-100);
+    border-top: 1px solid var(--cpk-color-border);
+    color: var(--cpk-color-contrast-muted);
+    line-height: 1.8;
+  }
+}
