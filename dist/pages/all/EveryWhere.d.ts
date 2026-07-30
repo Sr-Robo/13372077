@@ -1,5 +1,4 @@
-import React from 'react';
-export default function EveryWhere(): React.JSX.Element;
+export default function EveryWhere(): null;
 export declare const layout: {
     areaId: string;
     sortOrder: number;

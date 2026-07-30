@@ -424,3 +424,65 @@ html.cpk-cursor-active * {
 .cpk-logo:focus-visible img:not(.cpk-logo-alt) {
   opacity: 0;
 }
+
+// ---------------------------------------------------------------------
+// Header e Footer: sobrescreve as classes Tailwind do core do Evershop.
+// O <Header /> e <Footer /> são instanciados diretamente no Base.tsx do
+// core (dentro do CartProvider), então não podem ser trocados por layout
+// de área — a única forma de reskiná-los é via CSS.
+// ---------------------------------------------------------------------
+
+// Header: fundo escuro + borda inferior sutil.
+header.header {
+  background-color: var(--cpk-color-bg) !important;
+  border-bottom: 1px solid var(--cpk-color-border);
+}
+
+// Estilos dos ícones de busca, conta e carrinho no header.
+header.header .header__middle__right a,
+header.header .header__middle__right button {
+  color: var(--cpk-color-contrast-muted);
+  transition: color var(--cpk-transition-duration) var(--cpk-transition-easing),
+    text-shadow var(--cpk-transition-duration) var(--cpk-transition-easing);
+}
+
+header.header .header__middle__right a:hover,
+header.header .header__middle__right button:hover {
+  color: var(--cpk-color-brand);
+  text-shadow: var(--cpk-glow-sm);
+  background: transparent !important;
+}
+
+// Footer: fundo levemente mais claro que o body, borda superior de marca.
+footer.footer {
+  background-color: var(--cpk-color-bg-100) !important;
+  border-top: 2px solid var(--cpk-color-brand) !important;
+  border-right: none;
+  border-bottom: none;
+  border-left: none;
+  margin-top: 5rem;
+}
+
+// Borda interna do footerBottom (separador de copyright).
+footer.footer .footer__bottom {
+  border-top: 1px solid var(--cpk-color-border) !important;
+}
+
+// Texto de copyright e links do footer.
+footer.footer .copyright,
+footer.footer .copyright span {
+  color: var(--cpk-color-contrast-muted) !important;
+  font-family: var(--cpk-font-family);
+  font-size: 0.8125rem;
+}
+
+// Ícones de cartão (Visa/MC/PayPal) no footer — inverte para ficar legível no fundo escuro.
+footer.footer .card-icons svg {
+  opacity: 0.6;
+  filter: invert(0.9) brightness(0.8);
+}
+
+footer.footer .card-icons svg:hover {
+  opacity: 1;
+  filter: none;
+}

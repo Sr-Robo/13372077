@@ -6,7 +6,6 @@ export default function Logo({ setting }) {
         React.createElement("a", { href: "/", className: "logo-icon", "aria-label": `${storeName} – home` },
             React.createElement(CpkLogo, { alt: storeName }))));
 }
-// Substitui o módulo do core
 export const layout = {
     areaId: 'headerMiddleCenter',
     sortOrder: 10

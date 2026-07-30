@@ -14,7 +14,6 @@ export default function Logo({ setting }) {
   );
 }
 
-// Substitui o módulo do core
 export const layout = {
   areaId: 'headerMiddleCenter',
   sortOrder: 10
