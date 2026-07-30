@@ -1,0 +1,426 @@
+// Efeitos cyberpunk — implementação própria em CSS/JS nativo, zero libs.
+// Técnicas (corte de canto paramétrico via clip-path, cursor "mira" via
+// custom property + transform, glitch de texto via pseudo-elemento com
+// clip-path fatiado, overlay de fade) foram estudadas na referência
+// CyberPulse (wp.nkdev.info/cyberpulse) e reimplementadas do zero — nenhum
+// CSS/JS foi copiado, só o conceito.
+
+// ---------------------------------------------------------------------
+// Corte de canto (crop). Cada canto é 0 por padrão; utilitários ligam o(s)
+// canto(s) desejado(s) via as custom properties.
+// ---------------------------------------------------------------------
+.cpk-crop {
+  --cpk-crop-tl: 0px;
+  --cpk-crop-tr: 0px;
+  --cpk-crop-br: 0px;
+  --cpk-crop-bl: 0px;
+  clip-path: polygon(
+    0 var(--cpk-crop-tl),
+    var(--cpk-crop-tl) 0,
+    calc(100% - var(--cpk-crop-tr)) 0,
+    100% var(--cpk-crop-tr),
+    100% calc(100% - var(--cpk-crop-br)),
+    calc(100% - var(--cpk-crop-br)) 100%,
+    var(--cpk-crop-bl) 100%,
+    0 calc(100% - var(--cpk-crop-bl))
+  );
+}
+
+.cpk-crop-tl { --cpk-crop-tl: var(--cpk-crop-md); }
+.cpk-crop-tr { --cpk-crop-tr: var(--cpk-crop-md); }
+.cpk-crop-br { --cpk-crop-br: var(--cpk-crop-md); }
+.cpk-crop-bl { --cpk-crop-bl: var(--cpk-crop-md); }
+
+// ---------------------------------------------------------------------
+// Glow neon.
+// ---------------------------------------------------------------------
+.cpk-glow-sm { box-shadow: var(--cpk-glow-sm); }
+.cpk-glow { box-shadow: var(--cpk-glow-md); }
+.cpk-glow-lg { box-shadow: var(--cpk-glow-lg); }
+
+// ---------------------------------------------------------------------
+// Glitch de texto no hover/focus. Usa attr(data-text) nos pseudo-elementos
+// em vez de duplicar nós reais no DOM — elemento precisa de
+// data-text="mesmo texto do conteúdo".
+// ---------------------------------------------------------------------
+.cpk-glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.cpk-glitch::before,
+.cpk-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cpk-glitch:hover::before,
+.cpk-glitch:focus-visible::before {
+  color: var(--cpk-color-glitch-1);
+  animation: cpk-glitch-1 0.25s linear;
+}
+
+.cpk-glitch:hover::after,
+.cpk-glitch:focus-visible::after {
+  color: var(--cpk-color-glitch-2);
+  animation: cpk-glitch-2 0.25s linear;
+}
+
+// `opacity` faz parte do próprio keyframe (1 quase até o fim, 0 só no
+// último instante) em vez de uma regra estática `opacity: 1` no hover — se
+// opacity ficasse fixo em 1 pelo tempo inteiro do hover, a duplicata ficava
+// "grudada" visível parada assim que os 0.25s da animação acabavam (fxlip
+// reportou "parece ficar sobreposto"). Com o fade dentro do keyframe, a
+// animação sempre termina em opacity:0 sozinha — lê como uma transição
+// rápida que passa e some, igual à referência, não uma sobreposição fixa.
+@keyframes cpk-glitch-1 {
+  0% { opacity: 1; clip-path: inset(0 0 62% 0); transform: translateX(2px); }
+  33.9% { opacity: 1; clip-path: inset(0 0 62% 0); transform: translateX(2px); }
+  34% { opacity: 1; clip-path: inset(55% 0 0 0); transform: translateX(-2px); }
+  66.9% { opacity: 1; clip-path: inset(55% 0 0 0); transform: translateX(-2px); }
+  67% { opacity: 1; clip-path: inset(38% 0 45% 0); transform: translateX(2px); }
+  96% { opacity: 1; clip-path: inset(38% 0 45% 0); transform: translateX(2px); }
+  100% { opacity: 0; clip-path: inset(38% 0 45% 0); transform: translateX(2px); }
+}
+
+@keyframes cpk-glitch-2 {
+  0% { opacity: 1; clip-path: polygon(0 38%, 100% 38%, 100% 100%, 0 100%); transform: translateX(-2px); }
+  33% { opacity: 1; clip-path: polygon(0 38%, 100% 38%, 100% 100%, 0 100%); transform: translateX(-2px); }
+  34% { opacity: 1; clip-path: polygon(0 0, 100% 0, 100% 55%, 0 55%); transform: translateX(2px); }
+  66% { opacity: 1; clip-path: polygon(0 0, 100% 0, 100% 55%, 0 55%); transform: translateX(2px); }
+  67% {
+    opacity: 1;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 55%, 100% 55%, 100% 38%, 0 38%);
+    transform: translateX(-2px);
+  }
+  96% {
+    opacity: 1;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 55%, 100% 55%, 100% 38%, 0 38%);
+    transform: translateX(-2px);
+  }
+  100% {
+    opacity: 0;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 55%, 100% 55%, 100% 38%, 0 38%);
+    transform: translateX(-2px);
+  }
+}
+
+// Dentro de um botão (com padding grande ao redor do texto), o `inset: 0`
+// acima estica a camada de glitch pra caixa INTEIRA (texto + padding) — os
+// cortes percentuais do keyframe (`inset(0 0 62% 0)` etc.) passam a se
+// referir a essa caixa bem mais alta que o texto real, e o deslocamento
+// fica enorme (fxlip reportou "se move de maneira muito alta"). A
+// referência real (`.cpl-glitch-wrapper`) usa `top: 50% + translateY(-50%)`,
+// do tamanho do conteúdo, não da caixa — mesma correção aqui, com
+// @keyframes própria (senão herdaria o `transform: translateX` puro do
+// glitch genérico, perdendo a centralização vertical durante a animação).
+.cpk-btn.cpk-glitch::before,
+.cpk-btn.cpk-glitch::after {
+  inset: auto;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+
+.cpk-btn.cpk-glitch:hover::before,
+.cpk-btn.cpk-glitch:focus-visible::before {
+  animation: cpk-glitch-btn-text-1 0.25s linear;
+}
+
+.cpk-btn.cpk-glitch:hover::after,
+.cpk-btn.cpk-glitch:focus-visible::after {
+  animation: cpk-glitch-btn-text-2 0.25s linear;
+}
+
+@keyframes cpk-glitch-btn-text-1 {
+  0% { opacity: 1; clip-path: inset(0 0 62% 0); transform: translateY(-50%) translateX(2px); }
+  33.9% { opacity: 1; clip-path: inset(0 0 62% 0); transform: translateY(-50%) translateX(2px); }
+  34% { opacity: 1; clip-path: inset(55% 0 0 0); transform: translateY(-50%) translateX(-2px); }
+  66.9% { opacity: 1; clip-path: inset(55% 0 0 0); transform: translateY(-50%) translateX(-2px); }
+  67% { opacity: 1; clip-path: inset(38% 0 45% 0); transform: translateY(-50%) translateX(2px); }
+  96% { opacity: 1; clip-path: inset(38% 0 45% 0); transform: translateY(-50%) translateX(2px); }
+  100% { opacity: 0; clip-path: inset(38% 0 45% 0); transform: translateY(-50%) translateX(2px); }
+}
+
+@keyframes cpk-glitch-btn-text-2 {
+  0% { opacity: 1; clip-path: polygon(0 38%, 100% 38%, 100% 100%, 0 100%); transform: translateY(-50%) translateX(-2px); }
+  33% { opacity: 1; clip-path: polygon(0 38%, 100% 38%, 100% 100%, 0 100%); transform: translateY(-50%) translateX(-2px); }
+  34% { opacity: 1; clip-path: polygon(0 0, 100% 0, 100% 55%, 0 55%); transform: translateY(-50%) translateX(2px); }
+  66% { opacity: 1; clip-path: polygon(0 0, 100% 0, 100% 55%, 0 55%); transform: translateY(-50%) translateX(2px); }
+  67% {
+    opacity: 1;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 55%, 100% 55%, 100% 38%, 0 38%);
+    transform: translateY(-50%) translateX(-2px);
+  }
+  96% {
+    opacity: 1;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 55%, 100% 55%, 100% 38%, 0 38%);
+    transform: translateY(-50%) translateX(-2px);
+  }
+  100% {
+    opacity: 0;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 55%, 100% 55%, 100% 38%, 0 38%);
+    transform: translateY(-50%) translateX(-2px);
+  }
+}
+
+// ---------------------------------------------------------------------
+// Glitch de fundo pra botões — no hover, o fundo cortado (`.cpk-btn-bg`,
+// elemento real — ver components.scss) recebe DUAS camadas de fatiamento
+// (`::before`/`::after` do próprio `.cpk-btn-bg`, livres porque `.cpk-btn-bg`
+// é um elemento real, não pseudo-elemento do botão) reaproveitando as MESMAS
+// keyframes de clip-path do glitch de texto (cpk-glitch-1/2) — é a mesma
+// técnica de fatiamento da referência (`.cpl-glitch-button-background-1/2`),
+// só que aplicada ao fundo em vez do texto. Como `.cpk-btn-bg` já tem
+// clip-path (corte de canto / anel do outline), esse clip-path do PAI
+// confina automaticamente o fatiamento das camadas filhas — não vaza pra
+// fora do hexágono/anel, sem precisar combinar os dois clip-paths (testado
+// isolado, ver `btn_glitch_test4.html`). A cor de glitch (glitch-1/glitch-2)
+// nas camadas TAMBÉM resolve a "mudança de cor" no hover que a referência
+// tem — antes só deslocava (translateX), sem cor, sem fatiar de verdade.
+// Uso: <button className="cpk-btn cpk-glitch cpk-glitch-btn" data-text="...">
+//        <span className="cpk-btn-bg" aria-hidden="true" />
+//        texto
+//      </button>
+// ---------------------------------------------------------------------
+.cpk-btn-bg::before,
+.cpk-btn-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cpk-glitch-btn:hover .cpk-btn-bg::before,
+.cpk-glitch-btn:focus-visible .cpk-btn-bg::before {
+  background-color: var(--cpk-color-glitch-1);
+  animation: cpk-glitch-1 0.25s linear;
+}
+
+.cpk-glitch-btn:hover .cpk-btn-bg::after,
+.cpk-glitch-btn:focus-visible .cpk-btn-bg::after {
+  background-color: var(--cpk-color-glitch-2);
+  animation: cpk-glitch-2 0.25s linear;
+}
+
+// Movimento físico da caixa INTEIRA (não só das camadas de cor acima) — a
+// referência combina os dois: o fundo chacoalha em translateX ENQUANTO
+// fatia de cor. Tinha sido removido quando o fatiamento entrou (fxlip
+// reportou "o efeito vem das cores e não de uma movimentação, igual no
+// original"). Só `transform`, nunca `clip-path` aqui — o clip-path fixo
+// (corte de canto / anel) não pode ser sobrescrito pela animação, senão
+// perde o hexágono e "tilta" (bug já visto antes).
+.cpk-glitch-btn:hover .cpk-btn-bg,
+.cpk-glitch-btn:focus-visible .cpk-btn-bg {
+  animation: cpk-btn-bg-shift 0.25s linear;
+}
+
+@keyframes cpk-btn-bg-shift {
+  0%, 33.9% { transform: translateX(2px); }
+  34%, 66.9% { transform: translateX(-2px); }
+  67%, 100% { transform: translateX(2px); }
+}
+
+// ---------------------------------------------------------------------
+// Cursor "mira" (crosshair) — ponto + linhas full-width/height. Posição
+// vem de --cpk-cursor-x/-y, atualizadas via JS com style.setProperty
+// (sem re-render React a cada mousemove).
+// ---------------------------------------------------------------------
+html.cpk-cursor-active,
+html.cpk-cursor-active * {
+  cursor: none !important;
+}
+
+.cpk-cursor {
+  position: fixed;
+  top: -3px;
+  left: -3px;
+  z-index: 99999;
+  width: 6px;
+  height: 6px;
+  background-color: var(--cpk-color-brand);
+  box-shadow: var(--cpk-glow-sm);
+  pointer-events: none;
+  will-change: translate;
+  // `translate`/`scale` como propriedades próprias (não o `transform`
+  // shorthand) pra poder animar uma sem a outra: posição segue o mouse 1:1,
+  // sem nenhuma suavização por cima (fxlip pediu — a `transition` antiga no
+  // `transform` era uma "máscara" artificial de velocidade, o ponto sempre
+  // ficava correndo atrás do cursor real em vez de estar exatamente nele).
+  // Só o "crescer" no hover tem transição — é um estado, não velocidade.
+  translate: var(--cpk-cursor-x, -100px) var(--cpk-cursor-y, -100px);
+  transition: scale 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color var(--cpk-transition-duration), box-shadow var(--cpk-transition-duration);
+}
+
+.cpk-cursor.is-hover {
+  // mix-blend-mode: exclusion trocado por glow-lg — blend mode força o
+  // navegador a recompor a camada com tudo por baixo a cada frame (caro,
+  // um dos suspeitos do "delay" reportado); glow dá destaque parecido sem
+  // esse custo.
+  scale: 3;
+  background-color: var(--cpk-color-contrast);
+  box-shadow: var(--cpk-glow-lg);
+}
+
+.cpk-cursor-line {
+  position: fixed;
+  z-index: 99998;
+  opacity: 0.12;
+  background-color: var(--cpk-color-brand);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.cpk-cursor-line--h {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform: translateY(var(--cpk-cursor-y, -100px));
+}
+
+.cpk-cursor-line--v {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  transform: translateX(var(--cpk-cursor-x, -100px));
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cpk-cursor, .cpk-cursor-line { display: none; }
+  html.cpk-cursor-active, html.cpk-cursor-active * { cursor: auto !important; }
+}
+
+// ---------------------------------------------------------------------
+// Ruído de fundo (grão animado tipo estática de TV). Estudado na página
+// 502/504 antiga da referência (tinha `.cpl-page-noise`: textura PNG
+// tileable 100x100, position:fixed maior que a viewport). A tentativa
+// inicial com SVG feTurbulence ficou visualmente diferente (borrão
+// uniforme, não grão) — a textura real tem ~58% dos pixels totalmente
+// transparentes e o resto com alpha baixo (pico ~0.18, média ~0.03) e RGB
+// em cinza variável, não branco fixo. Reimplementado gerando uma textura
+// PRÓPRIA (`public/img/noise.png`, script Python com `random`, sem nenhum
+// pixel copiado da referência) que reproduz essa MESMA estatística —
+// técnica estudada, dado gerado do zero.
+//
+// Animação: mesma receita exata da referência (não JS) — @keyframes com
+// timing-function steps(3) ao longo de 1s, 11 waypoints com deslocamento
+// entre -9rem/+9rem. É a TÉCNICA/timing que foi estudada e reimplementada
+// (mesmos valores de deslocamento — isso é uma receita de animação, não um
+// asset — o PNG acima é que foi gerado do zero, nunca copiado). Tentativas
+// anteriores (JS setInterval sorteando posição, amplitude pequena) ficaram
+// "trêmulas" — a cadência do steps(3) sobre um alvo que muda suavemente a
+// cada 10% do ciclo é o que dá a sensação "rápida mas contínua e
+// confortável" que o fxlip descreveu na referência.
+// ---------------------------------------------------------------------
+.cpk-noise {
+  position: fixed;
+  inset: 0;
+  // Atrás do conteúdo normal (cards, texto, imagens) — só visível no fundo,
+  // como textura da superfície, não um filme flutuando por cima de tudo.
+  // Antes estava em 9999 (acima de quase tudo, igual ao z-index:10000 da
+  // referência) e o fxlip notou que competia visualmente com o conteúdo.
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cpk-noise::after {
+  content: '';
+  position: absolute;
+  top: -10rem;
+  left: -10rem;
+  width: calc(100% + 20rem);
+  height: calc(100% + 20rem);
+  will-change: transform;
+  // 0.42 (com a textura clara) ficou imperceptível — voltando pro 0.56
+  // (último valor aprovado antes do experimento com textura preta).
+  opacity: 0.56;
+  background: url('/img/noise.png') repeat 0 0;
+  background-size: 100px 100px;
+  animation: cpk-noise 1s steps(3) infinite;
+}
+
+// Valores exatos capturados da referência (técnica/timing, não asset).
+@keyframes cpk-noise {
+  0% { transform: translate3d(0, 9rem, 0); }
+  10% { transform: translate3d(-1rem, -4rem, 0); }
+  20% { transform: translate3d(-8rem, 2rem, 0); }
+  30% { transform: translate3d(9rem, -9rem, 0); }
+  40% { transform: translate3d(-2rem, 7rem, 0); }
+  50% { transform: translate3d(-9rem, -4rem, 0); }
+  60% { transform: translate3d(2rem, 6rem, 0); }
+  70% { transform: translate3d(7rem, -8rem, 0); }
+  80% { transform: translate3d(-9rem, 1rem, 0); }
+  90% { transform: translate3d(6rem, -5rem, 0); }
+  100% { transform: translate3d(-7rem, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cpk-noise::after {
+    animation: none;
+  }
+}
+
+// ---------------------------------------------------------------------
+// Fade entre navegações de página. O EverShop não tem router SPA — cada
+// navegação é reload completo — então o overlay cobre a tela antes do
+// unload (fade-out no clique) e revela a página nova no mount (fade-in).
+// ---------------------------------------------------------------------
+.cpk-fade {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background-color: var(--cpk-color-bg);
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity var(--cpk-transition-duration) var(--cpk-transition-easing);
+}
+
+.cpk-fade.is-hidden {
+  opacity: 0;
+}
+
+.cpk-fade.is-leaving {
+  opacity: 1;
+  pointer-events: initial;
+}
+
+// ---------------------------------------------------------------------
+// Logo com troca no hover (cyber-robo ↔ cyber-rob0).
+// ---------------------------------------------------------------------
+.cpk-logo {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+
+.cpk-logo img {
+  display: block;
+  height: 28px;
+  width: auto;
+  transition: opacity var(--cpk-transition-duration) var(--cpk-transition-easing);
+}
+
+.cpk-logo .cpk-logo-alt {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.cpk-logo:hover .cpk-logo-alt,
+.cpk-logo:focus-visible .cpk-logo-alt {
+  opacity: 1;
+}
+
+.cpk-logo:hover img:not(.cpk-logo-alt),
+.cpk-logo:focus-visible img:not(.cpk-logo-alt) {
+  opacity: 0;
+}

@@ -1,0 +1,163 @@
+// Componentes-base cyberpunk: botão, badge, card, input.
+// Combinam os tokens (cores/tipografia) com os efeitos (crop, glow) de
+// effects.scss — ex.: <button className="cpk-btn cpk-crop cpk-crop-br">.
+
+// Corte de canto do botão (top-left + bottom-right) fica num elemento REAL
+// de fundo (`<span class="cpk-btn-bg">`, z-index -1), não em pseudo-elemento
+// do botão — libera ::before/::after do próprio botão pro glitch de TEXTO
+// (.cpk-glitch, já existente) sem os dois brigarem pelos mesmos 2 slots de
+// pseudo-elemento disponíveis. É a MESMA arquitetura da página 502 antiga
+// (restaurada do histórico git): lá o fundo cortado também é um `<span
+// class="cpl-glitch-background">` real, separado do texto/glitch de texto.
+// Uso: <button className="cpk-btn cpk-glitch" data-text="...">
+//        <span className="cpk-btn-bg" aria-hidden="true" />
+//        texto
+//      </button>
+.cpk-btn {
+  position: relative;
+  z-index: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  font-family: var(--cpk-font-family);
+  font-weight: var(--cpk-font-weight-heading);
+  font-size: 0.8125em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.9em 2.2em;
+  background-color: transparent;
+  color: var(--cpk-color-bg);
+  border: none;
+  cursor: pointer;
+  transition: transform var(--cpk-transition-duration) var(--cpk-transition-easing);
+}
+
+.cpk-btn-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--cpk-color-brand);
+  clip-path: polygon(
+    0 var(--cpk-btn-crop, 12px),
+    var(--cpk-btn-crop, 12px) 0,
+    100% 0,
+    100% calc(100% - var(--cpk-btn-crop, 12px)),
+    calc(100% - var(--cpk-btn-crop, 12px)) 100%,
+    0 100%
+  );
+  transition: box-shadow var(--cpk-transition-duration) var(--cpk-transition-easing),
+    transform var(--cpk-transition-duration) var(--cpk-transition-easing);
+}
+
+// O glow vai no span de fundo (o formato cortado, hexágono), não no botão
+// real (que fica retangular de propósito, pra área de clique normal) — glow
+// no elemento real ignora o corte de canto e mostra um brilho retangular
+// destoando do formato visível.
+.cpk-btn:hover .cpk-btn-bg,
+.cpk-btn:focus-visible .cpk-btn-bg {
+  box-shadow: var(--cpk-glow-md);
+}
+
+.cpk-btn:active {
+  transform: translateY(1px);
+}
+
+.cpk-btn--outline {
+  color: var(--cpk-color-brand);
+  --cpk-crop-tl: var(--cpk-btn-crop, 12px);
+  --cpk-crop-tr: 0px;
+  --cpk-crop-br: var(--cpk-btn-crop, 12px);
+  --cpk-crop-bl: 0px;
+  --cpk-crop-outline: 1.5px;
+}
+
+// box-shadow inset não combina bem com clip-path de hexágono (a borda
+// "sumia" nos lados/cantos onde o corte já removeu área). Fórmula abaixo é
+// a MESMA técnica de "anel com cantos cortados" da referência real
+// (--cpl-crop--*__compensate + polygon de 18 pontos), só com nomes de
+// variável trocados — não é invenção própria, é a receita comprovada.
+.cpk-btn--outline .cpk-btn-bg {
+  --cpk-crop-tl-c: calc(var(--cpk-crop-tl) + var(--cpk-crop-outline));
+  --cpk-crop-tr-c: calc(var(--cpk-crop-tr) + var(--cpk-crop-outline));
+  --cpk-crop-br-c: calc(var(--cpk-crop-br) + var(--cpk-crop-outline));
+  --cpk-crop-bl-c: calc(var(--cpk-crop-bl) + var(--cpk-crop-outline));
+  background-color: var(--cpk-color-brand);
+  box-shadow: none;
+  clip-path: polygon(
+    var(--cpk-crop-outline) var(--cpk-crop-tl-c),
+    var(--cpk-crop-tl-c) var(--cpk-crop-outline),
+    calc(100% - var(--cpk-crop-tr-c)) var(--cpk-crop-outline),
+    calc(100% - var(--cpk-crop-outline)) var(--cpk-crop-tr-c),
+    calc(100% - var(--cpk-crop-outline)) calc(100% - var(--cpk-crop-br-c)),
+    calc(100% - var(--cpk-crop-br-c)) calc(100% - var(--cpk-crop-outline)),
+    var(--cpk-crop-bl-c) calc(100% - var(--cpk-crop-outline)),
+    var(--cpk-crop-outline) calc(100% - var(--cpk-crop-bl-c)),
+    0 calc(100% - var(--cpk-crop-bl)),
+    var(--cpk-crop-bl) 100%,
+    calc(100% - var(--cpk-crop-br)) 100%,
+    100% calc(100% - var(--cpk-crop-br)),
+    100% var(--cpk-crop-tr),
+    calc(100% - var(--cpk-crop-tr)) 0,
+    var(--cpk-crop-tl) 0,
+    0 var(--cpk-crop-tl),
+    0 calc(100% - var(--cpk-crop-bl)),
+    var(--cpk-crop-outline) calc(100% - var(--cpk-crop-bl-c))
+  );
+}
+
+// Mudança de cor sustentada no hover (fxlip: "quando tava em hover mudava de
+// cor" — o glitch de effects.scss só passa a cor por 0.25s e volta, faltava
+// uma troca que durasse o hover inteiro). Testado preenchimento roxo + texto
+// escuro e depois fundo preto sólido — nenhum dos dois agradou. Ficou: só a
+// BORDA (o anel) muda de cor, fundo continua preto/transparente, texto
+// continua roxo — o anel vira a cor "quente" do glitch (já é da paleta) e
+// volta ao normal quando o mouse sai.
+.cpk-btn--outline:hover .cpk-btn-bg,
+.cpk-btn--outline:focus-visible .cpk-btn-bg {
+  background-color: var(--cpk-color-glitch-1);
+}
+
+.cpk-badge {
+  display: inline-block;
+  font-family: var(--cpk-font-family);
+  font-size: 0.75em;
+  font-weight: var(--cpk-font-weight-heading);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 0.3em 0.8em;
+  background-color: rgba(var(--cpk-color-brand-rgb), 0.15);
+  color: var(--cpk-color-brand);
+  border: 1px solid rgba(var(--cpk-color-brand-rgb), 0.4);
+}
+
+.cpk-badge--success { color: var(--cpk-color-success); border-color: var(--cpk-color-success); background-color: rgba(46, 204, 113, 0.12); }
+.cpk-badge--danger { color: var(--cpk-color-danger); border-color: var(--cpk-color-danger); background-color: rgba(255, 77, 77, 0.12); }
+.cpk-badge--warning { color: var(--cpk-color-warning); border-color: var(--cpk-color-warning); background-color: rgba(255, 204, 0, 0.12); }
+
+.cpk-card {
+  background-color: var(--cpk-color-bg-100);
+  border: 1px solid var(--cpk-color-border);
+  padding: 2em;
+}
+
+.cpk-input {
+  display: block;
+  width: 100%;
+  background-color: var(--cpk-color-bg-200);
+  border: 1px solid var(--cpk-color-border);
+  color: var(--cpk-color-contrast);
+  font-family: var(--cpk-font-family);
+  font-size: 1em;
+  padding: 0.8em 1em;
+  transition: border-color var(--cpk-transition-duration) var(--cpk-transition-easing);
+}
+
+.cpk-input:focus {
+  border-color: var(--cpk-color-brand);
+  outline: none;
+}
+
+.cpk-input::placeholder {
+  color: var(--cpk-color-contrast-muted);
+}

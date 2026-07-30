@@ -1,0 +1,103 @@
+// Tokens de design do tema Cyberpunk ("Sr. Robô").
+// Cores/tipografia resgatadas das páginas 502/504 originais (ver
+// docs/tema-cyberpunk.md no repo do servidor); escala de corte de canto e
+// timing de transição inspirados na estrutura de tokens do tema de
+// referência CyberPulse (só conceito, zero código copiado).
+
+:root {
+  // Cor de marca — roxo/magenta, mesma cor das SVGs cyber-robo/cyber-rob0.
+  --cpk-color-brand: #bd00ff;
+  --cpk-color-brand-rgb: 189, 0, 255;
+
+  // Superfícies escuras — cinza escuro (dark gray), não preto puro.
+  // Pedido do fxlip (2026-07-20): o #050505 original deixava o dithering do
+  // monitor perceptível em áreas grandes sólidas mesmo com o ruído de fundo;
+  // a base subiu de quase-preto pra cinza escuro, mantendo a progressão
+  // relativa entre os 4 tons (fundo → cards → hover).
+  --cpk-color-bg: #121212;
+  --cpk-color-bg-100: #1c1c1c;
+  --cpk-color-bg-200: #242424;
+  --cpk-color-bg-300: #2c2c2c;
+  --cpk-color-border: rgba(255, 255, 255, 0.1);
+
+  // Texto.
+  --cpk-color-contrast: #f5f5f5;
+  --cpk-color-contrast-muted: #9a9a9a;
+
+  // Cores fixas do efeito de glitch — não acompanham a marca.
+  --cpk-color-glitch-1: #ee39f1;
+  --cpk-color-glitch-2: #39adef;
+
+  // Semânticas (ajustadas para contraste em fundo escuro).
+  --cpk-color-success: #2ecc71;
+  --cpk-color-danger: #ff4d4d;
+  --cpk-color-warning: #ffcc00;
+  --cpk-color-info: var(--cpk-color-glitch-2);
+
+  // Tipografia. Corpo em 16px/1.8/0.02em, peso 300 (Light) — a licença
+  // Purista comprada não inclui peso 400/Regular, só Thin/Light/Medium/
+  // SemiBold/Bold; 300 é o mais próximo do peso pedido pela referência.
+  --cpk-font-family: 'Purista', sans-serif;
+  --cpk-font-size-base: 16px;
+  --cpk-line-height-base: 1.8;
+  --cpk-letter-spacing-base: 0.02em;
+  --cpk-font-weight-base: 300;
+  --cpk-font-weight-heading: 600;
+
+  --cpk-font-size-h1: 40px;
+  --cpk-font-size-h2: 32px;
+  --cpk-font-size-h3: 28px;
+  --cpk-font-size-h4: 24px;
+  --cpk-font-size-h5: 20px;
+  --cpk-font-size-h6: 16px;
+  --cpk-font-size-display: 80px;
+  --cpk-line-height-heading: 1.2;
+
+  // Sem raio de borda — silhueta reta, corte de canto faz o "chanfro".
+  --cpk-radius: 0;
+  --cpk-crop-sm: 6px;
+  --cpk-crop-md: 12px;
+  --cpk-crop-lg: 20px;
+
+  --cpk-transition-duration: 0.25s;
+  --cpk-transition-easing: ease-in-out;
+
+  // Receita de glow neon — não existe na referência (lá o visual é liso,
+  // só corte de canto + glitch); é acréscimo próprio do tema.
+  --cpk-glow-sm: 0 0 6px rgba(var(--cpk-color-brand-rgb), 0.5);
+  --cpk-glow-md: 0 0 6px rgba(var(--cpk-color-brand-rgb), 0.6),
+    0 0 24px rgba(var(--cpk-color-brand-rgb), 0.35);
+  --cpk-glow-lg: 0 0 10px rgba(var(--cpk-color-brand-rgb), 0.7),
+    0 0 40px rgba(var(--cpk-color-brand-rgb), 0.4);
+}
+
+body {
+  background-color: var(--cpk-color-bg);
+  color: var(--cpk-color-contrast);
+  font-family: var(--cpk-font-family);
+  font-size: var(--cpk-font-size-base);
+  font-weight: var(--cpk-font-weight-base);
+  line-height: var(--cpk-line-height-base);
+  letter-spacing: var(--cpk-letter-spacing-base);
+}
+
+h1, h2, h3, h4, h5, h6, .cpk-h1, .cpk-h2, .cpk-h3, .cpk-h4, .cpk-h5, .cpk-h6 {
+  font-family: var(--cpk-font-family);
+  font-weight: var(--cpk-font-weight-heading);
+  line-height: var(--cpk-line-height-heading);
+  margin: 0;
+}
+
+h1, .cpk-h1 { font-size: var(--cpk-font-size-h1); }
+h2, .cpk-h2 { font-size: var(--cpk-font-size-h2); }
+h3, .cpk-h3 { font-size: var(--cpk-font-size-h3); }
+h4, .cpk-h4 { font-size: var(--cpk-font-size-h4); }
+h5, .cpk-h5 { font-size: var(--cpk-font-size-h5); }
+h6, .cpk-h6 { font-size: var(--cpk-font-size-h6); }
+
+.cpk-display {
+  font-family: var(--cpk-font-family);
+  font-weight: var(--cpk-font-weight-heading);
+  font-size: var(--cpk-font-size-display);
+  line-height: var(--cpk-line-height-heading);
+}
