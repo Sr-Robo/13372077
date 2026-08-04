@@ -388,3 +388,27 @@
     line-height: 1.8;
   }
 }
+
+// Estrutura geral do header (emula cpl-navbar-container cpl-navbar-collapse-md cpl-navbar-align-center).
+// Logo + hamburguer ficam em headerMiddleLeft (esquerda), ícones em headerMiddleRight (direita, ml-auto).
+// headerMiddleCenter ficou vazio — não precisa de estilo especial.
+header.header .header__middle {
+  display: flex !important;
+  align-items: center !important;
+  // justify-content do core já está ok (espaço entre left e right via ml-auto)
+}
+
+// Left: logo + nav hamburguer lado a lado
+header.header .header__middle__left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1.5rem;
+}
+
+// Alinhamento do lado direito (busca, conta, carrinho) — emula cpl-navbar-nav-icons
+header.header .header__middle__right {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 0.75rem !important;
+}

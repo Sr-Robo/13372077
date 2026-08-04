@@ -161,3 +161,254 @@
 .cpk-input::placeholder {
   color: var(--cpk-color-contrast-muted);
 }
+
+// Override agressivo no login do core (já que não podemos substituir o componente sem mexer no repo www)
+.login__page {
+  font-family: var(--cpk-font-family);
+
+  .login__form__title {
+    font-family: var(--cpk-font-family);
+    font-size: 2.5rem;
+    font-weight: var(--cpk-font-weight-heading);
+    text-transform: uppercase;
+    color: var(--cpk-color-brand);
+    text-shadow: var(--cpk-glow-sm);
+    margin-bottom: 0.5rem;
+  }
+
+  .login__form__subtitle {
+    color: var(--cpk-color-contrast-muted);
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    margin-bottom: 2rem;
+  }
+
+  // O card base do shadcn do evershop
+  .rounded-lg.border.py-8 {
+    background-color: var(--cpk-color-bg-100);
+    border: 1px solid var(--cpk-color-border);
+    border-radius: 0 !important; // força canto reto
+    box-shadow: 0 0 15px rgba(189,0,255,0.05);
+    position: relative;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+
+    // Borda inferior neon "falsa"
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--cpk-color-brand);
+      box-shadow: var(--cpk-glow-sm);
+      z-index: 2;
+    }
+  }
+
+  // Inputs padrão do form (emulam o cpk-input já definido)
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    background: var(--cpk-color-bg-200);
+    border: 1px solid var(--cpk-color-border);
+    color: var(--cpk-color-contrast);
+    border-radius: 0;
+    font-family: var(--cpk-font-family);
+    padding: 0.8em 1em;
+
+    &:focus {
+      outline: none;
+      border-color: var(--cpk-color-brand);
+      box-shadow: inset 0 0 5px rgba(189,0,255,0.2);
+    }
+  }
+
+  // Botão padrão do evershop
+  .form-submit-button {
+    border-top-color: var(--cpk-color-border); // separator
+
+    button {
+      background: transparent;
+      color: var(--cpk-color-brand);
+      border: 1px solid var(--cpk-color-brand);
+      border-radius: 0;
+      font-family: var(--cpk-font-family);
+      text-transform: uppercase;
+      font-weight: var(--cpk-font-weight-heading);
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+
+      &:hover {
+        background: rgba(189,0,255,0.1);
+        box-shadow: var(--cpk-glow-md);
+      }
+    }
+  }
+
+  .login__page__options {
+    a {
+      color: var(--cpk-color-contrast-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      &:hover {
+        color: var(--cpk-color-brand);
+        text-shadow: var(--cpk-glow-sm);
+      }
+    }
+  }
+}
+
+// Override para a página de Produto (/product/:slug)
+.product__detail {
+  font-family: var(--cpk-font-family);
+
+  // Nome do produto
+  .product__single__name {
+    font-size: 3rem;
+    font-weight: var(--cpk-font-weight-heading);
+    text-transform: uppercase;
+    color: var(--cpk-color-brand);
+    text-shadow: var(--cpk-glow-sm);
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  // Preço
+  .product__single__price {
+    color: var(--cpk-color-success); // Cor verde de sucesso/sistema para o preço
+    text-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
+    
+    .line-through {
+      color: var(--cpk-color-danger);
+      text-shadow: none;
+    }
+  }
+
+  // Seletor de Variantes (cores, tamanhos) e Inputs
+  .variant-selector select,
+  input[name="qty"] {
+    background: var(--cpk-color-bg-200);
+    border: 1px solid var(--cpk-color-border);
+    color: var(--cpk-color-contrast);
+    border-radius: 0;
+    font-family: var(--cpk-font-family);
+    padding: 0.5em 1em;
+    height: auto;
+
+    &:focus {
+      outline: none;
+      border-color: var(--cpk-color-brand);
+      box-shadow: inset 0 0 5px rgba(189,0,255,0.2);
+    }
+  }
+
+  // Botão "Add To Cart"
+  .space-y-3 > button {
+    background-color: transparent !important;
+    color: var(--cpk-color-brand) !important;
+    border: 1.5px solid var(--cpk-color-brand) !important;
+    border-radius: 0 !important;
+    font-family: var(--cpk-font-family) !important;
+    text-transform: uppercase !important;
+    font-weight: var(--cpk-font-weight-heading) !important;
+    letter-spacing: 0.05em !important;
+    padding: 1.5em 2em !important;
+    transition: all 0.2s !important;
+    position: relative !important;
+    overflow: hidden !important;
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% calc(100% - 15px),
+      calc(100% - 15px) 100%,
+      0 100%
+    );
+
+    &:hover {
+      background: rgba(189,0,255,0.1) !important;
+      box-shadow: var(--cpk-glow-md) !important;
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--cpk-color-brand);
+      box-shadow: var(--cpk-glow-sm);
+      z-index: 2;
+    }
+  }
+
+  // Mídia / Galeria (Foto do produto)
+  .product__detail__left {
+    position: relative;
+    padding: 1rem;
+    border: 1px solid var(--cpk-color-border);
+    background: var(--cpk-color-bg-100);
+    
+    // Brackets cyberpunk
+    &::before {
+      content: '';
+      position: absolute;
+      top: -2px; left: -2px;
+      width: 30px; height: 30px;
+      border-top: 2px solid var(--cpk-color-brand);
+      border-left: 2px solid var(--cpk-color-brand);
+      z-index: 10;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; right: -2px;
+      width: 30px; height: 30px;
+      border-bottom: 2px solid var(--cpk-color-brand);
+      border-right: 2px solid var(--cpk-color-brand);
+      z-index: 10;
+    }
+    
+    // Imagem base
+    img {
+      filter: grayscale(20%) contrast(1.1); // Dá um tom mais áspero cyberpunk
+    }
+  }
+
+  // Descrição do Produto
+  .product__single__description {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: var(--cpk-color-bg-100);
+    border-top: 1px solid var(--cpk-color-border);
+    color: var(--cpk-color-contrast-muted);
+    line-height: 1.8;
+  }
+}
+
+// Estrutura geral do header (emula cpl-navbar-container cpl-navbar-collapse-md cpl-navbar-align-center).
+// Logo + hamburguer ficam em headerMiddleLeft (esquerda), ícones em headerMiddleRight (direita, ml-auto).
+// headerMiddleCenter ficou vazio — não precisa de estilo especial.
+header.header .header__middle {
+  display: flex !important;
+  align-items: center !important;
+  // justify-content do core já está ok (espaço entre left e right via ml-auto)
+}
+
+// Left: logo + nav hamburguer lado a lado
+header.header .header__middle__left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1.5rem;
+}
+
+// Alinhamento do lado direito (busca, conta, carrinho) — emula cpl-navbar-nav-icons
+header.header .header__middle__right {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 0.75rem !important;
+}

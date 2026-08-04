@@ -404,8 +404,9 @@ html.cpk-cursor-active * {
 
 .cpk-logo img {
   display: block;
-  height: 28px;
+  height: 60px;
   width: auto;
+  margin-top: 10px;
   transition: opacity var(--cpk-transition-duration) var(--cpk-transition-easing);
 }
 
@@ -433,9 +434,96 @@ html.cpk-cursor-active * {
 // ---------------------------------------------------------------------
 
 // Header: fundo escuro + borda inferior sutil.
+// position: relative necessário pro dropdown mobile do cpk-hamburger-nav.
 header.header {
   background-color: var(--cpk-color-bg) !important;
   border-bottom: 1px solid var(--cpk-color-border);
+  position: relative;
+}
+
+// Menu sanduíche (cpl-navbar-collapse-md equivalente).
+// Botão visível só em mobile; nav sempre visível em desktop.
+.cpk-hamburger-menu {
+  display: contents; // não quebra o flex do headerMiddleLeft
+}
+
+.cpk-hamburger-btn {
+  display: none; // escondido em desktop
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--cpk-color-contrast-muted);
+  padding: 0.4em;
+  transition: color var(--cpk-transition-duration) var(--cpk-transition-easing);
+
+  &:hover {
+    color: var(--cpk-color-brand);
+    text-shadow: var(--cpk-glow-sm);
+  }
+}
+
+.cpk-hamburger-nav {
+  // Desktop: sempre visível, inline
+  display: flex;
+  align-items: center;
+}
+
+.cpk-hamburger-nav-list {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cpk-hamburger-nav-link {
+  font-family: var(--cpk-font-family);
+  font-size: 0.8125rem;
+  font-weight: var(--cpk-font-weight-heading);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cpk-color-contrast-muted);
+  text-decoration: none;
+  transition: color var(--cpk-transition-duration) var(--cpk-transition-easing),
+    text-shadow var(--cpk-transition-duration) var(--cpk-transition-easing);
+
+  &:hover {
+    color: var(--cpk-color-brand);
+    text-shadow: var(--cpk-glow-sm);
+  }
+}
+
+// Mobile: colapso
+@media (max-width: 767px) {
+  .cpk-hamburger-btn {
+    display: flex;
+  }
+
+  .cpk-hamburger-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--cpk-color-bg);
+    border-bottom: 1px solid var(--cpk-color-border);
+    padding: 1rem 1.5rem;
+    z-index: 100;
+
+    &.cpk-hamburger-nav--open {
+      display: flex;
+    }
+  }
+
+  .cpk-hamburger-nav-list {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
+  }
 }
 
 // Estilos dos ícones de busca, conta e carrinho no header.

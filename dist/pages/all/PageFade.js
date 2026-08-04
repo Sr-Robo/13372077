@@ -47,9 +47,19 @@ export default function PageFade() {
             }, FADE_DURATION_MS);
         };
         document.addEventListener('click', handleClick);
+        const handlePageShow = (event) => {
+            // Se voltamos de um BFCache (botão Voltar), a página não remonta.
+            // Precisamos limpar a classe `is-leaving` para não ficar preso na tela escura.
+            if (event.persisted) {
+                overlay.classList.remove('is-leaving');
+                overlay.classList.add('is-hidden');
+            }
+        };
+        window.addEventListener('pageshow', handlePageShow);
         return () => {
             cancelAnimationFrame(revealFrame);
             document.removeEventListener('click', handleClick);
+            window.removeEventListener('pageshow', handlePageShow);
         };
     }, []);
     return React.createElement("div", { ref: overlayRef, className: "cpk-fade", "aria-hidden": "true" });

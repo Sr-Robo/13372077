@@ -3,9 +3,9 @@ import CpkLogo from '../../components/Logo.js';
 
 export default function Logo({ setting }) {
   const storeName = setting?.storeName || 'Sr. Robô';
-  
+
   return (
-    <div className="logo flex justify-center items-center">
+    <div className="logo flex justify-start items-center">
       <a href="/" className="logo-icon" aria-label={`${storeName} – home`}>
         {/* Renderiza o Logo customizado cyberpunk (com transição cyber-robo e cyber-rob0 no hover) */}
         <CpkLogo alt={storeName} />
@@ -15,7 +15,7 @@ export default function Logo({ setting }) {
 }
 
 export const layout = {
-  areaId: 'headerMiddleCenter',
+  areaId: 'headerMiddleLeft',
   sortOrder: 10
 };
 
