@@ -3,7 +3,7 @@ import React from 'react';
 import { Items } from '@components/frontStore/checkout/checkout/summary/Items';
 import { CartSummary } from '@components/frontStore/checkout/checkout/summary/Cart';
 import Area from '@components/common/Area';
-import '@evershop/evershop/src/modules/checkout/pages/frontStore/checkout/Summary.scss';
+import '@evershop/evershop/modules/checkout/pages/frontStore/checkout/Summary.scss';
 
 export default function Summary({ cart, setting: { priceIncludingTax } }) {
   return (

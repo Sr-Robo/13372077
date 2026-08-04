@@ -8,8 +8,8 @@ import {
   useCheckoutStepsDispatch
 } from '@components/common/context/checkoutSteps';
 import { CheckoutProvider } from '@components/common/context/checkout';
-import '@evershop/evershop/src/modules/checkout/pages/frontStore/checkout/Checkout.scss';
-import { _ } from '@evershop/evershop/src/lib/locale/translate';
+import '@evershop/evershop/modules/checkout/pages/frontStore/checkout/Checkout.scss';
+import { _ } from '@evershop/evershop/lib/locale/translate/_';
 import './CheckoutOverride.scss';
 
 function Steps() {

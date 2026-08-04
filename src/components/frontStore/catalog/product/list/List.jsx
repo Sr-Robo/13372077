@@ -4,8 +4,8 @@ import { Name } from '@components/frontStore/catalog/product/list/item/Name';
 import { Thumbnail } from '@components/frontStore/catalog/product/list/item/Thumbnail';
 import { Price } from '@components/frontStore/catalog/product/list/item/Price';
 import Area from '@components/common/Area';
-import { get } from '@evershop/evershop/src/lib/util/get';
-import { _ } from '@evershop/evershop/src/lib/locale/translate';
+import { get } from '@evershop/evershop/lib/util/get';
+import { _ } from '@evershop/evershop/lib/locale/translate/_';
 import './List.scss';
 
 export default function ProductList({ products = [], countPerRow = 3 }) {

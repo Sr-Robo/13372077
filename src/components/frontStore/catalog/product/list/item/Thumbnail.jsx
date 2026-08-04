@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import ProductNoThumbnail from '@components/common/ProductNoThumbnail';
+import { ProductNoThumbnail } from '@components/common/ProductNoThumbnail';
 
 function Thumbnail({ url, imageUrl, alt }) {
   return (
