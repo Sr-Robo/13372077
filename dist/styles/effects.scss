@@ -434,95 +434,131 @@ html.cpk-cursor-active * {
 // ---------------------------------------------------------------------
 
 // Header: fundo escuro + borda inferior sutil.
-// position: relative necessário pro dropdown mobile do cpk-hamburger-nav.
 header.header {
   background-color: var(--cpk-color-bg) !important;
   border-bottom: 1px solid var(--cpk-color-border);
-  position: relative;
 }
 
-// Menu sanduíche (cpl-navbar-collapse-md equivalente).
-// Botão visível só em mobile; nav sempre visível em desktop.
-.cpk-hamburger-menu {
-  display: contents; // não quebra o flex do headerMiddleLeft
-}
-
-.cpk-hamburger-btn {
-  display: none; // escondido em desktop
+// Três pontos verticais (cpl-offcanvas-toggle da referência shop.html).
+.cpk-offcanvas-toggle {
+  display: flex;
   align-items: center;
   justify-content: center;
   background: transparent;
   border: none;
   cursor: pointer;
   color: var(--cpk-color-contrast-muted);
-  padding: 0.4em;
+  padding: 0.5em;
+  transition: color var(--cpk-transition-duration) var(--cpk-transition-easing);
+  flex-shrink: 0;
+
+  &:hover {
+    color: var(--cpk-color-brand);
+  }
+}
+
+// Overlay escuro por trás do painel
+.cpk-offcanvas-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 200;
+  cursor: pointer;
+}
+
+// Painel lateral (desliza da esquerda)
+.cpk-offcanvas-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 320px;
+  max-width: 90vw;
+  background-color: var(--cpk-color-bg-100);
+  border-right: 1px solid var(--cpk-color-border);
+  z-index: 210;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform 0.3s var(--cpk-transition-easing);
+  overflow-y: auto;
+
+  &.cpk-offcanvas-panel--open {
+    transform: translateX(0);
+  }
+}
+
+.cpk-offcanvas-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--cpk-color-border);
+  flex-shrink: 0;
+}
+
+.cpk-offcanvas-close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--cpk-color-contrast-muted);
+  padding: 0.25em;
+  display: flex;
+  align-items: center;
+  transition: color var(--cpk-transition-duration) var(--cpk-transition-easing);
+
+  &:hover {
+    color: var(--cpk-color-brand);
+  }
+}
+
+.cpk-offcanvas-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1;
+}
+
+.cpk-offcanvas-tagline {
+  color: var(--cpk-color-contrast-muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  border-left: 2px solid var(--cpk-color-brand);
+  padding-left: 1rem;
+  margin: 0;
+}
+
+.cpk-offcanvas-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  p {
+    color: var(--cpk-color-contrast-muted);
+    font-size: 0.875rem;
+    margin: 0;
+  }
+}
+
+.cpk-offcanvas-section-title {
+  font-family: var(--cpk-font-family);
+  font-size: 0.6875rem;
+  font-weight: var(--cpk-font-weight-heading);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cpk-color-brand);
+  margin: 0;
+}
+
+.cpk-offcanvas-link {
+  color: var(--cpk-color-contrast-muted);
+  text-decoration: none;
   transition: color var(--cpk-transition-duration) var(--cpk-transition-easing);
 
   &:hover {
     color: var(--cpk-color-brand);
     text-shadow: var(--cpk-glow-sm);
-  }
-}
-
-.cpk-hamburger-nav {
-  // Desktop: sempre visível, inline
-  display: flex;
-  align-items: center;
-}
-
-.cpk-hamburger-nav-list {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.cpk-hamburger-nav-link {
-  font-family: var(--cpk-font-family);
-  font-size: 0.8125rem;
-  font-weight: var(--cpk-font-weight-heading);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--cpk-color-contrast-muted);
-  text-decoration: none;
-  transition: color var(--cpk-transition-duration) var(--cpk-transition-easing),
-    text-shadow var(--cpk-transition-duration) var(--cpk-transition-easing);
-
-  &:hover {
-    color: var(--cpk-color-brand);
-    text-shadow: var(--cpk-glow-sm);
-  }
-}
-
-// Mobile: colapso
-@media (max-width: 767px) {
-  .cpk-hamburger-btn {
-    display: flex;
-  }
-
-  .cpk-hamburger-nav {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: var(--cpk-color-bg);
-    border-bottom: 1px solid var(--cpk-color-border);
-    padding: 1rem 1.5rem;
-    z-index: 100;
-
-    &.cpk-hamburger-nav--open {
-      display: flex;
-    }
-  }
-
-  .cpk-hamburger-nav-list {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-    width: 100%;
   }
 }
 
