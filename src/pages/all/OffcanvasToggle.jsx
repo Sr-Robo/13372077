@@ -77,7 +77,7 @@ export default function OffcanvasToggle({ setting }) {
 
 export const layout = {
   areaId: 'headerMiddleLeft',
-  sortOrder: 20
+  sortOrder: 5
 };
 
 export const query = `
