@@ -493,6 +493,7 @@ header.header {
 [data-slot="sheet-overlay"] {
   background: rgba(0, 0, 0, 0.6) !important;
   z-index: 200 !important;
+  will-change: opacity;
 }
 
 [data-slot="sheet-content"] {
