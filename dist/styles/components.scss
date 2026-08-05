@@ -550,6 +550,7 @@ select#shop-sort-by {
   background-color: var(--cpk-color-bg-200) !important;
   border: none !important;
   border-bottom: 4px solid var(--cpk-color-border) !important;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 4px), calc(100% - 2px) calc(100% - 2px), 102px calc(100% - 2px), 100px 100%, 4px 100%, 0 calc(100% - 4px)) !important;
   color: var(--cpk-color-contrast) !important;
   font-family: var(--cpk-font-family) !important;
   padding: 0.5em 2.5em 0.5em 1em !important;
