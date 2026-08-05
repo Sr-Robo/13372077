@@ -261,6 +261,131 @@
   }
 }
 
+// Estilo unificado para a caixa de busca (Search overlay e página de busca)
+.search__input__container {
+  background-color: rgba(5, 5, 5, 0.95) !important; // Preto com 95% opacidade
+  backdrop-filter: blur(10px) !important;
+
+  .close-icon {
+    color: var(--cpk-color-contrast-muted) !important;
+    transition: color var(--cpk-transition-duration) var(--cpk-transition-easing) !important;
+
+    &:hover {
+      color: var(--cpk-color-brand) !important;
+      background: transparent !important;
+    }
+  }
+
+  // Centralizador da caixa de input
+  .search__input {
+    // Inputs da busca
+    input[type="search"],
+    input[data-slot="input-group-control"] {
+      background-color: var(--cpk-color-bg-100) !important;
+      border: 1.5px solid var(--cpk-color-border) !important;
+      color: var(--cpk-color-contrast) !important;
+      border-radius: 0 !important;
+      font-family: var(--cpk-font-family) !important;
+      padding: 1rem 1.5rem !important;
+      font-size: 1.25rem !important;
+
+      &:focus {
+        outline: none !important;
+        border-color: var(--cpk-color-brand) !important;
+        box-shadow: var(--cpk-glow-sm) !important;
+      }
+    }
+
+    [data-slot="input-group"] {
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    [data-slot="input-group-addon"] {
+      color: var(--cpk-color-contrast-muted) !important;
+      padding-left: 1.25rem !important;
+
+      svg {
+        width: 1.5rem !important;
+        height: 1.5rem !important;
+      }
+    }
+
+    // Resultados rápidos do autocomplete de busca (se habilitado)
+    .search__results {
+      background-color: var(--cpk-color-bg-100) !important;
+      border: 1px solid var(--cpk-color-border) !important;
+      border-radius: 0 !important;
+      box-shadow: var(--cpk-glow-md) !important;
+
+      div {
+        border-bottom: 1px solid var(--cpk-color-border);
+        color: var(--cpk-color-contrast) !important;
+        font-family: var(--cpk-font-family) !important;
+        transition: background-color var(--cpk-transition-duration);
+
+        &:hover {
+          background-color: var(--cpk-color-bg-200) !important;
+        }
+
+        a {
+          color: var(--cpk-color-contrast) !important;
+          text-decoration: none;
+
+          &:hover {
+            color: var(--cpk-color-brand) !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Customizações para a página de busca principal (/search)
+.search__page__top {
+  // Ajuste do input de busca inline
+  form {
+    input[type="search"] {
+      background-color: var(--cpk-color-bg-100) !important;
+      border: 1.5px solid var(--cpk-color-border) !important;
+      color: var(--cpk-color-contrast) !important;
+      border-radius: 0 !important;
+      font-family: var(--cpk-font-family) !important;
+      padding-top: 1rem !important;
+      padding-bottom: 1rem !important;
+      font-size: 1.125rem !important;
+
+      &:focus {
+        outline: none !important;
+        border-color: var(--cpk-color-brand) !important;
+        box-shadow: var(--cpk-glow-sm) !important;
+      }
+    }
+
+    svg {
+      color: var(--cpk-color-contrast-muted) !important;
+    }
+  }
+
+  // Título "X results for..."
+  .search-name {
+    font-family: var(--cpk-font-family) !important;
+    font-weight: var(--cpk-font-weight-heading) !important;
+    color: var(--cpk-color-contrast) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    border-bottom: 1px solid var(--cpk-color-border);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+
+    span {
+      color: var(--cpk-color-brand) !important;
+      text-shadow: var(--cpk-glow-sm) !important;
+    }
+  }
+}
+
 // Override para a página de Produto (/product/:slug)
 .product__detail {
   font-family: var(--cpk-font-family);
@@ -402,6 +527,7 @@ header.header .header__middle {
 header.header .header__middle__left {
   display: flex !important;
   align-items: center !important;
+  margin: -2px 0px 0 -2px;
   gap: 1.5rem;
 }
 
@@ -412,3 +538,114 @@ header.header .header__middle__right {
   justify-content: flex-end !important;
   gap: 0.75rem !important;
 }
+
+// Customização da página de Loja (/shop) e caixas de seleção
+select#shop-sort-by {
+  --cpl-form-select-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3e%3cpath fill='none' d='M15 7.5L12 4.5L9 7.5M9 16.5L12 19.5L15 16.5' stroke='%23777777' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
+  --cpl-form-select-icon-hover: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3e%3cpath fill='none' d='M15 7.5L12 4.5L9 7.5M9 16.5L12 19.5L15 16.5' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
+
+  width: auto !important;
+  min-width: 160px;
+  border-radius: 0 !important;
+  background-color: var(--cpk-color-bg-200) !important;
+  border: none !important;
+  border-bottom: 4px solid var(--cpk-color-border) !important;
+  color: var(--cpk-color-contrast) !important;
+  font-family: var(--cpk-font-family) !important;
+  padding: 0.5em 2.5em 0.5em 1em !important;
+  height: 40px !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  background-image: var(--cpl-form-select-icon) !important;
+  background-repeat: no-repeat !important;
+  background-position: calc(100% - 12px) center !important;
+  background-size: 20px !important;
+  transition: border-bottom-color var(--cpk-transition-duration) var(--cpk-transition-easing) !important;
+
+  &:hover, &:focus {
+    outline: none !important;
+    background-image: var(--cpl-form-select-icon-hover) !important;
+    border-bottom-color: var(--cpk-color-brand) !important;
+  }
+}
+
+// Estilização do price range (price_slider_wrapper da referência adaptado pro HTML rangeslider do EverShop)
+.rangeslider {
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+
+  // Trilha de base (fundo do slider)
+  input[type='range']::-webkit-slider-runnable-track {
+    height: 3px !important;
+    background: var(--cpk-color-bg-300) !important;
+    border-radius: 0 !important;
+  }
+
+  // Thumb do slider (o handle)
+  input[type='range']::-webkit-slider-thumb {
+    height: 12px !important;
+    width: 12px !important;
+    margin-top: -5px !important;
+    background-color: var(--cpk-color-brand) !important;
+    border: 2px solid var(--cpk-color-bg) !important;
+    border-radius: 0 !important;
+    box-shadow: var(--cpk-glow-sm) !important;
+    transition: background-color 0.15s !important;
+    cursor: pointer !important;
+
+    &:hover {
+      background-color: var(--cpk-color-contrast) !important;
+      box-shadow: var(--cpk-glow-md) !important;
+    }
+  }
+
+  // Ajuste do slider do Firefox
+  input[type='range']::-moz-range-track {
+    height: 3px !important;
+    background: var(--cpk-color-bg-300) !important;
+  }
+  input[type='range']::-moz-range-thumb {
+    height: 12px !important;
+    width: 12px !important;
+    background-color: var(--cpk-color-brand) !important;
+    border: 2px solid var(--cpk-color-bg) !important;
+    border-radius: 0 !important;
+    box-shadow: var(--cpk-glow-sm) !important;
+    cursor: pointer !important;
+  }
+}
+
+// Sidebar: Títulos de seção de filtros da direita (emula .widgettitle com ::after)
+.cpk-shop-filter-heading {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  font-family: var(--cpk-font-family) !important;
+  font-size: 1.1em !important;
+  letter-spacing: 0.1em !important;
+  color: var(--cpk-color-contrast) !important;
+  text-transform: uppercase !important;
+  margin-bottom: 20px !important;
+  position: relative !important;
+  padding-bottom: 0 !important;
+
+  // Força o span interno (com classe font-bold do tailwind) a ficar sem negrito/com peso 600
+  span, strong {
+    font-weight: 600 !important;
+  }
+
+  // A linha lateral do widgettitle
+  &::after {
+    content: "" !important;
+    position: static !important;
+    flex-basis: 0 !important;
+    flex-grow: 1 !important;
+    max-width: 100% !important;
+    width: auto !important;
+    height: 0 !important;
+    margin-left: 20px !important;
+    border-top: 2px solid rgba(255, 255, 255, 0.2) !important;
+    background-color: transparent !important;
+  }
+}
+

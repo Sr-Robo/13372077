@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react';
 // o mouse. Posição é escrita direto via style.setProperty em vez de state
 // do React, pra não re-renderizar a cada mousemove. Desativado em telas
 // touch (sem mouse real) — ver media query (hover: none) em effects.scss.
-const HOVER_SELECTOR = 'input, textarea, select, .cpk-cursor-hover';
+const HOVER_SELECTOR = 'input, textarea, .cpk-cursor-hover';
 
 export default function Cursor() {
   const dotRef = useRef<HTMLDivElement>(null);

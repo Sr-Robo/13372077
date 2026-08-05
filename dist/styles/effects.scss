@@ -234,7 +234,7 @@
 // ---------------------------------------------------------------------
 html.cpk-cursor-active,
 html.cpk-cursor-active * {
-  cursor: none !important;
+  cursor: auto !important;
 }
 
 .cpk-cursor {
@@ -435,8 +435,8 @@ html.cpk-cursor-active * {
 
 // Header: fundo escuro + borda inferior sutil.
 header.header {
-  background-color: var(--cpk-color-bg) !important;
-  border-bottom: 1px solid var(--cpk-color-border);
+//  background-color: var(--cpk-color-bg) !important;
+//  border-bottom: 1px solid var(--cpk-color-border);
 }
 
 // Três pontos verticais (cpl-offcanvas-toggle da referência shop.html).
@@ -485,6 +485,101 @@ header.header {
 
   &.cpk-offcanvas-panel--open {
     transform: translateX(0);
+  }
+}
+
+// Estilo unificado para o minicart (Sheet do Evershop) igual ao offcanvas.
+// O minicart do evershop usa [data-slot="sheet-overlay"] e [data-slot="sheet-content"].
+[data-slot="sheet-overlay"] {
+  background: rgba(0, 0, 0, 0.6) !important;
+  z-index: 200 !important;
+  will-change: opacity;
+}
+
+[data-slot="sheet-content"] {
+  background-color: var(--cpk-color-bg-100) !important;
+  border-left: 1px solid var(--cpk-color-border) !important;
+  border-right: none !important;
+  z-index: 210 !important;
+  color: var(--cpk-color-contrast) !important;
+  font-family: var(--cpk-font-family) !important;
+
+  // Forçar conteúdo a preencher o container com as bordas e estilos corretos
+  .minicart__items__container {
+    height: calc(100vh - 120px) !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  // Header do carrinho
+  [data-slot="sheet-header"] {
+    border-bottom: 1px solid var(--cpk-color-border) !important;
+    padding: 1.25rem 1.5rem !important;
+
+    [data-slot="sheet-title"] {
+      font-family: var(--cpk-font-family) !important;
+      font-weight: var(--cpk-font-weight-heading) !important;
+      color: var(--cpk-color-contrast) !important;
+      text-transform: uppercase !important;
+      font-size: 1.25rem !important;
+      letter-spacing: 0.05em !important;
+    }
+  }
+
+  // Sumário e botões
+  .minicart__summary {
+    border-top: 1px solid var(--cpk-color-border) !important;
+    padding-top: 1rem !important;
+
+    span {
+      color: var(--cpk-color-contrast) !important;
+      font-family: var(--cpk-font-family) !important;
+    }
+  }
+
+  // Botões do minicart (View Cart e Checkout)
+  .minicart__viewcart__button,
+  .minicart__checkout__button {
+    font-family: var(--cpk-font-family) !important;
+    text-transform: uppercase !important;
+    font-weight: var(--cpk-font-weight-heading) !important;
+    letter-spacing: 0.05em !important;
+    border-radius: 0 !important;
+    margin-top: 0.5rem !important;
+    height: 48px !important;
+  }
+
+  .minicart__viewcart__button {
+    background-color: transparent !important;
+    color: var(--cpk-color-brand) !important;
+    border: 1.5px solid var(--cpk-color-brand) !important;
+
+    &:hover {
+      background: rgba(189,0,255,0.1) !important;
+      box-shadow: var(--cpk-glow-md) !important;
+    }
+  }
+
+  .minicart__checkout__button {
+    background-color: var(--cpk-color-brand) !important;
+    color: var(--cpk-color-bg) !important;
+    border: none !important;
+
+    &:hover {
+      box-shadow: var(--cpk-glow-md) !important;
+    }
+  }
+
+  // Ícone de fechar do sheet-close
+  [data-slot="sheet-close"] {
+    color: var(--cpk-color-contrast-muted) !important;
+    transition: color var(--cpk-transition-duration) var(--cpk-transition-easing) !important;
+
+    &:hover {
+      color: var(--cpk-color-brand) !important;
+      background: transparent !important;
+    }
   }
 }
 
