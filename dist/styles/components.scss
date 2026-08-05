@@ -649,3 +649,174 @@ select#shop-sort-by {
   }
 }
 
+.category-filter, .price-filter {
+  border-bottom: none !important;
+}
+
+// Alinhamento clássico do Price Filter imitando o WooCommerce/CyberPulse no layout do EverShop
+.price-filter {
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  padding-bottom: 50px !important; // Abre espaço inferior para o botão e preços alinhados
+}
+
+.rangeslider {
+  margin-bottom: 25px !important;
+
+  // Transforma os tooltips flutuantes nos textos fixos de preço (from e to)
+  .tooltip.min, .tooltip.max {
+    position: absolute !important;
+    top: auto !important;
+    bottom: -45px !important; // Posiciona abaixo do slider
+    width: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    font-size: 0.8751em !important;
+    font-family: var(--cpk-font-family) !important;
+    color: var(--cpk-color-contrast) !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    z-index: 5 !important;
+
+    .push {
+      display: none !important; // Desativa o deslocador dinâmico original do EverShop
+    }
+
+    output {
+      font-family: var(--cpk-font-family) !important;
+      color: var(--cpk-color-contrast) !important;
+      font-weight: bold !important;
+    }
+  }
+
+  // Preço mínimo ("Price: R$XX") posicionado à DIREITA
+  .tooltip.min {
+    right: 75px !important;
+    left: auto !important;
+
+    &::before {
+      content: "Price: " !important;
+      color: var(--cpk-color-contrast-muted, #9a9a9a) !important;
+      margin-right: 4px !important;
+      text-transform: uppercase !important;
+      font-size: 0.9em !important;
+      letter-spacing: 0.05em !important;
+    }
+  }
+
+  // Preço máximo ("— R$XX") posicionado à extrema DIREITA
+  .tooltip.max {
+    right: 10px !important;
+    left: auto !important;
+
+    &::before {
+      content: "— " !important;
+      color: var(--cpk-color-contrast, #f5f5f5) !important;
+      margin-right: 4px !important;
+    }
+  }
+}
+
+// Oculta centavos do output do PriceFilter cortando os dois últimos dígitos decimais e a vírgula/ponto
+.price-filter output {
+  font-size: 0.95em !important;
+  display: inline-block !important;
+  max-width: 4.5ch !important; // Encurtado para 4.5ch para garantir corte dos centavos de forma mais consistente
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+  vertical-align: bottom !important;
+}
+
+// Limita a largura máxima global de conteúdo em 1860px centralizado
+.page-width {
+  max-width: 1860px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+// Customização de Grid da Categoria para Desktop (920px principal, 320px sidebar + gap personalizável centralizados na tela)
+@media (min-width: 768px) {
+  // Ajuste do container grid principal na página de categorias
+  .page-width.grid.grid-cols-1.md\:grid-cols-4 {
+    display: flex !important;
+    flex-direction: row-reverse !important; // Sidebar na direita, produtos na esquerda
+    justify-content: center !important; // Centraliza as duas colunas no meio dos 1860px
+    gap: 80px !important; // Modifique este valor para alterar o espaçamento entre a sidebar e os produtos
+    width: 100% !important;
+    max-width: 1860px !important; // Conteúdo centralizado dentro dos 1860px
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  // md:col-span-3 (Principal/Produtos) -> 920px de largura
+  .md\:col-span-3 {
+    flex: 0 0 920px !important;
+    width: 920px !important;
+    max-width: 920px !important;
+    margin: 0 !important;
+  }
+
+  // md:col-span-1 (Sidebar/Filtros) -> 320px de largura
+  .md\:col-span-1 {
+    flex: 0 0 320px !important;
+    width: 320px !important;
+    max-width: 320px !important;
+    margin: 0 !important;
+  }
+}
+
+// Reposicionamento do Contador de Produtos (Inversão com a Ordenação no topo)
+.md\:col-span-3 {
+  display: flex !important;
+  flex-direction: column !important;
+
+  // Inverte a ordem visual do product-count do final para o topo
+  .product-count.italic.block {
+    order: -1 !important;
+    margin-top: 0 !important;
+    margin-bottom: 20px !important;
+    font-style: normal !important;
+    font-size: 0.9em !important;
+    color: var(--cpk-color-contrast-muted) !important;
+  }
+
+  // Ordenação (Sorting) no topo
+  .product-sorting {
+    order: -2 !important;
+    margin-bottom: 10px !important;
+  }
+}
+
+// Junta a Ordenação (Sort By) e o Contador na mesma linha (Estilo WooCommerce Invertido)
+@media (min-width: 640px) {
+  .md\:col-span-3 {
+    position: relative !important;
+
+    // Alinha a ordenação (Sorting) à esquerda
+    .product-sorting {
+      display: flex !important;
+      justify-content: flex-start !important;
+      width: 100% !important;
+
+      .product-sorting-inner {
+        justify-content: flex-start !important;
+      }
+    }
+
+    // Alinha o contador de resultados ("Showing X-Y of Z results") à direita
+    .product-count.italic.block {
+      position: absolute !important;
+      top: 8px !important;
+      right: 0 !important;
+      left: auto !important;
+      margin: 0 !important;
+    }
+  }
+}
+
