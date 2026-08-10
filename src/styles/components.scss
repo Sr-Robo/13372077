@@ -570,29 +570,90 @@ select#shop-sort-by {
   }
 }
 
-// Estilização do price range (price_slider_wrapper da referência adaptado pro HTML rangeslider do EverShop)
+// Estilização do price range (price_slider/ui-slider da referência CyberPulse
+// adaptado pro HTML rangeslider do EverShop — dois <input type=range>
+// sobrepostos, sem o componente jQuery UI real). Réplica visual de:
+//   .price_slider.ui-slider.ui-corner-all.ui-slider-horizontal.ui-widget.ui-widget-content
+//   .ui-slider-range.ui-corner-all.ui-widget-header (faixa preenchida)
+//   .ui-slider-handle.ui-corner-all.ui-state-default (os 2 manípulos)
+// A faixa preenchida (.ui-slider-range) é simulada com linear-gradient
+// usando --min-percent/--max-percent injetados inline pelo PriceFilter.jsx.
 .rangeslider {
+  --min-percent: 0%;
+  --max-percent: 100%;
   padding-top: 15px !important;
   padding-bottom: 15px !important;
+  position: relative !important;
+  height: 30px !important; // os inputs saem do fluxo (position: absolute) — evita colapso
 
-  // Trilha de base (fundo do slider)
+  // Trilha de base — equivalente a .ui-widget-content (fundo cheio, 3px).
+  // Só o input "max" (embaixo na pilha, ver z-index) desenha a trilha; o
+  // "min" fica transparente pra não tapar o gradient do "max" por cima dele.
   input[type='range']::-webkit-slider-runnable-track {
     height: 3px !important;
-    background: var(--cpk-color-bg-300) !important;
+    background: transparent !important;
+    border-radius: 0 !important; // ui-corner-all da referência usa --cpl-border-radius: 0
+  }
+  input[type='range']::-moz-range-track {
+    height: 3px !important;
+    background: transparent !important;
     border-radius: 0 !important;
   }
 
-  // Thumb do slider (o handle)
+  // Faixa preenchida entre os dois handles (equivalente a .ui-slider-range/
+  // .ui-widget-header) — pintada no input "max", que fica embaixo na pilha
+  // (ver z-index abaixo) e cobre a trilha inteira.
+  input.max::-webkit-slider-runnable-track {
+    background: linear-gradient(
+      to right,
+      var(--cpk-color-bg-300) var(--min-percent),
+      var(--cpk-color-brand) var(--min-percent),
+      var(--cpk-color-brand) var(--max-percent),
+      var(--cpk-color-bg-300) var(--max-percent)
+    ) !important;
+  }
+  input.max::-moz-range-track {
+    background: linear-gradient(
+      to right,
+      var(--cpk-color-bg-300) var(--min-percent),
+      var(--cpk-color-brand) var(--min-percent),
+      var(--cpk-color-brand) var(--max-percent),
+      var(--cpk-color-bg-300) var(--max-percent)
+    ) !important;
+  }
+
+  // Thumb do slider — equivalente a .ui-slider-handle.ui-state-default
+  // (retângulo estreito 7px, cor de marca, borda na cor de fundo)
   input[type='range']::-webkit-slider-thumb {
-    height: 12px !important;
-    width: 12px !important;
-    margin-top: -5px !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    height: 16px !important;
+    width: 7px !important;
+    margin-top: -6.5px !important;
+    background-color: var(--cpk-color-brand) !important;
+    border: 2px solid var(--cpk-color-bg) !important;
+    border-radius: 0 !important; // ui-corner-all
+    box-shadow: var(--cpk-glow-sm) !important;
+    transition: background-color 0.15s !important;
+    cursor: ew-resize !important;
+    position: relative !important;
+    z-index: 3 !important;
+
+    // Equivalente a :hover / .ui-state-hover / .ui-state-focus da referência
+    &:hover {
+      background-color: var(--cpk-color-contrast) !important;
+      box-shadow: var(--cpk-glow-md) !important;
+    }
+  }
+  input[type='range']::-moz-range-thumb {
+    height: 16px !important;
+    width: 7px !important;
     background-color: var(--cpk-color-brand) !important;
     border: 2px solid var(--cpk-color-bg) !important;
     border-radius: 0 !important;
     box-shadow: var(--cpk-glow-sm) !important;
     transition: background-color 0.15s !important;
-    cursor: pointer !important;
+    cursor: ew-resize !important;
 
     &:hover {
       background-color: var(--cpk-color-contrast) !important;
@@ -600,19 +661,31 @@ select#shop-sort-by {
     }
   }
 
-  // Ajuste do slider do Firefox
-  input[type='range']::-moz-range-track {
-    height: 3px !important;
-    background: var(--cpk-color-bg-300) !important;
+  // Os dois inputs ficam sobrepostos na mesma linha; só o thumb recebe
+  // interação, pra permitir arrastar cada handle independentemente mesmo
+  // com os dois <input> ocupando a mesma área.
+  input[type='range'] {
+    position: absolute !important;
+    top: 15px !important;
+    left: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    background: transparent !important;
+    pointer-events: none !important;
+
+    &::-webkit-slider-thumb {
+      pointer-events: auto !important;
+    }
+    &::-moz-range-thumb {
+      pointer-events: auto !important;
+    }
   }
-  input[type='range']::-moz-range-thumb {
-    height: 12px !important;
-    width: 12px !important;
-    background-color: var(--cpk-color-brand) !important;
-    border: 2px solid var(--cpk-color-bg) !important;
-    border-radius: 0 !important;
-    box-shadow: var(--cpk-glow-sm) !important;
-    cursor: pointer !important;
+
+  input.min {
+    z-index: 2 !important;
+  }
+  input.max {
+    z-index: 1 !important;
   }
 }
 
