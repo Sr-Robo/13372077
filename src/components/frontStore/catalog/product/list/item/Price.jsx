@@ -2,9 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 function Price({ regular, special }) {
+  const isSpecial = special && special.value < regular.value;
   return (
     <span className="price">
-      {special ? (
+      {isSpecial ? (
         <>
           <del aria-hidden="true">
             <span className="amount">{regular.text}</span>
