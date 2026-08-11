@@ -10,11 +10,17 @@
   &.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   &.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
-  @media (max-width: 1024px) {
+  // Breakpoints da referência CyberPulse: 328 / 568 / 778 / 1078 / 1388px
+  // xl (≥1388px): default acima
+  // lg (1078–1387px): 3+ cols colapsam pra 2
+  @media (max-width: 1387.98px) {
     &.cols-3, &.cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
-
-  @media (max-width: 640px) {
+  // md (778–1077px): sidebar ainda lateral, área de produto cresce — mantém 2 cols
+  // (sem mudança de cols aqui; o colapso de sidebar é no ShopView — frente Back)
+  // sm (568–777px): 2 cols em tela estreita sem sidebar
+  // xs (≤567px): 1 coluna
+  @media (max-width: 567.98px) {
     &.cols-2, &.cols-3, &.cols-4 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
   }
 }
