@@ -404,7 +404,7 @@ html.cpk-cursor-active * {
 
 .cpk-logo img {
   display: block;
-  height: 60px;
+  height: 42px;
   width: auto;
   margin-top: 10px;
   transition: opacity var(--cpk-transition-duration) var(--cpk-transition-easing);
@@ -441,6 +441,7 @@ header.header {
 
 // Três pontos verticais (cpl-offcanvas-toggle da referência shop.html).
 .cpk-offcanvas-toggle {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -451,6 +452,18 @@ header.header {
   padding: 0.5em;
   transition: color var(--cpk-transition-duration) var(--cpk-transition-easing);
   flex-shrink: 0;
+
+  // Área de clique estendida via pseudo-elemento (mesma técnica da referência
+  // .cpl-offcanvas-toggle::before): não altera o tamanho visual do ícone nem
+  // ocupa espaço no fluxo do header, só amplia o hit-area.
+  &::before {
+    position: absolute;
+    top: -10px;
+    right: -16px;
+    bottom: -10px;
+    left: -16px;
+    content: '';
+  }
 
   &:hover {
     color: var(--cpk-color-brand);

@@ -695,13 +695,15 @@ select#shop-sort-by {
   align-items: center !important;
   justify-content: flex-start !important;
   font-family: var(--cpk-font-family) !important;
-  font-size: 1.1em !important;
-  letter-spacing: 0.1em !important;
+  font-size: 1.25em !important;
+  font-weight: 600;
+  letter-spacing: 0 !important;
   color: var(--cpk-color-contrast) !important;
-  text-transform: uppercase !important;
-  margin-bottom: 20px !important;
+//  text-transform: uppercase !important;
+  margin-bottom: 26px !important;
   position: relative !important;
   padding-bottom: 0 !important;
+  border-bottom: none !important;
 
   // Força o span interno (com classe font-bold do tailwind) a ficar sem negrito/com peso 600
   span, strong {
@@ -812,36 +814,70 @@ select#shop-sort-by {
   margin-right: auto !important;
 }
 
-// Customização de Grid da Categoria para Desktop (920px principal, 320px sidebar + gap personalizável centralizados na tela)
+// Layout do grid principal (sidebar + produtos) espelhando os breakpoints da referência CyberPulse:
+// Referência usa --cpl-container-xl__width: 1320px (>= 1388px) com sidebar 320px + gap 80px
+//                  --cpl-container-lg__width: 1010px (1078–1387px) com sidebar 260px + gap 60px
+//                  --cpl-container-md__width: 710px  (778–1077px)  sidebar colapsa (100% + gap 60px)
+// Breakpoint do Tailwind md: (768px) → aproximação do 778px da referência.
+
+// Propriedades comuns a todos os breakpoints com sidebar visível
 @media (min-width: 768px) {
-  // Ajuste do container grid principal na página de categorias
   .page-width.grid.grid-cols-1.md\:grid-cols-4 {
     display: flex !important;
-    flex-direction: row-reverse !important; // Sidebar na direita, produtos na esquerda
-    justify-content: center !important; // Centraliza as duas colunas no meio dos 1860px
-    gap: 80px !important; // Modifique este valor para alterar o espaçamento entre a sidebar e os produtos
+    flex-direction: row-reverse !important; // Sidebar à direita, produtos à esquerda
+    justify-content: center !important;
     width: 100% !important;
-    max-width: 1860px !important; // Conteúdo centralizado dentro dos 1860px
     margin-left: auto !important;
     margin-right: auto !important;
     padding-left: 20px !important;
     padding-right: 20px !important;
   }
 
-  // md:col-span-3 (Principal/Produtos) -> 920px de largura
+  .md\:col-span-3,
+  .md\:col-span-1 {
+    margin: 0 !important;
+  }
+}
+
+// lg (1078–1387px): container 1010px, sidebar 260px, gap 60px → produtos 690px
+// Imagens: (690 - 40) / 2 = 325px por card (igual à referência)
+@media (min-width: 768px) and (max-width: 1387.98px) {
+  .page-width.grid.grid-cols-1.md\:grid-cols-4 {
+    gap: 60px !important;
+    max-width: 1010px !important;
+  }
+
+  .md\:col-span-3 {
+    flex: 0 0 690px !important;
+    width: 690px !important;
+    max-width: 690px !important;
+  }
+
+  .md\:col-span-1 {
+    flex: 0 0 260px !important;
+    width: 260px !important;
+    max-width: 260px !important;
+  }
+}
+
+// xl (>= 1388px): container 1320px, sidebar 320px, gap 80px → produtos 920px
+// Imagens: (920 - 40) / 2 = 440px por card
+@media (min-width: 1388px) {
+  .page-width.grid.grid-cols-1.md\:grid-cols-4 {
+    gap: 80px !important;
+    max-width: 1320px !important;
+  }
+
   .md\:col-span-3 {
     flex: 0 0 920px !important;
     width: 920px !important;
     max-width: 920px !important;
-    margin: 0 !important;
   }
 
-  // md:col-span-1 (Sidebar/Filtros) -> 320px de largura
   .md\:col-span-1 {
     flex: 0 0 320px !important;
     width: 320px !important;
     max-width: 320px !important;
-    margin: 0 !important;
   }
 }
 
@@ -868,6 +904,12 @@ select#shop-sort-by {
 }
 
 // Junta a Ordenação (Sort By) e o Contador na mesma linha (Estilo WooCommerce Invertido)
+// Referência: result-count à esquerda, select à direita.
+// O JSX emite select primeiro, count depois — row-reverse corrige sem tocar no Back.
+.cpk-shop-toolbar {
+  flex-direction: row-reverse;
+}
+
 @media (min-width: 640px) {
   .md\:col-span-3 {
     position: relative !important;

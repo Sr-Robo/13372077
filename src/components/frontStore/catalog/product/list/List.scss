@@ -1,7 +1,9 @@
 /* Base grid for products (Cleaned from woocommerce defaults) */
 .products-grid {
   display: grid;
-  gap: 40px;
+  // Referência CyberPulse: grid-gap: 60px 40px (row column)
+  column-gap: 40px;
+  row-gap: 60px;
   list-style: none;
   padding: 0;
   margin: 0;

@@ -570,29 +570,90 @@ select#shop-sort-by {
   }
 }
 
-// Estilização do price range (price_slider_wrapper da referência adaptado pro HTML rangeslider do EverShop)
+// Estilização do price range (price_slider/ui-slider da referência CyberPulse
+// adaptado pro HTML rangeslider do EverShop — dois <input type=range>
+// sobrepostos, sem o componente jQuery UI real). Réplica visual de:
+//   .price_slider.ui-slider.ui-corner-all.ui-slider-horizontal.ui-widget.ui-widget-content
+//   .ui-slider-range.ui-corner-all.ui-widget-header (faixa preenchida)
+//   .ui-slider-handle.ui-corner-all.ui-state-default (os 2 manípulos)
+// A faixa preenchida (.ui-slider-range) é simulada com linear-gradient
+// usando --min-percent/--max-percent injetados inline pelo PriceFilter.jsx.
 .rangeslider {
+  --min-percent: 0%;
+  --max-percent: 100%;
   padding-top: 15px !important;
   padding-bottom: 15px !important;
+  position: relative !important;
+  height: 30px !important; // os inputs saem do fluxo (position: absolute) — evita colapso
 
-  // Trilha de base (fundo do slider)
+  // Trilha de base — equivalente a .ui-widget-content (fundo cheio, 3px).
+  // Só o input "max" (embaixo na pilha, ver z-index) desenha a trilha; o
+  // "min" fica transparente pra não tapar o gradient do "max" por cima dele.
   input[type='range']::-webkit-slider-runnable-track {
     height: 3px !important;
-    background: var(--cpk-color-bg-300) !important;
+    background: transparent !important;
+    border-radius: 0 !important; // ui-corner-all da referência usa --cpl-border-radius: 0
+  }
+  input[type='range']::-moz-range-track {
+    height: 3px !important;
+    background: transparent !important;
     border-radius: 0 !important;
   }
 
-  // Thumb do slider (o handle)
+  // Faixa preenchida entre os dois handles (equivalente a .ui-slider-range/
+  // .ui-widget-header) — pintada no input "max", que fica embaixo na pilha
+  // (ver z-index abaixo) e cobre a trilha inteira.
+  input.max::-webkit-slider-runnable-track {
+    background: linear-gradient(
+      to right,
+      var(--cpk-color-bg-300) var(--min-percent),
+      var(--cpk-color-brand) var(--min-percent),
+      var(--cpk-color-brand) var(--max-percent),
+      var(--cpk-color-bg-300) var(--max-percent)
+    ) !important;
+  }
+  input.max::-moz-range-track {
+    background: linear-gradient(
+      to right,
+      var(--cpk-color-bg-300) var(--min-percent),
+      var(--cpk-color-brand) var(--min-percent),
+      var(--cpk-color-brand) var(--max-percent),
+      var(--cpk-color-bg-300) var(--max-percent)
+    ) !important;
+  }
+
+  // Thumb do slider — equivalente a .ui-slider-handle.ui-state-default
+  // (retângulo estreito 7px, cor de marca, borda na cor de fundo)
   input[type='range']::-webkit-slider-thumb {
-    height: 12px !important;
-    width: 12px !important;
-    margin-top: -5px !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    height: 16px !important;
+    width: 7px !important;
+    margin-top: -6.5px !important;
+    background-color: var(--cpk-color-brand) !important;
+    border: 2px solid var(--cpk-color-bg) !important;
+    border-radius: 0 !important; // ui-corner-all
+    box-shadow: var(--cpk-glow-sm) !important;
+    transition: background-color 0.15s !important;
+    cursor: ew-resize !important;
+    position: relative !important;
+    z-index: 3 !important;
+
+    // Equivalente a :hover / .ui-state-hover / .ui-state-focus da referência
+    &:hover {
+      background-color: var(--cpk-color-contrast) !important;
+      box-shadow: var(--cpk-glow-md) !important;
+    }
+  }
+  input[type='range']::-moz-range-thumb {
+    height: 16px !important;
+    width: 7px !important;
     background-color: var(--cpk-color-brand) !important;
     border: 2px solid var(--cpk-color-bg) !important;
     border-radius: 0 !important;
     box-shadow: var(--cpk-glow-sm) !important;
     transition: background-color 0.15s !important;
-    cursor: pointer !important;
+    cursor: ew-resize !important;
 
     &:hover {
       background-color: var(--cpk-color-contrast) !important;
@@ -600,19 +661,31 @@ select#shop-sort-by {
     }
   }
 
-  // Ajuste do slider do Firefox
-  input[type='range']::-moz-range-track {
-    height: 3px !important;
-    background: var(--cpk-color-bg-300) !important;
+  // Os dois inputs ficam sobrepostos na mesma linha; só o thumb recebe
+  // interação, pra permitir arrastar cada handle independentemente mesmo
+  // com os dois <input> ocupando a mesma área.
+  input[type='range'] {
+    position: absolute !important;
+    top: 15px !important;
+    left: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    background: transparent !important;
+    pointer-events: none !important;
+
+    &::-webkit-slider-thumb {
+      pointer-events: auto !important;
+    }
+    &::-moz-range-thumb {
+      pointer-events: auto !important;
+    }
   }
-  input[type='range']::-moz-range-thumb {
-    height: 12px !important;
-    width: 12px !important;
-    background-color: var(--cpk-color-brand) !important;
-    border: 2px solid var(--cpk-color-bg) !important;
-    border-radius: 0 !important;
-    box-shadow: var(--cpk-glow-sm) !important;
-    cursor: pointer !important;
+
+  input.min {
+    z-index: 2 !important;
+  }
+  input.max {
+    z-index: 1 !important;
   }
 }
 
@@ -622,13 +695,15 @@ select#shop-sort-by {
   align-items: center !important;
   justify-content: flex-start !important;
   font-family: var(--cpk-font-family) !important;
-  font-size: 1.1em !important;
-  letter-spacing: 0.1em !important;
+  font-size: 1.25em !important;
+  font-weight: 600;
+  letter-spacing: 0 !important;
   color: var(--cpk-color-contrast) !important;
-  text-transform: uppercase !important;
-  margin-bottom: 20px !important;
+//  text-transform: uppercase !important;
+  margin-bottom: 26px !important;
   position: relative !important;
   padding-bottom: 0 !important;
+  border-bottom: none !important;
 
   // Força o span interno (com classe font-bold do tailwind) a ficar sem negrito/com peso 600
   span, strong {
@@ -739,36 +814,70 @@ select#shop-sort-by {
   margin-right: auto !important;
 }
 
-// Customização de Grid da Categoria para Desktop (920px principal, 320px sidebar + gap personalizável centralizados na tela)
+// Layout do grid principal (sidebar + produtos) espelhando os breakpoints da referência CyberPulse:
+// Referência usa --cpl-container-xl__width: 1320px (>= 1388px) com sidebar 320px + gap 80px
+//                  --cpl-container-lg__width: 1010px (1078–1387px) com sidebar 260px + gap 60px
+//                  --cpl-container-md__width: 710px  (778–1077px)  sidebar colapsa (100% + gap 60px)
+// Breakpoint do Tailwind md: (768px) → aproximação do 778px da referência.
+
+// Propriedades comuns a todos os breakpoints com sidebar visível
 @media (min-width: 768px) {
-  // Ajuste do container grid principal na página de categorias
   .page-width.grid.grid-cols-1.md\:grid-cols-4 {
     display: flex !important;
-    flex-direction: row-reverse !important; // Sidebar na direita, produtos na esquerda
-    justify-content: center !important; // Centraliza as duas colunas no meio dos 1860px
-    gap: 80px !important; // Modifique este valor para alterar o espaçamento entre a sidebar e os produtos
+    flex-direction: row-reverse !important; // Sidebar à direita, produtos à esquerda
+    justify-content: center !important;
     width: 100% !important;
-    max-width: 1860px !important; // Conteúdo centralizado dentro dos 1860px
     margin-left: auto !important;
     margin-right: auto !important;
     padding-left: 20px !important;
     padding-right: 20px !important;
   }
 
-  // md:col-span-3 (Principal/Produtos) -> 920px de largura
+  .md\:col-span-3,
+  .md\:col-span-1 {
+    margin: 0 !important;
+  }
+}
+
+// lg (1078–1387px): container 1010px, sidebar 260px, gap 60px → produtos 690px
+// Imagens: (690 - 40) / 2 = 325px por card (igual à referência)
+@media (min-width: 768px) and (max-width: 1387.98px) {
+  .page-width.grid.grid-cols-1.md\:grid-cols-4 {
+    gap: 60px !important;
+    max-width: 1010px !important;
+  }
+
+  .md\:col-span-3 {
+    flex: 0 0 690px !important;
+    width: 690px !important;
+    max-width: 690px !important;
+  }
+
+  .md\:col-span-1 {
+    flex: 0 0 260px !important;
+    width: 260px !important;
+    max-width: 260px !important;
+  }
+}
+
+// xl (>= 1388px): container 1320px, sidebar 320px, gap 80px → produtos 920px
+// Imagens: (920 - 40) / 2 = 440px por card
+@media (min-width: 1388px) {
+  .page-width.grid.grid-cols-1.md\:grid-cols-4 {
+    gap: 80px !important;
+    max-width: 1320px !important;
+  }
+
   .md\:col-span-3 {
     flex: 0 0 920px !important;
     width: 920px !important;
     max-width: 920px !important;
-    margin: 0 !important;
   }
 
-  // md:col-span-1 (Sidebar/Filtros) -> 320px de largura
   .md\:col-span-1 {
     flex: 0 0 320px !important;
     width: 320px !important;
     max-width: 320px !important;
-    margin: 0 !important;
   }
 }
 
@@ -795,6 +904,12 @@ select#shop-sort-by {
 }
 
 // Junta a Ordenação (Sort By) e o Contador na mesma linha (Estilo WooCommerce Invertido)
+// Referência: result-count à esquerda, select à direita.
+// O JSX emite select primeiro, count depois — row-reverse corrige sem tocar no Back.
+.cpk-shop-toolbar {
+  flex-direction: row-reverse;
+}
+
 @media (min-width: 640px) {
   .md\:col-span-3 {
     position: relative !important;
