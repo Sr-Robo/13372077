@@ -2,7 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 function Price({ regular, special }) {
-  const isSpecial = special && special.value < regular.value;
+  // O core do Evershop retorna special = regular quando não há preço especial real,
+  // ou pode retornar tipos flutuantes inconsistentes. O 'text' é garantido formatado.
+  const isSpecial = special && regular && special.text !== regular.text && special.value < regular.value;
   return (
     <span className="price">
       {isSpecial ? (

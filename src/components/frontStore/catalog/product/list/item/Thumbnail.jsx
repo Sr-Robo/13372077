@@ -2,9 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { ProductNoThumbnail } from '@components/common/ProductNoThumbnail';
 
-function Thumbnail({ url, imageUrl, alt }) {
+function Thumbnail({ url, imageUrl, alt, isSpecial }) {
   return (
     <div className="product-thumbnail-wrap">
+      {isSpecial && <span className="cpk-badge-sale">Sale!</span>}
       {imageUrl ? (
         <a href={url} className="product-link">
           <img src={imageUrl} alt={alt} loading="lazy" />
