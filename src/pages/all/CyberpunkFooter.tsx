@@ -2,10 +2,10 @@ import React from 'react';
 
 export default function CyberpunkFooter() {
   return (
-    <div className="cpk-footer-copyright grid grid-cols-1 md:grid-cols-2 gap-8 justify-between">
+    <div className="cpk-footer-copyright grid grid-cols-1 md:grid-cols-2 gap-8 justify-between page-width px-5">
       <div className="self-center">
         <div className="copyright text-center md:text-left text-textSubdued">
-          <span>(C) 2026 Sr. Robô. Todos os direitos revertidos</span>
+          <span>Copyleft <span className="inline-block transform rotate-180">©</span> 2026 Sr. Robô - Todos os direitos revertidos.</span>
         </div>
       </div>
 

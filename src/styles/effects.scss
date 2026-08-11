@@ -709,17 +709,18 @@ footer.footer {
 // futuro. Sem o mt-12 do core, pra colar direto no wrapper (sem vazar
 // espaço morto antes dela).
 footer.footer .footer__bottom {
-  background-color: var(--cpk-color-bg-100) !important;
+  background-color: transparent !important; // Deixa o bg do body aparecer
   border-top: none !important;
   margin-top: 0 !important;
   padding-top: 36px !important;
   padding-bottom: 36px !important;
-  // Centraliza e restringe a largura total do footer para acompanhar o main,
-  // usando o mesmo valor fixado na classe .page-width do components.scss
-  max-width: 1860px;
-  margin-left: auto;
-  margin-right: auto;
+  background-color: transparent !important; // Deixa o bg do body aparecer
   position: relative;
+
+  // Como o core renderiza .footer__bottom com width 100%,
+  // não adianta restringir o tamanho dele, as bordas continuam
+  // indo até o fim. Precisamos colocar o max-width e margins
+  // no before para a "borda" ter o mesmo tamanho da page-width.
 
   &::before {
     position: absolute;
@@ -728,12 +729,15 @@ footer.footer .footer__bottom {
     left: 0;
     clip-path: polygon(0 10px, calc(50% - 51px) 10px, calc(50% - 40px) 0, calc(50% + 40px) 0, calc(50% + 51px) 10px, 100% 10px, 100% 11px, calc(50% + 50px) 11px, calc(50% + 39px) 1px, calc(50% - 39px) 1px, calc(50% - 50px) 11px, 0 11px);
     content: "";
-    // Antes usava cpk-color-border (neutro); agora que footer__bottom É o
-    // footer, o recorte leva a cor de marca que era do border-top do wrapper.
     border-top: 11px solid var(--cpk-color-brand);
     -webkit-transform: scaleY(-1);
     -ms-transform: scaleY(-1);
     transform: scaleY(-1);
+
+    // Alinha a borda com as margins do container principal
+    max-width: 1860px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
@@ -790,6 +794,7 @@ footer.footer .copyright span {
   margin-right: calc(var(--cpk-social-links__gap-h) / 2);
   margin-left: calc(var(--cpk-social-links__gap-h) / 2);
   color: var(--cpk-social-links__color);
+  font-weight: normal; // Remove bold to match reference
   transition: color 0.25s ease-in-out;
 }
 .cpk-social-links a:hover {
