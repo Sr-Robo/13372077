@@ -686,27 +686,39 @@ header.header .header__middle__right button:hover {
   background: transparent !important;
 }
 
-// Footer: footerTop e as 3 áreas de footerMiddle não têm widgets (ficam
-// vazias), então o <footer> em si é só um wrapper estrutural. A .footer__bottom
-// é o footer "de fato" — fundo e borda de marca vivem nela, não no wrapper.
+// Footer: footerTop e as 3 áreas de footerMiddle não têm widgets hoje (ficam
+// vazias), mas são áreas editáveis do core (data-evershop-editable-area) —
+// podem ganhar conteúdo pelo admin a qualquer momento. Por isso o fundo
+// escuro é fixado na tag <footer> inteira (não só na .footer__bottom): o
+// core entrega essa tag com bg-muted/30 + pb-8 do Tailwind (tokens de tema
+// claro, nunca pensados pro tema escuro) — sem isso, o pb-8 (32px) no fim
+// da página fica com esse cinza claro vazando por baixo da .footer__bottom
+// (2026-08-11, bug reportado pelo fxlip: barra cinza clara no fim do site).
 footer.footer {
   border: none !important;
   padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  background-color: transparent !important;
   margin-top: 5rem;
+}
+
+// footer__bottom = a área com conteúdo hoje (ícones de cartão + copyright) +
+// borda de marca (via ::before, recortada em zigue-zague) com estética
+// CyberPulse. background-color repetido aqui (mesmo valor da tag <footer>
+// acima) só por robustez, caso footer__bottom ganhe um tom próprio no
+// futuro. Sem o mt-12 do core, pra colar direto no wrapper (sem vazar
+// espaço morto antes dela).
+footer.footer .footer__bottom {
+  background-color: var(--cpk-color-bg-100) !important;
+  border-top: none !important;
+  margin-top: 0 !important;
+  padding-top: 36px !important;
+  padding-bottom: 36px !important;
   // Centraliza e restringe a largura total do footer para acompanhar o main,
   // usando o mesmo valor fixado na classe .page-width do components.scss
   max-width: 1860px;
   margin-left: auto;
   margin-right: auto;
-}
-
-// footer__bottom = o footer visível: fundo + borda de marca (via ::before,
-// recortada em zigue-zague) com estética CyberPulse. Sem o mt-12 do core,
-// pra colar direto no wrapper (sem vazar espaço morto antes dela).
-footer.footer .footer__bottom {
-  background-color: var(--cpk-color-bg-100) !important;
-  border-top: none !important;
-  margin-top: 0 !important;
   position: relative;
 
   &::before {
@@ -725,7 +737,20 @@ footer.footer .footer__bottom {
   }
 }
 
-// Texto de copyright e links do footer.
+// Ocultar o footer default do core, já que agora usamos o CyberpunkFooter injetado no footerBottom
+footer.footer .footer__bottom .footer__default {
+  display: none !important;
+}
+
+// Estilos para o novo layout CyberpunkFooter
+footer.footer .cpk-footer-copyright {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+// Texto de copyright
 footer.footer .copyright,
 footer.footer .copyright span {
   color: var(--cpk-color-contrast-muted) !important;
@@ -733,13 +758,49 @@ footer.footer .copyright span {
   font-size: 0.8125rem;
 }
 
-// Ícones de cartão (Visa/MC/PayPal) no footer — inverte para ficar legível no fundo escuro.
-footer.footer .card-icons svg {
-  opacity: 0.6;
-  filter: invert(0.9) brightness(0.8);
+/* ------------------------------------------------------------------
+  Social Links
+ ------------------------------------------------------------------- */
+.cpk-social-links {
+  --cpk-social-links__gap-h: 22px;
+  --cpk-social-links__gap-v: 8px;
+  --cpk-social-links__font-size: 0.8125em;
+  --cpk-social-links__color: var(--cpk-color-contrast-muted);
+  --cpk-social-links-hover__color: var(--cpk-color-brand);
+}
+.cpk-social-links ul {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+  margin-top: calc(var(--cpk-social-links__gap-v) / -1);
+  margin-right: calc(var(--cpk-social-links__gap-h) / -2);
+  margin-bottom: 0;
+  margin-left: calc(var(--cpk-social-links__gap-h) / -2);
+  font-size: var(--cpk-social-links__font-size);
+  font-weight: 600;
+  text-transform: uppercase;
+  list-style: none;
+}
+.cpk-social-links a {
+  display: flex;
+  align-items: center;
+  margin-top: var(--cpk-social-links__gap-v);
+  margin-right: calc(var(--cpk-social-links__gap-h) / 2);
+  margin-left: calc(var(--cpk-social-links__gap-h) / 2);
+  color: var(--cpk-social-links__color);
+  transition: color 0.25s ease-in-out;
+}
+.cpk-social-links a:hover {
+  color: var(--cpk-social-links-hover__color);
+  text-shadow: var(--cpk-glow-sm);
+  text-decoration: none;
+}
+.cpk-social-links li {
+  flex: 0 0 auto;
+  max-width: 100%;
+  display: block;
+}
+.cpk-social-links-text a {
+  font-size: inherit;
 }
 
-footer.footer .card-icons svg:hover {
-  opacity: 1;
-  filter: none;
-}
