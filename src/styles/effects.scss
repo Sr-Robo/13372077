@@ -762,6 +762,7 @@ footer.footer .copyright span {
   color: var(--cpk-color-contrast-muted) !important;
   font-family: var(--cpk-font-family);
   font-size: 1em !important;
+  -webkit-font-smoothing: antialiased; // Corrige o visual pixelizado da ref
 }
 
 /* ------------------------------------------------------------------
@@ -783,7 +784,7 @@ footer.footer .copyright span {
   margin-bottom: 0;
   margin-left: calc(var(--cpk-social-links__gap-h) / -2);
   font-size: var(--cpk-social-links__font-size);
-  font-weight: 600;
+  font-weight: normal; // 600 was making it bolder than reference
   text-transform: uppercase;
   list-style: none;
 }
@@ -794,7 +795,7 @@ footer.footer .copyright span {
   margin-right: calc(var(--cpk-social-links__gap-h) / 2);
   margin-left: calc(var(--cpk-social-links__gap-h) / 2);
   color: var(--cpk-social-links__color);
-  font-weight: normal; // Remove bold to match reference
+  letter-spacing: 0.1em; // Adds a bit of cyberpunk kerning
   transition: color 0.25s ease-in-out;
 }
 .cpk-social-links a:hover {
