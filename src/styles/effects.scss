@@ -737,8 +737,10 @@ footer.footer .footer__bottom {
   }
 }
 
-// Ocultar o footer default do core, já que agora usamos o CyberpunkFooter injetado no footerBottom
-footer.footer .footer__bottom .footer__default {
+// Ocultar os itens default do core (ícones de cartão + copyright) injetados
+// diretamente pelo coreComponents (que é a div sem classes customizadas).
+// Só preservamos o componente do tema que criamos.
+footer.footer .footer__bottom > div:not(.cpk-footer-copyright) {
   display: none !important;
 }
 
@@ -755,7 +757,7 @@ footer.footer .copyright,
 footer.footer .copyright span {
   color: var(--cpk-color-contrast-muted) !important;
   font-family: var(--cpk-font-family);
-  font-size: 0.8125rem;
+  font-size: 1em !important;
 }
 
 /* ------------------------------------------------------------------
