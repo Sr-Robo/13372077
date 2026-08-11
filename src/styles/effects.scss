@@ -694,11 +694,32 @@ footer.footer {
   border-bottom: none;
   border-left: none;
   margin-top: 5rem;
+  // Centraliza e restringe a largura total do footer para acompanhar o main,
+  // usando o mesmo valor fixado na classe .page-width do components.scss
+  max-width: 1860px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-// Borda interna do footerBottom (separador de copyright).
+// Borda interna do footerBottom (separador de copyright) com estética CyberPulse
 footer.footer .footer__bottom {
-  border-top: 1px solid var(--cpk-color-border) !important;
+  border-top: none !important;
+  position: relative;
+
+  &::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    clip-path: polygon(0 10px, calc(50% - 51px) 10px, calc(50% - 40px) 0, calc(50% + 40px) 0, calc(50% + 51px) 10px, 100% 10px, 100% 11px, calc(50% + 50px) 11px, calc(50% + 39px) 1px, calc(50% - 39px) 1px, calc(50% - 50px) 11px, 0 11px);
+    content: "";
+    // O cpl-color-background-400 mapado para as nossas variáveis (borda com leve glow no original)
+    // Aqui usamos border-top pra criar a massa e o clip-path recorta no formato.
+    border-top: 11px solid var(--cpk-color-border);
+    -webkit-transform: scaleY(-1);
+    -ms-transform: scaleY(-1);
+    transform: scaleY(-1);
+  }
 }
 
 // Texto de copyright e links do footer.
