@@ -686,19 +686,43 @@ header.header .header__middle__right button:hover {
   background: transparent !important;
 }
 
-// Footer: fundo levemente mais claro que o body, borda superior de marca.
+// Footer: footerTop e as 3 áreas de footerMiddle não têm widgets (ficam
+// vazias), então o <footer> em si é só um wrapper estrutural. A .footer__bottom
+// é o footer "de fato" — fundo e borda de marca vivem nela, não no wrapper.
 footer.footer {
-  background-color: var(--cpk-color-bg-100) !important;
-  border-top: 2px solid var(--cpk-color-brand) !important;
-  border-right: none;
-  border-bottom: none;
-  border-left: none;
+  border: none !important;
+  padding-top: 0 !important;
   margin-top: 5rem;
+  // Centraliza e restringe a largura total do footer para acompanhar o main,
+  // usando o mesmo valor fixado na classe .page-width do components.scss
+  max-width: 1860px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-// Borda interna do footerBottom (separador de copyright).
+// footer__bottom = o footer visível: fundo + borda de marca (via ::before,
+// recortada em zigue-zague) com estética CyberPulse. Sem o mt-12 do core,
+// pra colar direto no wrapper (sem vazar espaço morto antes dela).
 footer.footer .footer__bottom {
-  border-top: 1px solid var(--cpk-color-border) !important;
+  background-color: var(--cpk-color-bg-100) !important;
+  border-top: none !important;
+  margin-top: 0 !important;
+  position: relative;
+
+  &::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    clip-path: polygon(0 10px, calc(50% - 51px) 10px, calc(50% - 40px) 0, calc(50% + 40px) 0, calc(50% + 51px) 10px, 100% 10px, 100% 11px, calc(50% + 50px) 11px, calc(50% + 39px) 1px, calc(50% - 39px) 1px, calc(50% - 50px) 11px, 0 11px);
+    content: "";
+    // Antes usava cpk-color-border (neutro); agora que footer__bottom É o
+    // footer, o recorte leva a cor de marca que era do border-top do wrapper.
+    border-top: 11px solid var(--cpk-color-brand);
+    -webkit-transform: scaleY(-1);
+    -ms-transform: scaleY(-1);
+    transform: scaleY(-1);
+  }
 }
 
 // Texto de copyright e links do footer.
