@@ -161,21 +161,3 @@
   background-color: var(--cpk-color-brand);
   z-index: 5;
 }
-
-/* Paginação - Estilo Cyberpulse */
-.products-pagination [data-slot="pagination-link"] {
-  border-radius: 0;
-  background-color: var(--cpk-color-bg-200);
-  border: 1px solid var(--cpk-color-border);
-  color: var(--cpk-color-contrast);
-  font-family: var(--cpk-font-family);
-  height: 40px;
-  min-width: 40px;
-  transition: all 0.2s ease;
-  
-  &:hover, &[data-active="true"] {
-    background-color: var(--cpk-color-brand);
-    border-color: var(--cpk-color-brand);
-    color: var(--cpk-color-white);
-  }
-}

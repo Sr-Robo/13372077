@@ -666,7 +666,7 @@ select#shop-sort-by {
   // com os dois <input> ocupando a mesma área.
   input[type='range'] {
     position: absolute !important;
-//    top: 15px !important;
+    top: 15px !important;
     left: 0 !important;
     width: 100% !important;
     margin: 0 !important;
@@ -738,7 +738,7 @@ select#shop-sort-by {
 }
 
 .rangeslider {
-//  margin-bottom: 25px !important;
+  margin-bottom: 25px !important;
 
   // Transforma os tooltips flutuantes nos textos fixos de preço (from e to)
   .tooltip.min, .tooltip.max {
