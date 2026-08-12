@@ -22,7 +22,7 @@ const Title = ({ count }) => {
   );
 };
 
-export default function CpkShoppingCart({ checkoutUrl }) {
+export default function ShoppingCart({ checkoutUrl }) {
   const { data: cart } = useCartState();
   return (
     <div className="cart cpl-cart-wrap page-width mt-10 mb-20">
@@ -47,7 +47,7 @@ export default function CpkShoppingCart({ checkoutUrl }) {
             <div className="cart-summary cpl-cart-summary">
               <Area id="shoppingCartBeforeSummary" noOuter />
 
-              <h2 className="cpk-h4 summary-title">{_('Resumo do Pedido')}</h2>
+              <h2 className="cpk-h4 summary-title">{_('CART TOTALS')}</h2>
 
               <div className="mt-4 summary-content">
                 <CartTotalSummary />
@@ -58,7 +58,7 @@ export default function CpkShoppingCart({ checkoutUrl }) {
               <div className="shopping-cart-checkout-btn mt-6">
                 <button
                   onClick={() => (window.location.href = checkoutUrl)}
-                  className="cpk-btn cpk-glitch w-full"
+                  className="cpk-btn cpk-glitch w-full cpk-glitch-btn group"
                   data-text={_('Proceed to checkout')}
                 >
                   <span className="cpk-btn-bg" aria-hidden="true" />

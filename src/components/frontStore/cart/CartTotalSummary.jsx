@@ -70,7 +70,7 @@ const Tax = ({ showPriceIncludingTax, amount, loading = false }) => {
 
 const Subtotal = ({ subTotal, loading = false }) => {
   return (
-    <div className="flex justify-between gap-7 py-1.5">
+    <div className="summary-row flex justify-between gap-7 py-1.5">
       <div className="text-muted-foreground">{_('Sub total')}</div>
       <SkeletonValue loading={loading} className="text-right">
         {subTotal}
@@ -82,14 +82,14 @@ const Subtotal = ({ subTotal, loading = false }) => {
 const Discount = ({ discountAmount, coupon, loading = false }) => {
   if (!coupon) {
     return (
-      <div className="gap-7 py-2">
+      <div className="gap-7 py-2 summary-row">
         <CouponForm />
       </div>
     );
   }
 
   return (
-    <div className="flex justify-between gap-7 py-2">
+    <div className="summary-row flex justify-between gap-7 py-2">
       <Coupon>
         {(state, actions) => (
           <>
@@ -199,6 +199,10 @@ const DefaultCartSummary = ({
       loading={loading}
     />
     <Area id="cartSummaryAfterTotal" noOuter />
+
+    <div className="cpl-coupon-form">
+      <Area id="cartCouponForm" noOuter />
+    </div>
   </div>
 );
 
