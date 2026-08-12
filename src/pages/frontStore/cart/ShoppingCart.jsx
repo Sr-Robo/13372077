@@ -85,7 +85,7 @@ export default function ShoppingCart({ checkoutUrl }) {
 
 export const layout = {
   areaId: 'content',
-  sortOrder: 10
+  sortOrder: 15
 };
 
 export const query = `
