@@ -25,7 +25,7 @@ docker run -d --rm --name evershop-dev \
   -e DB_PASSWORD="$(grep '^DB_PASSWORD=' ~/server/stacks/ecommerce/.env | cut -d= -f2-)" \
   -e DB_HOST=database -e DB_PORT=5432 -e NODE_ENV=development -e HOME=/tmp \
   -u 1000:1000 \
-  node:18-alpine sh -c "npm run dev"
+  node:20-alpine sh -c "cd /app && npm run dev"
 ```
 
 ⚠️ **Sempre `--user 1000:1000`** — container root quebra o dono de `dist/`
