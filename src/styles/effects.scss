@@ -760,8 +760,8 @@ footer.footer .cpk-footer-copyright {
 footer.footer .copyright,
 footer.footer .copyright span {
   color: var(--cpk-color-contrast-muted) !important;
-  font-family: var(--cpk-font-family);
-  font-size: 1em !important;
+  font-family: 'Purista', sans-serif !important;
+  font-size: 13px !important;
   -webkit-font-smoothing: antialiased; // Corrige o visual pixelizado da ref
 }
 
@@ -784,7 +784,8 @@ footer.footer .copyright span {
   margin-bottom: 0;
   margin-left: calc(var(--cpk-social-links__gap-h) / -2);
   font-size: var(--cpk-social-links__font-size);
-  font-weight: normal; // 600 was making it bolder than reference
+  font-family: 'Purista', sans-serif;
+  font-weight: 600;
   text-transform: uppercase;
   list-style: none;
 }
