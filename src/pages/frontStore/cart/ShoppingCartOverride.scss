@@ -1,0 +1,108 @@
+/* Container principal do carrinho */
+.cpl-cart-wrap {
+  .shopping-cart-header {
+    margin-bottom: 2rem;
+
+    .shopping-cart-title {
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  /* Lista de items */
+  .cpl-cart-items-wrap {
+    /* Box minimalista para englobar os items */
+    background: rgba(var(--cpk-color-bg-200), 0.4);
+    border: 1px solid var(--cpk-color-border, rgba(255, 255, 255, 0.1));
+    padding: 1.5rem;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      width: 15px;
+      height: 15px;
+      border-top: 1px solid var(--cpk-color-brand);
+      border-left: 1px solid var(--cpk-color-brand);
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      right: -1px;
+      width: 15px;
+      height: 15px;
+      border-bottom: 1px solid var(--cpk-color-brand);
+      border-right: 1px solid var(--cpk-color-brand);
+    }
+
+    .cart__items {
+      border-color: var(--cpk-color-border, rgba(255, 255, 255, 0.1));
+    }
+
+    .cart__item {
+      border-color: var(--cpk-color-border, rgba(255, 255, 255, 0.1));
+
+      .text-muted-foreground {
+        color: var(--cpk-color-contrast-muted);
+        opacity: 0.8;
+      }
+
+      .text-destructive {
+        color: var(--cpk-color-danger);
+      }
+
+      a.hover\:underline:hover {
+        color: var(--cpk-color-glitch-2);
+        text-decoration: none;
+        text-shadow: var(--cpk-glow-sm);
+      }
+    }
+  }
+
+  /* Summary */
+  .cpl-cart-summary {
+    background: rgba(var(--cpk-color-bg-200), 0.6);
+    border: 1px solid var(--cpk-color-border, rgba(255, 255, 255, 0.1));
+    padding: 2rem;
+    position: relative;
+
+    .summary-title {
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--cpk-color-border, rgba(255, 255, 255, 0.1));
+      padding-bottom: 0.75rem;
+    }
+
+    .summary-content {
+      color: var(--cpk-color-contrast);
+
+      .text-muted-foreground {
+        color: var(--cpk-color-contrast-muted);
+        opacity: 0.8;
+      }
+
+      .summary__row {
+        border-color: var(--cpk-color-border, rgba(255, 255, 255, 0.1));
+      }
+    }
+
+    .continue-shopping-link {
+      color: var(--cpk-color-brand);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.8rem;
+      transition: all 0.3s ease;
+
+      &:hover {
+        color: var(--cpk-color-glitch-2);
+        text-shadow: var(--cpk-glow-sm);
+      }
+    }
+  }
+}
