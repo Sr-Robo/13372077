@@ -1,2 +1,5 @@
 node_modules/
 dist/
+cart-preview*.png
+cart-preview.png
+
