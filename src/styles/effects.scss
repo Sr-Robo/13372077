@@ -574,7 +574,7 @@ header.header {
     background-color: transparent !important;
     border: none !important;
     border-radius: 0 !important;
-    padding: 0.9em 2.2em !important;
+    padding: 0.9em 1em !important; // Padding menor horizontal para acomodá-los lado a lado
     height: auto !important;
     min-height: 0 !important;
     font-family: var(--cpk-font-family) !important;
