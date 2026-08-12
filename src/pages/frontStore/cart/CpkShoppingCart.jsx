@@ -22,7 +22,7 @@ const Title = ({ count }) => {
   );
 };
 
-export default function ShoppingCart({ checkoutUrl }) {
+export default function CpkShoppingCart({ checkoutUrl }) {
   const { data: cart } = useCartState();
   return (
     <div className="cart cpl-cart-wrap page-width mt-10 mb-20">
