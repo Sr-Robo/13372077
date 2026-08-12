@@ -5,18 +5,9 @@ import { useCatalogImageDimensions } from '@components/common/useCatalogImageDim
 import { CartItem } from '@components/frontStore/cart/CartContext.js';
 import { ItemQuantity } from '@components/frontStore/cart/ItemQuantity.js';
 import { _ } from '@evershop/evershop/lib/locale/translate/_';
-import { deriveProductImageSize } from '@evershop/evershop/lib/util/deriveProductImageSize';
+import { deriveProductImageSize } from '@evershop/evershop/lib/util/deriveProductImageSize.js';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import React from 'react';
-
-interface CartItemsTableProps {
-  items: CartItem[];
-  showPriceIncludingTax?: boolean;
-  loading?: boolean;
-  onSort?: (key: string, direction: 'asc' | 'desc') => void;
-  currentSort?: { key: string; direction: 'asc' | 'desc' };
-  onRemoveItem?: (itemId: string) => Promise<void>;
-}
 
 /**
  * Re-skin (2026-07-10): a flex line-item list matching the reference — 96px
@@ -24,7 +15,7 @@ interface CartItemsTableProps {
  * on the top row and the qty stepper + Remove on the bottom row, items divided
  * by rules. (Was a 3-column ExtendableTable.)
  */
-export const DefaultCartItemList: React.FC<CartItemsTableProps> = ({
+export const DefaultCartItemList = ({
   items,
   showPriceIncludingTax = true,
   loading = false,
@@ -35,7 +26,7 @@ export const DefaultCartItemList: React.FC<CartItemsTableProps> = ({
   return (
     <>
       <Area id="cartItemListBefore" noOuter />
-      <div className="cart__items divide-y divide-border">
+      <div className="cart__items divide-y">
         {items.map((row) => {
           const totalValue = showPriceIncludingTax
             ? row.lineTotalInclTax?.text
@@ -51,7 +42,8 @@ export const DefaultCartItemList: React.FC<CartItemsTableProps> = ({
                     height={thumbSize.height}
                     sizes="100px"
                     objectFit="cover"
-                    className="h-24 w-24 rounded-lg border border-border"
+                    className="h-24 w-24 rounded-lg border"
+                    style={{ borderColor: 'var(--cpk-color-border, rgba(255, 255, 255, 0.1))' }}
                   />
                 ) : (
                   <ProductNoThumbnail width={96} height={96} />
@@ -63,6 +55,7 @@ export const DefaultCartItemList: React.FC<CartItemsTableProps> = ({
                     <a
                       href={row.productUrl}
                       className="font-medium hover:underline"
+                      style={{ color: 'var(--cpk-color-contrast)' }}
                     >
                       {row.productName}
                     </a>
@@ -83,7 +76,7 @@ export const DefaultCartItemList: React.FC<CartItemsTableProps> = ({
                       </div>
                     ))}
                   </div>
-                  <div className="text-right font-medium tabular-nums">
+                  <div className="text-right font-medium tabular-nums" style={{ color: 'var(--cpk-color-contrast)' }}>
                     {totalValue}
                   </div>
                 </div>
@@ -95,7 +88,7 @@ export const DefaultCartItemList: React.FC<CartItemsTableProps> = ({
                     max={99}
                   >
                     {({ quantity, increase, decrease }) => (
-                      <div className="inline-flex items-center rounded-md border border-border">
+                      <div className="inline-flex items-center rounded-md border" style={{ borderColor: 'var(--cpk-color-border, rgba(255, 255, 255, 0.1))' }}>
                         <button
                           onClick={decrease}
                           disabled={loading || quantity <= 1}
@@ -122,7 +115,7 @@ export const DefaultCartItemList: React.FC<CartItemsTableProps> = ({
                       e.preventDefault();
                       onRemoveItem?.(row.cartItemId);
                     }}
-                    className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-destructive"
+                    className="inline-flex items-center gap-1 text-xs text-destructive hover:text-destructive"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                     {_('Remove')}
