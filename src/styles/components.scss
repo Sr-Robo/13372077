@@ -908,6 +908,8 @@ select#shop-sort-by {
 // O JSX emite select primeiro, count depois — row-reverse corrige sem tocar no Back.
 .cpk-shop-toolbar {
   flex-direction: row-reverse;
+    margin-top: 31px !important;
+    margin-bottom: 40px !important;
 }
 
 @media (min-width: 640px) {

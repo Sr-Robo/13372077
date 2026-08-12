@@ -123,6 +123,13 @@
   top: 50%;
   left: 0;
   right: 0;
+  // Centralizar o texto duplicado dentro do span (left:0/right:0 = largura
+  // TOTAL do botão) — num pill estreito (padding grande, sem width própria)
+  // left-align "por acaso" coincidia com o texto real; num botão full-width
+  // (barra do add-to-cart, ver List.scss) o texto fantasma ficava colado na
+  // borda esquerda, brigando com o texto real centralizado pelo flex
+  // (fxlip reportou "um 'view product' glitando" fora do lugar, 2026-08-12).
+  text-align: center;
   transform: translateY(-50%);
   white-space: nowrap;
 }
@@ -552,37 +559,38 @@ header.header {
     }
   }
 
-  // Botões do minicart (View Cart e Checkout)
+  // Botões do minicart (View Cart e Checkout) — mesmo tratamento cpk-btn /
+  // cpk-glitch do botão "Filtrar" (extensions/catalog_shop/.../filter/
+  // PriceFilter.jsx): crop paramétrico + glow + glitch de texto/fundo via
+  // <span class="cpk-btn-bg"> (ver DefaultMinicartDropdownSummary.tsx no
+  // fork www). Fundo/borda/glow real do botão agora vêm do próprio
+  // .cpk-btn/.cpk-btn--outline (components.scss) através desse span — aqui
+  // só neutraliza as classes Tailwind que o <Button> (Base UI) aplica no
+  // MESMO elemento (bg-*, border-*, rounded-md, h-10, px-2.5, text-sm,
+  // font-medium): como têm a mesma especificidade de .cpk-btn, sem
+  // !important elas venceriam por ordem de import, não por especificidade.
   .minicart__viewcart__button,
   .minicart__checkout__button {
-    font-family: var(--cpk-font-family) !important;
-    text-transform: uppercase !important;
-    font-weight: var(--cpk-font-weight-heading) !important;
-    letter-spacing: 0.05em !important;
+    background-color: transparent !important;
+    border: none !important;
     border-radius: 0 !important;
+    padding: 0.9em 2.2em !important;
+    height: auto !important;
+    min-height: 0 !important;
+    font-family: var(--cpk-font-family) !important;
+    font-size: 0.8125em !important;
+    font-weight: var(--cpk-font-weight-heading) !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
     margin-top: 0.5rem !important;
-    height: 48px !important;
   }
 
   .minicart__viewcart__button {
-    background-color: transparent !important;
     color: var(--cpk-color-brand) !important;
-    border: 1.5px solid var(--cpk-color-brand) !important;
-
-    &:hover {
-      background: rgba(189,0,255,0.1) !important;
-      box-shadow: var(--cpk-glow-md) !important;
-    }
   }
 
   .minicart__checkout__button {
-    background-color: var(--cpk-color-brand) !important;
     color: var(--cpk-color-bg) !important;
-    border: none !important;
-
-    &:hover {
-      box-shadow: var(--cpk-glow-md) !important;
-    }
   }
 
   // Ícone de fechar do sheet-close

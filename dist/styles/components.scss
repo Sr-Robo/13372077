@@ -553,7 +553,7 @@ select#shop-sort-by {
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 4px), calc(100% - 2px) calc(100% - 2px), 102px calc(100% - 2px), 100px 100%, 4px 100%, 0 calc(100% - 4px)) !important;
   color: var(--cpk-color-contrast) !important;
   font-family: var(--cpk-font-family) !important;
-  padding: 0.8em 2.5em 0.8em 1em !important;
+  padding: 0 2.5em 0 1em !important;
   height: 48px !important;
   appearance: none !important;
   -webkit-appearance: none !important;
@@ -908,6 +908,8 @@ select#shop-sort-by {
 // O JSX emite select primeiro, count depois — row-reverse corrige sem tocar no Back.
 .cpk-shop-toolbar {
   flex-direction: row-reverse;
+    margin-top: 31px !important;
+    margin-bottom: 40px !important;
 }
 
 @media (min-width: 640px) {
@@ -921,6 +923,7 @@ select#shop-sort-by {
       width: 100% !important;
 
       .product-sorting-inner {
+        align-items: center !important;
         justify-content: flex-start !important;
       }
     }

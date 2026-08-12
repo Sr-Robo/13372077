@@ -80,15 +80,51 @@
     }
   }
 
+  // Barra full-width encostada na base da thumbnail, sem corte de canto —
+  // mesma receita da referência CyberPulse pro add-to-cart do grid
+  // (`ul.products li.product .button`, achado em
+  // refs/cyberpulse/shop_arquivos/plugin-woocommerce.css): fundo sólido
+  // neutro escuro (não a cor de marca), altura fixa, ícone depois do texto,
+  // revela só com transform (translateY 100%→0) no hover do card — sem
+  // opacity, técnica/valores estudados, reimplementados do zero.
   .add-to-cart-button {
     position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    opacity: 0;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    padding: 0;
+    background-color: var(--cpk-color-bg-300);
+    color: var(--cpk-color-contrast);
+    text-decoration: none;
+    transform: translateY(100%);
+    transition: transform 0.2s ease-in-out,
+      background-color var(--cpk-transition-duration) var(--cpk-transition-easing);
     z-index: 10;
     white-space: nowrap;
+
+    // Ícone depois do texto (setinha) — flex-shrink:0 pra não espremer com
+    // o texto, tamanho um pouco maior que o padrão (16px) porque 16 sumia
+    // no meio do texto (fxlip: "não tem aquela seta no final").
+    &__icon {
+      flex-shrink: 0;
+    }
+
+    // Hover: fundo continua a mesma cor neutra escura (não vira roxo), só
+    // fica mais transparente — pedido do fxlip (2026-08-12): "esse fundo
+    // precisa ficar um pouco transparente ao invés de ficar roxo". Cor
+    // igual a --cpk-color-bg-300 (#2c2c2c) em rgba, só reduzindo a opacidade
+    // do FUNDO — texto/ícone continuam 100% opacos (por isso rgba na
+    // background-color, não um `opacity` no elemento inteiro, que
+    // desbotaria o texto junto).
+    &:hover,
+    &:focus-visible {
+      background-color: rgba(44, 44, 44, 0.7);
+      box-shadow: var(--cpk-glow-sm);
+    }
   }
 
   &:hover {
@@ -97,8 +133,7 @@
       opacity: 0.8;
     }
     .add-to-cart-button {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
+      transform: translateY(0);
     }
   }
 }
