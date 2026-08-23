@@ -21,9 +21,9 @@ function Thumbnail({ imageUrl, alt, isSpecial }) {
       )}
       <span
         className="button add-to-cart-button cpk-btn cpk-glitch cpk-link-disabled"
-        data-text="View Product"
+        data-text="Ver Produto"
       >
-        View Product
+        Ver Produto
         <svg
           className="add-to-cart-button__icon"
           width="18"
