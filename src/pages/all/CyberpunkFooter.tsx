@@ -12,22 +12,22 @@ export default function CyberpunkFooter() {
       <div className="cpk-social-links cpk-social-links-text flex justify-center md:justify-end self-center">
         <ul>
           <li>
-            <a href="#" target="_blank" rel="noopener noreferrer">
+            <a href="https://youtube.com/@sr.robo.net.br0" target="_blank" rel="noopener noreferrer">
               YOUTUBE.
             </a>
           </li>
           <li>
-            <a href="#" target="_blank" rel="noopener noreferrer">
+            <a href="https://instagr.am/sr.robo.net.br" target="_blank" rel="noopener noreferrer">
               INSTAGRAM.
             </a>
           </li>
           <li>
-            <a href="#" target="_blank" rel="noopener noreferrer">
+            <a href="https://tiktok.com/@sr.robo.net.br" target="_blank" rel="noopener noreferrer">
               TIKTOK.
             </a>
           </li>
           <li>
-            <a href="#" target="_blank" rel="noopener noreferrer">
+            <a href="https://t.me/sr_robo_net_br" target="_blank" rel="noopener noreferrer">
               TELEGRAM.
             </a>
           </li>
