@@ -694,6 +694,27 @@ header.header .header__middle__right button:hover {
   background: transparent !important;
 }
 
+// Busca e login/conta ainda não têm destino final (fase de layout, sem
+// backend wireado) — desabilitados visualmente, mas o carrinho continua
+// normal. `pointer-events: none` já anula clique e :hover (a regra acima
+// nunca mais casa pra esses dois), então não precisa duplicar :hover aqui.
+// Seletores específicos (search__icon / customer-icon a) em vez do genérico
+// `a, button` do bloco acima, pra não pegar o `button.mini-cart-icon`.
+header.header .header__middle__right .search__box .search__icon,
+header.header .header__middle__right .customer-icon a {
+  pointer-events: none;
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+// Classe reaproveitável pra qualquer <span> que substitui um <a href> ainda
+// sem destino (fase de layout) — usada na listagem de produto (Thumbnail.jsx,
+// Name.jsx) e disponível pra qualquer outra página nesta mesma fase.
+.cpk-link-disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
 // Footer: footerTop e as 3 áreas de footerMiddle não têm widgets hoje (ficam
 // vazias), mas são áreas editáveis do core (data-evershop-editable-area) —
 // podem ganhar conteúdo pelo admin a qualquer momento. Por isso o fundo

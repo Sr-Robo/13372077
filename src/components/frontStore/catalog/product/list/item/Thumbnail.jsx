@@ -2,22 +2,25 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { ProductNoThumbnail } from '@components/common/ProductNoThumbnail';
 
-function Thumbnail({ url, imageUrl, alt, isSpecial }) {
+// Fase de layout: listagem ainda não linka pra ficha de produto (sem
+// backend wireado). Os 3 destinos que apontariam pra `url` viram <span>
+// com a classe `cpk-link-disabled` (pointer-events: none em effects.scss)
+// em vez de <a href>, mantendo o mesmo visual sem navegação morta.
+function Thumbnail({ imageUrl, alt, isSpecial }) {
   return (
     <div className="product-thumbnail-wrap">
       {isSpecial && <span className="cpk-badge-sale">Sale!</span>}
       {imageUrl ? (
-        <a href={url} className="product-link">
+        <span className="product-link cpk-link-disabled">
           <img src={imageUrl} alt={alt} loading="lazy" />
-        </a>
+        </span>
       ) : (
-        <a href={url} className="product-link">
+        <span className="product-link cpk-link-disabled">
           <ProductNoThumbnail width={370} height={370} />
-        </a>
+        </span>
       )}
-      <a
-        href={url}
-        className="button add-to-cart-button cpk-btn cpk-glitch"
+      <span
+        className="button add-to-cart-button cpk-btn cpk-glitch cpk-link-disabled"
         data-text="View Product"
       >
         View Product
@@ -37,21 +40,19 @@ function Thumbnail({ url, imageUrl, alt, isSpecial }) {
             strokeLinejoin="round"
           />
         </svg>
-      </a>
+      </span>
     </div>
   );
 }
 
 Thumbnail.propTypes = {
   alt: PropTypes.string,
-  imageUrl: PropTypes.string,
-  url: PropTypes.string
+  imageUrl: PropTypes.string
 };
 
 Thumbnail.defaultProps = {
   alt: '',
-  imageUrl: '',
-  url: ''
+  imageUrl: ''
 };
 
 export { Thumbnail };

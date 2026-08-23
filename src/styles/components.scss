@@ -141,6 +141,15 @@
   padding: 2em;
 }
 
+// Filler de área sem funcionalidade pronta ainda (ver PlaceholderNotice.jsx).
+.cpk-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 6em;
+  text-align: center;
+}
+
 .cpk-input {
   display: block;
   width: 100%;

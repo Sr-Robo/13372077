@@ -37,9 +37,13 @@ src/
 │   └── frontStore/checkout/
 │       ├── Checkout.jsx, Summary.jsx, CheckoutOverride.scss
 ├── components/
-│   ├── Logo.tsx           ← componente de logo reutilizável
+│   ├── Logo.tsx              ← componente de logo reutilizável
+│   ├── PlaceholderNotice.jsx ← filler "Em breve" (.cpk-card/.cpk-placeholder)
+│   │                           pra área sem funcionalidade pronta (ver
+│   │                           § Pendências de funcionalidade)
 │   └── frontStore/catalog/product/list/
-│       ├── List.jsx/scss, item/{Name,Price,Thumbnail}.jsx
+│       ├── List.jsx/scss, item/{Name,Price,Thumbnail}.jsx (Name/Thumbnail
+│       │   sem link pra produto desde 2026-08-22, ver pendências)
 └── (dist/ é gerado por compile — versionado no git)
 ```
 
@@ -66,20 +70,50 @@ por `getComponentsByRoute` → `scanRouteComponents` a partir de `dist/`, não
 
 ## Estado das páginas (Fase 2)
 
-- [x] Listagem `/shop` (extensão `catalog_shop` no fork `www`, não no tema)
+- [x] Listagem `/shop` (extensão `catalog_shop` no fork `www`, não no tema) —
+      página piloto do padrão cyberpulse validado (2026-08-22)
 - [x] Header + Logo (CSS override + Logo.jsx em `headerMiddleCenter`)
 - [x] Footer (CSS override em `effects.scss`)
-- [x] Home (hero com glitch em `OnlyHomePage.tsx`)
+- [x] Home (hero com glitch em `OnlyHomePage.tsx`) — desde 2026-08-22 a home
+      não é mais alcançada por navegação normal (`/` redireciona pra `/shop`,
+      ver `extensions/catalog_shop/src/pages/frontStore/homepage/homeToShop.js`
+      no fork `www`); ver pendência abaixo
 - [x] Login/Cadastro (override em `components.scss` + `LoginHero.tsx`)
 - [x] Página de produto (override em `components.scss`)
-- [ ] Carrinho
-- [ ] Checkout
+- [x] Carrinho (2026-08-20)
+- [x] Checkout (2026-08-20)
 - [ ] Página estática/CMS (about)
 - [ ] Dashboard do cliente (conta/pedidos)
 - [ ] Páginas de erro 502/504
 
 Fases 3 (interação/scroll-reveal) e 4 (responsivo/acessibilidade/performance)
 ainda não iniciadas.
+
+**2026-08-22 — revisão cyberpulse em andamento**: `/shop` foi validado como
+piloto do padrão atual; login, criar conta, esqueceu senha, produto,
+carrinho, checkout e home entraram de novo em checklist de revisão contra
+esse padrão (mesmo os já `[x]` acima) — ver `~/server/docs/tema-cyberpunk.md`
+e o backlog do fxlip pro estado desse checklist.
+
+## Pendências de funcionalidade
+
+Lista viva do que foi visto e adiado durante trabalho de **layout** (fase
+atual). Cada item aqui é um lembrete pra uma sessão futura de
+workflow/testes — não implementar durante uma sessão de layout.
+
+- **Home inalcançável por navegação normal** (2026-08-22): com `/` →
+  redirect 302 pra `/shop`, o hero de `OnlyHomePage.tsx` (CTA "Explorar
+  Catálogo") nunca mais renderiza pro usuário comum. Decidir: remover o
+  componente, reaproveitar em outra rota (`/home`?), ou manter como está
+  (código morto, sem custo real).
+- **Busca e login/conta desabilitados no header** (2026-08-22): CSS-only
+  (`pointer-events: none`), não semântico — sem `aria-disabled` (exigiria
+  editar `SearchBox.tsx`/`CustomerIcon.tsx` do core). Reavaliar quando essas
+  duas funcionalidades tiverem destino real.
+- **Link de produto removido na listagem** (2026-08-22): `Thumbnail.jsx` e
+  `Name.jsx` não linkam mais pra ficha de produto (viraram `<span
+  className="... cpk-link-disabled">`). Reverter quando a ficha de produto
+  tiver conteúdo real pronto pra receber tráfego da listagem.
 
 ## Gotchas resolvidos (contexto / causa-raiz)
 

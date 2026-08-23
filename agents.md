@@ -28,3 +28,10 @@ não são importados automaticamente).
   a loja comercialmente. Não assumir liberação sem confirmar com o fxlip.
 - **Referência de design**: a página 502 no git log é mais autoritativa que
   o CyberPulse externo (inspiração, nunca cópia de código/assets).
+- **Fase atual (desde 2026-08-22): só layout** — criação/modificação
+  visual. Funcionalidade real (formulário que grava, integração, fluxo
+  completo) e testes ponta-a-ponta ficam pra outra sessão depois. Ao
+  esbarrar num espaço que dependeria disso, preencher com
+  `<PlaceholderNotice />` (`src/components/PlaceholderNotice.jsx`) e
+  registrar em `memory.md § Pendências de funcionalidade` — não
+  implementar agora.

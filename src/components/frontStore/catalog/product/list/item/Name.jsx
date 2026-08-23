@@ -1,18 +1,18 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-function Name({ name, url, id }) {
+// Fase de layout: sem link pra ficha de produto ainda (ver Thumbnail.jsx).
+function Name({ name, id }) {
   return (
-    <a href={url} className="product-title-link">
+    <span className="product-title-link cpk-link-disabled">
       <h2 className="product-title">{name}</h2>
-    </a>
+    </span>
   );
 }
 
 Name.propTypes = {
   id: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
-  url: PropTypes.string.isRequired
+  name: PropTypes.string.isRequired
 };
 
 export { Name };
