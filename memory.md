@@ -28,6 +28,9 @@ src/
 │   │   ├── Noise.tsx     ← (body) textura animada de fundo (SVG feTurbulence)
 │   │   ├── Fonts.jsx/scss ← @font-face Purista
 │   │   ├── Logo.jsx      ← (headerMiddleCenter) cyber-robo ↔ cyber-rob0 no hover
+│   │   ├── CyberpunkFooter.tsx ← (footerBottom) copyleft lê themeConfig.copyRight
+│   │   │                        (metafield custom.copyright do admin, 2026-08-22);
+│   │   │                        full-bleed igual o header (ver Gotchas)
 │   │   ├── EveryWhere.tsx ← retorna null (limpo)
 │   │   └── OffcanvasToggle.jsx
 │   ├── homepage/
