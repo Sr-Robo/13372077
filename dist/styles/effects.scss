@@ -751,6 +751,20 @@ footer.footer .footer__bottom {
   // borda a borda da viewport sem max-width/margin auto — antes tinha
   // max-width: 1860px centralizado, o que fazia a borda "flutuar" no
   // centro em telas largas enquanto o header atravessava tudo.
+  //
+  // Pulso de brilho (2026-08-23, pedido do fxlip): `filter: drop-shadow`,
+  // nunca `box-shadow` — box-shadow ignora o clip-path e o halo sairia
+  // retangular, cobrindo o entalhe em V do meio em vez de acompanhá-lo.
+  // A animação só mexe em `filter`; `clip-path` fica intocado (mesma regra
+  // do `.cpk-glitch-btn` acima: clip-path em keyframe perde a forma fixa).
+  //
+  // Ideias futuras cogitadas e adiadas (não implementar sem pedido novo):
+  // - Ciclo de cor: animar border-top-color entre tons da paleta.
+  // - Shimmer: trocar border-top solid por background (gradient) +
+  //   height, pra poder animar background-position — border não aceita
+  //   gradient direto.
+  // - Glitch tipo cpk-glitch-1/2 dos botões: exigiria um ::after extra
+  //   pra segunda camada de cor, competindo com o clip-path fixo.
   &::before {
     position: absolute;
     top: 0;
@@ -762,6 +776,27 @@ footer.footer .footer__bottom {
     -webkit-transform: scaleY(-1);
     -ms-transform: scaleY(-1);
     transform: scaleY(-1);
+    animation: cpk-footer-glow-pulse 3s ease-in-out infinite;
+  }
+}
+
+// v2 (2026-08-23): a v1 só com drop-shadow fraco (blur 2→6px, alfa
+// 0.35→0.75) era imperceptível — medido em screenshot headless, diff de
+// pixel real mas mean ~4.7/255. `brightness()` entra no mesmo filter pra
+// a PRÓPRIA linha pulsar (não só o halo ao redor dela), + blur/alfa bem
+// mais fortes.
+@keyframes cpk-footer-glow-pulse {
+  0%, 100% {
+    filter: brightness(1) drop-shadow(0 0 3px rgba(var(--cpk-color-brand-rgb), 0.5));
+  }
+  50% {
+    filter: brightness(1.6) drop-shadow(0 0 14px rgba(var(--cpk-color-brand-rgb), 1));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  footer.footer .footer__bottom::before {
+    animation: none;
   }
 }
 
