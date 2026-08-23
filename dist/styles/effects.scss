@@ -759,12 +759,19 @@ footer.footer .footer__bottom {
   // do `.cpk-glitch-btn` acima: clip-path em keyframe perde a forma fixa).
   //
   // Ideias futuras cogitadas e adiadas (não implementar sem pedido novo):
-  // - Ciclo de cor: animar border-top-color entre tons da paleta.
   // - Shimmer: trocar border-top solid por background (gradient) +
   //   height, pra poder animar background-position — border não aceita
   //   gradient direto.
   // - Glitch tipo cpk-glitch-1/2 dos botões: exigiria um ::after extra
   //   pra segunda camada de cor, competindo com o clip-path fixo.
+  //
+  // Ciclo de cor (2026-08-23) implementado como alternativa pronta logo
+  // abaixo (@keyframes cpk-footer-color-cycle) — pra trocar o efeito
+  // ativo, troca só a linha `animation:` aqui embaixo por:
+  //   animation: cpk-footer-color-cycle 6s linear infinite;
+  // Não precisa mexer em mais nada: a keyframe de cor não usa `filter`,
+  // então não fica resíduo do pulso de brilho; o bloco
+  // prefers-reduced-motion abaixo desliga os dois igual, sem ajuste.
   &::before {
     position: absolute;
     top: 0;
@@ -792,6 +799,22 @@ footer.footer .footer__bottom {
   50% {
     filter: brightness(1.6) drop-shadow(0 0 14px rgba(var(--cpk-color-brand-rgb), 1));
   }
+}
+
+// Alternativa "ciclo de cor" (2026-08-23, pedido do fxlip: deixar outro
+// efeito pronto pra trocar fácil depois). Anima só border-top-color —
+// não mexe em clip-path/transform/filter, mesma regra de sempre. Cicla
+// entre os 3 tons de acento que o tema já usa (brand + os dois tons do
+// glitch de texto, --cpk-color-glitch-1/2 em tokens.scss): não introduz
+// cor nova, só reaproveita o vocabulário visual que já existe. `linear`
+// (não ease-in-out) porque com 3 paradas equidistantes o ease faria a
+// transição "acelerar/desacelerar" de forma despareceida entre os
+// trechos — linear mantém o ritmo igual o ciclo inteiro. 6s (o dobro do
+// pulso de brilho) porque são 3 cores pra perceber, não só claro/escuro.
+@keyframes cpk-footer-color-cycle {
+  0%, 100% { border-top-color: var(--cpk-color-brand); }
+  33% { border-top-color: var(--cpk-color-glitch-1); }
+  66% { border-top-color: var(--cpk-color-glitch-2); }
 }
 
 @media (prefers-reduced-motion: reduce) {
