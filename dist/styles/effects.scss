@@ -731,7 +731,7 @@ footer.footer {
   margin-top: 5rem;
 }
 
-// footer__bottom = a área com conteúdo hoje (ícones de cartão + copyright) +
+// footer__bottom = a área com conteúdo hoje (copyleft + redes sociais) +
 // borda de marca (via ::before, recortada em zigue-zague) com estética
 // CyberPulse. background-color repetido aqui (mesmo valor da tag <footer>
 // acima) só por robustez, caso footer__bottom ganhe um tom próprio no
@@ -746,11 +746,11 @@ footer.footer .footer__bottom {
   background-color: transparent !important; // Deixa o bg do body aparecer
   position: relative;
 
-  // Como o core renderiza .footer__bottom com width 100%,
-  // não adianta restringir o tamanho dele, as bordas continuam
-  // indo até o fim. Precisamos colocar o max-width e margins
-  // no before para a "borda" ter o mesmo tamanho da page-width.
-
+  // Full-bleed igual ao header (2026-08-22, pedido do fxlip: footer
+  // "dimensionado como o header, em 100% do width"): o ::before vai de
+  // borda a borda da viewport sem max-width/margin auto — antes tinha
+  // max-width: 1860px centralizado, o que fazia a borda "flutuar" no
+  // centro em telas largas enquanto o header atravessava tudo.
   &::before {
     position: absolute;
     top: 0;
@@ -762,11 +762,6 @@ footer.footer .footer__bottom {
     -webkit-transform: scaleY(-1);
     -ms-transform: scaleY(-1);
     transform: scaleY(-1);
-
-    // Alinha a borda com as margins do container principal
-    max-width: 1860px;
-    margin-left: auto;
-    margin-right: auto;
   }
 }
 
@@ -785,13 +780,23 @@ footer.footer .cpk-footer-copyright {
   align-items: center;
 }
 
-// Texto de copyright
+// Texto de copyright (conteúdo vem do metafield `custom.copyright` via
+// themeConfig — ver CyberpunkFooter.tsx)
 footer.footer .copyright,
 footer.footer .copyright span {
   color: var(--cpk-color-contrast-muted) !important;
   font-family: 'Purista', sans-serif !important;
   font-size: 13px !important;
   -webkit-font-smoothing: antialiased; // Corrige o visual pixelizado da ref
+}
+
+// © do texto de copyleft renderizado invertido (🄯). O texto vem da config
+// do admin como string pura — o componente envolve cada "©" nesse span
+// (ver CopyLeftText em CyberpunkFooter.tsx) pra manter a rotação sem
+// exigir markup especial no valor salvo no banco.
+footer.footer .copyright .cpk-copyleft-mark {
+  display: inline-block;
+  transform: rotate(180deg);
 }
 
 /* ------------------------------------------------------------------
