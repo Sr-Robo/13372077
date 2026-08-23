@@ -27,7 +27,7 @@ export default function CyberpunkFooter() {
             </a>
           </li>
           <li>
-            <a href="https://t.me/sr_robo_net_br" target="_blank" rel="noopener noreferrer">
+            <a href="https://t.me/+6s4y5eOZQLIxMjkx" target="_blank" rel="noopener noreferrer">
               TELEGRAM.
             </a>
           </li>
