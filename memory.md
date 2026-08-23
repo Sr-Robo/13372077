@@ -45,9 +45,10 @@ src/
 │   │                           pra área sem funcionalidade pronta (ver
 │   │                           § Pendências de funcionalidade)
 │   └── frontStore/catalog/product/list/
-│       ├── List.jsx/scss, item/{Name,Price,Thumbnail}.jsx (Name/Thumbnail
-│       │   sem link pra produto desde 2026-08-22, ver pendências)
-└── (dist/ é gerado por compile — versionado no git)
+│       ├── List.jsx/scss, item/{Name,Price,Thumbnail,Rating}.jsx
+│       │   (Name/Thumbnail sem link pra produto desde 2026-08-22, ver
+│       │   pendências; Rating decorativo desde 2026-08-23, ver pendências)
+└── (dist/ é gerado por compile; ver nota abaixo)
 ```
 
 **Mecanismo de descoberta**: componentes em `pages/<rota>/` são descobertos
@@ -55,7 +56,11 @@ por `getComponentsByRoute` → `scanRouteComponents` a partir de `dist/`, não
 `src/`. Cada componente exporta `{ default, layout: { areaId, sortOrder } }`.
 `pages/all/` = todas as páginas.
 
-**`dist/` é versionado** (diferente do fork `www` onde `dist` é ignorado).
+**`dist/`**: o deploy (`deploy-ecommerce.sh`) compila o tema do zero
+(`npm install && npm run compile` em container node:20 `--user 1000:1000`) —
+o `src/` é a fonte da verdade. Parte do `dist/` é trackeada no git (legado,
+~34 de 90 arquivos; `.gitignore` do repo ignora `dist/`), mas arquivos novos
+do dist NÃO precisam ser commitados: o deploy regenera tudo.
 
 ## Tokens de design
 
@@ -117,6 +122,10 @@ workflow/testes — não implementar durante uma sessão de layout.
   `Name.jsx` não linkam mais pra ficha de produto (viraram `<span
   className="... cpk-link-disabled">`). Reverter quando a ficha de produto
   tiver conteúdo real pronto pra receber tráfego da listagem.
+- **Estrelas de avaliação decorativas** (2026-08-23): `item/Rating.jsx`
+  renderiza 5 estrelas fixas (`RATING_COUNT`) no card do `/shop` — não há
+  sistema de avaliações no EverShop deste fork. Quando existir, passar a
+  média por prop (componente já isolado pra isso).
 
 ## Gotchas resolvidos (contexto / causa-raiz)
 

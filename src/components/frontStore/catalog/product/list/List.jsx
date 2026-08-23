@@ -3,6 +3,7 @@ import React from 'react';
 import { Name } from '@components/frontStore/catalog/product/list/item/Name';
 import { Thumbnail } from '@components/frontStore/catalog/product/list/item/Thumbnail';
 import { Price } from '@components/frontStore/catalog/product/list/item/Price';
+import { Rating } from '@components/frontStore/catalog/product/list/item/Rating';
 import Area from '@components/common/Area';
 import { get } from '@evershop/evershop/lib/util/get';
 import { _ } from '@evershop/evershop/lib/locale/translate/_';
@@ -41,6 +42,12 @@ export default function ProductList({ products = [], countPerRow = 3 }) {
                 props: { name: p.name, url: p.url, id: p.productId },
                 sortOrder: 20,
                 id: 'name'
+              },
+              {
+                // Decorativo por enquanto (sem sistema de avaliações) — ver Rating.jsx
+                component: { default: Rating },
+                sortOrder: 25,
+                id: 'rating'
               },
               {
                 component: { default: Price },

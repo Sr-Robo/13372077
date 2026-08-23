@@ -138,9 +138,12 @@
   }
 }
 
+// Referência CyberPulse: nome e preço centralizados no card (era à esquerda).
 .product-title-link {
+  display: block;
   text-decoration: none;
-  
+  text-align: center;
+
   .product-title {
     font-size: 1.25rem;
     font-weight: 600;
@@ -151,10 +154,24 @@
   }
 }
 
-.price {
-  font-size: 1.125rem;
-  font-weight: 500;
+// Estrelas de avaliação decorativas (ver Rating.jsx) — centralizadas entre
+// nome e preço, como na referência.
+.cpk-rating {
   display: flex;
+  justify-content: center;
+  gap: 3px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: var(--cpk-color-warning);
+}
+
+.price {
+  // Purista Bold (700) — peso real da família. O 500 anterior caía num
+  // fallback sintetizado (Purista-Medium não existe no disco, 404).
+  font-size: 1.125rem;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
   gap: 10px;
   align-items: center;
 
