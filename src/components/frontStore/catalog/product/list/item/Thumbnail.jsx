@@ -9,7 +9,8 @@ import { ProductNoThumbnail } from '@components/common/ProductNoThumbnail';
 function Thumbnail({ imageUrl, alt, isSpecial }) {
   return (
     <div className="product-thumbnail-wrap">
-      {isSpecial && <span className="cpk-badge-sale">Sale!</span>}
+      {/* Termo de campanha da loja (BR) — literal, sem translate. */}
+      {isSpecial && <span className="cpk-badge-sale">Promoção!</span>}
       {imageUrl ? (
         <span className="product-link cpk-link-disabled">
           <img src={imageUrl} alt={alt} loading="lazy" />

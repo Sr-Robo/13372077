@@ -23,6 +23,9 @@
   // Texto.
   --cpk-color-contrast: #f5f5f5;
   --cpk-color-contrast-muted: #ffffff;
+  // Texto secundário/desativado — ex.: preço anterior riscado no card
+  // (pedido do fxlip 2026-08-25: "cinza escurecido" distinguindo do atual).
+  --cpk-color-muted: #8a8a8a;
 
   // Cores fixas do efeito de glitch — não acompanham a marca.
   --cpk-color-glitch-1: #ee39f1;

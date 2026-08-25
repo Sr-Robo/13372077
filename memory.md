@@ -47,7 +47,11 @@ src/
 │   └── frontStore/catalog/product/list/
 │       ├── List.jsx/scss, item/{Name,Price,Thumbnail,Rating}.jsx
 │       │   (Name/Thumbnail sem link pra produto desde 2026-08-22, ver
-│       │   pendências; Rating decorativo desde 2026-08-23, ver pendências)
+│       │   pendências; Rating decorativo desde 2026-08-23, ver pendências;
+│       │   promo no card desde 2026-08-25: badge "Promoção!" no Thumbnail
+│       │   + Price com ins(promo, contraste) antes del(anterior riscado
+│       │   cinza `--cpk-color-muted`, negrito) — dado vem do resolver da
+│       │   extensão product_discount no fork www, ver gotcha abaixo)
 └── (dist/ é gerado por compile; ver nota abaixo)
 ```
 
@@ -128,6 +132,15 @@ workflow/testes — não implementar durante uma sessão de layout.
   média por prop (componente já isolado pra isso).
 
 ## Gotchas resolvidos (contexto / causa-raiz)
+
+### Preço promocional no card depende do backend do fork `www`
+O tema só APRESENTA promo: `List.jsx` passa `isSpecial` (compara
+`price.special < price.regular`) pro `Thumbnail` (badge) e o `Price.jsx`
+renderiza `ins`(promo)/`del`(riscado). O dado `price.special` vem do resolver
+`Product.price` da extensão `product_discount` (repo `www`) — que até
+2026-08-25 era sobrescvido em silêncio pelos stubs do core (bug de merge no
+`buildResolvers`) e lia a coluna errada do row da listagem. Fix no lado do
+`www`; se a badge sumir, debugar LÁ (schema/resolver), não no tema.
 
 ### Bind mount com container root
 Todo `docker run` que monta `repos/*` precisa de `--user 1000:1000`. Container

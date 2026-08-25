@@ -9,17 +9,19 @@ function Price({ regular, special }) {
     <span className="price">
       {isSpecial ? (
         <>
-          <del aria-hidden="true">
-            <span className="amount">{regular.text}</span>
-          </del>
-          <span className="screen-reader-text">
-            Original price was: {regular.text}.
-          </span>
+          {/* Promoção primeiro, preço anterior riscado depois — mesma ordem
+              da referência (pedido do fxlip 2026-08-25). */}
           <ins aria-hidden="true">
             <span className="amount">{special.text}</span>
           </ins>
           <span className="screen-reader-text">
             Current price is: {special.text}.
+          </span>
+          <del aria-hidden="true">
+            <span className="amount">{regular.text}</span>
+          </del>
+          <span className="screen-reader-text">
+            Original price was: {regular.text}.
           </span>
         </>
       ) : (

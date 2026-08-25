@@ -175,14 +175,18 @@
   gap: 10px;
   align-items: center;
 
+  // Promo (ins) primeiro, na mesma cor dos demais preços (contraste) —
+  // pedido do fxlip 2026-08-25. Preço anterior (del) depois: riscado, em
+  // negrito como todos os preços, mas em cinza escurecido.
   del {
-    opacity: 0.6;
+    color: var(--cpk-color-muted);
+    text-decoration: line-through;
     font-size: 0.9em;
   }
 
   ins {
     text-decoration: none;
-    color: var(--cpk-color-brand) !important;
+    color: var(--cpk-color-contrast);
   }
 }
 
@@ -208,7 +212,7 @@
   padding: 3.5px 25px;
   font-size: 0.8125em;
   font-weight: 600;
-  color: var(--cpk-color-white);
+  color: var(--cpk-color-contrast);
   text-transform: uppercase;
   background-color: var(--cpk-color-brand);
   z-index: 5;
