@@ -97,7 +97,10 @@ do dist NÃO precisam ser commitados: o deploy regenera tudo.
       `[data-slot="breadcrumb"]` global). Atenção: a ficha só responde em
       `/product/<uuid>` — `url_key` no lugar do uuid dá 404 (comportamento
       do core 2.2.1, não bug do tema).
-- [x] Carrinho (2026-08-20)
+- [x] Carrinho — revisado contra o piloto em 2026-08-26 (CTA de checkout
+      agora PRENCHIDO no padrão .cpk-btn, valores: subtotal em contraste /
+      unitário em muted, thumb com corte de canto como o card do /shop;
+      estado vazio extraído como `.cpk-empty-state` reutilizável)
 - [x] Checkout (2026-08-20)
 - [ ] Página estática/CMS (about)
 - [ ] Dashboard do cliente (conta/pedidos)

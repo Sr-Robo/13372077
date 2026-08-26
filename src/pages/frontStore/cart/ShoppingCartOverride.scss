@@ -59,10 +59,21 @@
         border-top: 1px solid var(--cpk-color-border, rgba(255, 255, 255, 0.1));
       }
 
-      /* Ajuste da borda da imagem do produto */
+      /* Ajuste da borda da imagem do produto — mesma linguagem do thumb do
+         card do /shop (List.scss .product-thumbnail-wrap): fundo bg-200 +
+         corte de canto inferior-direito, sem borda (corte e borda brigam) */
       .cpl-product-image {
-        border-radius: 0; /* Cyberpunk style usa cantos retos */
+        border-radius: 0;
         border: none;
+        background: var(--cpk-color-bg-200);
+        --cpk-crop-br: var(--cpk-crop-md);
+        clip-path: polygon(
+          0 0,
+          100% 0,
+          100% calc(100% - var(--cpk-crop-br)),
+          calc(100% - var(--cpk-crop-br)) 100%,
+          0 100%
+        );
       }
 
       .text-muted-foreground {
@@ -100,15 +111,18 @@
         text-shadow: var(--cpk-glow-sm);
       }
 
-      /* Preço individual (se houver) */
+      /* Preço individual (se houver) — unitário em muted, subtotal é o
+         valor de destaque (padrão do piloto /shop e da ficha: valores em
+         contraste, brand reservado pra interativo/acento) */
       .cpl-item-price {
-        color: var(--cpk-color-brand);
-        font-weight: 600;
+        color: var(--cpk-color-contrast-muted);
+        font-weight: 400;
+        font-size: 0.95rem;
       }
 
       /* Subtotal do item */
       .cpl-item-subtotal {
-        color: var(--cpk-color-brand);
+        color: var(--cpk-color-contrast);
         font-weight: 600;
         font-size: 1.1rem;
       }
@@ -261,29 +275,13 @@
       }
     }
 
+    /* Botão de checkout: PRENCHIDO no padrão .cpk-btn (fundo brand, texto
+       escuro, glow no hover) — desde a revisão da ficha (2026-08-26) o CTA
+       primário do funil é preenchido, coerente com a ref e o "Ver Produto"
+       do card. Antes era outline transparente aqui; sem override o default
+       preenchido do .cpk-btn/.cpk-btn-bg já aplica. */
     .shopping-cart-checkout-btn {
-      button {
-        color: var(--cpk-color-brand);
-        background: transparent;
-      }
-      .cpk-btn-bg {
-         background-color: transparent;
-         border: 1px solid var(--cpk-color-brand);
-      }
-      button:hover {
-        .cpk-btn-bg {
-          background-color: var(--cpk-color-brand);
-        }
-        color: var(--cpk-color-bg);
-      }
-      button.cpk-glitch-btn:hover .cpk-btn-bg::before,
-      button.cpk-glitch-btn:focus-visible .cpk-btn-bg::before {
-        background-color: var(--cpk-color-brand);
-      }
-      button.cpk-glitch-btn:hover .cpk-btn-bg::after,
-      button.cpk-glitch-btn:focus-visible .cpk-btn-bg::after {
-        background-color: var(--cpk-color-brand);
-      }
+      // Sem regras: herda o .cpk-btn preenchido.
     }
 
     .continue-shopping-link {
@@ -311,45 +309,12 @@
 }
 
 /* Empty cart state */
+/* Estado vazio do carrinho — a receita visual do cartão cortado migrou pra
+   components.scss como componente reutilizável `.cpk-empty-state` (revisão
+   do /cart, 2026-08-26): mesma aparência, agora também disponível pra
+   "sem pedidos" do dashboard e páginas de erro. O JSX usa a classe nova. */
 .empty-shopping-cart {
-  .cpl-empty-cart {
-    background: rgba(var(--cpk-color-bg-200), 0.4);
-    border: 1px solid var(--cpk-color-border, rgba(255, 255, 255, 0.1));
-    padding: 4rem 2rem;
-    position: relative;
-    max-width: 600px;
-    margin: 0 auto;
-
-    /* Cyberpunk corners */
-    clip-path: polygon(
-      0 20px,
-      20px 0,
-      100% 0,
-      100% calc(100% - 20px),
-      calc(100% - 20px) 100%,
-      0 100%
-    );
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: -1px;
-      left: 20px;
-      width: 60px;
-      height: 2px;
-      background-color: var(--cpk-color-brand);
-      box-shadow: var(--cpk-glow-sm);
-    }
-
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      right: 20px;
-      width: 60px;
-      height: 2px;
-      background-color: var(--cpk-color-brand);
-      box-shadow: var(--cpk-glow-sm);
-    }
+  .cpk-empty-state {
+    // receita em components.scss
   }
 }

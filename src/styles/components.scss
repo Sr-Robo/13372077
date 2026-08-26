@@ -1157,6 +1157,53 @@ select#shop-sort-by {
   }
 }
 
+// Estado vazio — cartão cortado com título, texto e CTA centrados.
+// Extraído da revisão do /cart (2026-08-26): a receita era do
+// `.cpl-empty-cart` local da página. Reuso: "sem pedidos" do dashboard,
+// páginas de erro.
+.cpk-empty-state {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: rgba(var(--cpk-color-bg-200), 0.4);
+  border: 1px solid var(--cpk-color-border);
+
+  // Cantos cortados (mesma família do .cpl-cart-summary)
+  clip-path: polygon(
+    0 20px,
+    20px 0,
+    100% 0,
+    100% calc(100% - 20px),
+    calc(100% - 20px) 100%,
+    0 100%
+  );
+
+  // Traços brand nas bordas cortadas
+  &::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 20px;
+    width: 60px;
+    height: 2px;
+    background-color: var(--cpk-color-brand);
+    box-shadow: var(--cpk-glow-sm);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    right: 20px;
+    width: 60px;
+    height: 2px;
+    background-color: var(--cpk-color-brand);
+    box-shadow: var(--cpk-glow-sm);
+  }
+}
+
 /* Container principal do carrinho */
 .cpl-cart-wrap {
   .shopping-cart-header {

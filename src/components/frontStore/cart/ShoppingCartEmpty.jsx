@@ -4,7 +4,7 @@ import React from 'react';
 export function ShoppingCartEmpty() {
   return (
     <div className="empty-shopping-cart w-full flex justify-center py-20">
-      <div className="text-center cpl-empty-cart">
+      <div className="text-center cpk-empty-state">
         <h2 className="cpk-h2 mb-4" style={{ color: 'var(--cpk-color-contrast)' }}>{_('CARRINHO')}</h2>
         <div className="mt-2 text-center text-muted-foreground mb-8">
           <span style={{ color: 'var(--cpk-color-contrast-muted)' }}>{_('Seu carrinho está vazio.')}</span>
