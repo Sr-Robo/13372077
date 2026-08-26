@@ -396,6 +396,14 @@
 }
 
 // Override para a página de Produto (/product/:slug)
+// ─────────────────────────────────────────────────────────────────────
+// Ficha de produto (/product/:uuid) — revisão contra o piloto /shop
+// (2026-08-26). Refs: ~/refs/cyberpulse/cyberpulse/{simples,variavel}.html
+// (inspiração estrutural; paleta/identidade próprias). Componentes
+// extraídos pra reuso nas próximas páginas: .cpk-price-block,
+// .cpk-meta-list, .cpk-gallery, breadcrumb [data-slot="breadcrumb"].
+// ─────────────────────────────────────────────────────────────────────
+
 .product__detail {
   font-family: var(--cpk-font-family);
 
@@ -410,20 +418,9 @@
     letter-spacing: 0.05em;
   }
 
-  // Preço
-  .product__single__price {
-    color: var(--cpk-color-success); // Cor verde de sucesso/sistema para o preço
-    text-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
-    
-    .line-through {
-      color: var(--cpk-color-danger);
-      text-shadow: none;
-    }
-  }
-
-  // Seletor de Variantes (cores, tamanhos) e Inputs
-  .variant-selector select,
-  input[name="qty"] {
+  // Seletor de Variantes (cores, tamanhos) — sem produto variável no
+  // catálogo pra testar hoje, regras mantidas do corte anterior
+  .variant-selector select {
     background: var(--cpk-color-bg-200);
     border: 1px solid var(--cpk-color-border);
     color: var(--cpk-color-contrast);
@@ -439,53 +436,13 @@
     }
   }
 
-  // Botão "Add To Cart"
-  .space-y-3 > button {
-    background-color: transparent !important;
-    color: var(--cpk-color-brand) !important;
-    border: 1.5px solid var(--cpk-color-brand) !important;
-    border-radius: 0 !important;
-    font-family: var(--cpk-font-family) !important;
-    text-transform: uppercase !important;
-    font-weight: var(--cpk-font-weight-heading) !important;
-    letter-spacing: 0.05em !important;
-    padding: 1.5em 2em !important;
-    transition: all 0.2s !important;
-    position: relative !important;
-    overflow: hidden !important;
-    clip-path: polygon(
-      0 0,
-      100% 0,
-      100% calc(100% - 15px),
-      calc(100% - 15px) 100%,
-      0 100%
-    );
-
-    &:hover {
-      background: rgba(189,0,255,0.1) !important;
-      box-shadow: var(--cpk-glow-md) !important;
-    }
-    
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background: var(--cpk-color-brand);
-      box-shadow: var(--cpk-glow-sm);
-      z-index: 2;
-    }
-  }
-
   // Mídia / Galeria (Foto do produto)
   .product__detail__left {
     position: relative;
     padding: 1rem;
     border: 1px solid var(--cpk-color-border);
     background: var(--cpk-color-bg-100);
-    
+
     // Brackets cyberpunk
     &::before {
       content: '';
@@ -505,21 +462,273 @@
       border-right: 2px solid var(--cpk-color-brand);
       z-index: 10;
     }
-    
+
     // Imagem base
     img {
       filter: grayscale(20%) contrast(1.1); // Dá um tom mais áspero cyberpunk
     }
   }
+}
 
-  // Descrição do Produto
-  .product__single__description {
-    margin-top: 3rem;
-    padding: 2rem;
-    background: var(--cpk-color-bg-100);
-    border-top: 1px solid var(--cpk-color-border);
+// Preço — MESMA receita do card do /shop (List.scss .price): valor atual
+// em contraste SemiBold, anterior riscado em muted. Na ficha o markup do
+// core usa <span> + <span class="line-through"> (não ins/del), então os
+// seletores cobrem as duas grafias. Font-size explícito no span pra vencer
+// o .text-2xl/.text-lg do Tailwind (0,2,0 > 0,1,0).
+.cpk-price-block,
+.product__detail .product__single__price {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--cpk-font-family);
+  color: var(--cpk-color-contrast);
+
+  > span,
+  .amount {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--cpk-color-contrast);
+    letter-spacing: 0.02em;
+  }
+
+  .line-through,
+  del {
+    color: var(--cpk-color-muted);
+    text-decoration: line-through;
+    font-size: 19px;
+    font-weight: 400;
+  }
+
+  ins {
+    text-decoration: none;
+    color: var(--cpk-color-contrast);
+  }
+}
+
+// Lista de metadados (SKU, atributos) — padrão "RÓTULO // valor" da ref:
+// rótulo uppercase espaçado em muted, valor em contraste suave, divisórias
+// finas. Reuso: dashboard do cliente (dados da conta, endereços).
+.cpk-meta-list,
+.product__detail .product__single__attributes {
+  font-family: var(--cpk-font-family);
+  font-size: 13px;
+  line-height: 1.6;
+  border-color: var(--cpk-color-border);
+
+  > div {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: 1rem;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--cpk-color-border);
+  }
+
+  dt {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--cpk-color-muted);
+    font-weight: var(--cpk-font-weight-base);
+  }
+
+  dd {
+    margin: 0;
     color: var(--cpk-color-contrast-muted);
-    line-height: 1.8;
+  }
+}
+
+// Galeria — override do Media.scss do core (que é claro: thumb branca,
+// raio 4-8px, fundo #f7f7f7). Escurece, zera raio, thumb ativa com brand
+// + glow. Setas recoloridas (posição/shape do core mantidos).
+.cpk-gallery,
+.product__detail .product-media-container {
+  .main-image-container {
+    border-radius: 0;
+    border: 1px solid var(--cpk-color-border);
+    background: var(--cpk-color-bg-100);
+  }
+
+  .product-image {
+    background-color: var(--cpk-color-bg-100) !important;
+    cursor: zoom-in;
+  }
+
+  .slick-thumb {
+    li {
+      opacity: 0.6;
+      transition: opacity var(--cpk-transition-duration) var(--cpk-transition-easing);
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    li.slick-active {
+      opacity: 1;
+
+      .thumbnail-wrapper {
+        border-color: var(--cpk-color-brand);
+        box-shadow: var(--cpk-glow-sm);
+      }
+    }
+
+    .thumbnail-wrapper {
+      width: 76px;
+      border: 1px solid var(--cpk-color-border);
+      border-radius: 0;
+      background: var(--cpk-color-bg-100);
+      padding: 2px;
+    }
+  }
+
+  .slick-arrow.custom-arrow {
+    background: var(--cpk-color-bg-200);
+    border: 1px solid var(--cpk-color-border);
+    border-radius: 0;
+    color: var(--cpk-color-contrast);
+    z-index: 5;
+    transition: border-color var(--cpk-transition-duration) var(--cpk-transition-easing),
+      color var(--cpk-transition-duration) var(--cpk-transition-easing);
+
+    &:hover {
+      border-color: var(--cpk-color-brand);
+      color: var(--cpk-color-brand);
+    }
+  }
+}
+
+// Campo de quantidade — NumberField do core é shadcn
+// ([data-slot="input-group"]); veste de cpk-input: fundo bg-200, borda
+// reta, foco brand (o ring do shadcn também é box-shadow — o
+// !important abaixo vence).
+.product__detail [data-slot='input-group'] {
+  border-radius: 0;
+  border-color: var(--cpk-color-border);
+  background: var(--cpk-color-bg-200);
+  height: auto;
+
+  &:focus-within {
+    border-color: var(--cpk-color-brand);
+    box-shadow: var(--cpk-glow-sm) !important;
+  }
+
+  input[name='qty'] {
+    padding: 0.65em 1em;
+    color: var(--cpk-color-contrast);
+    font-family: var(--cpk-font-family);
+  }
+}
+
+.product__detail label[data-slot='field-label'] {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  color: var(--cpk-color-muted);
+}
+
+// CTA "Adicionar ao carrinho" — mesma linguagem do .cpk-btn preenchido do
+// piloto (botão "Ver Produto" do card): fundo brand, texto escuro, corte
+// de canto, glow no hover. O markup é do core (sem o <span class
+// ="cpk-btn-bg"> do botão do tema), então o corte vai direto no botão e
+// os !important vencem o Button do shadcn.
+.product__detail .space-y-3 > button {
+  background-color: var(--cpk-color-brand) !important;
+  color: var(--cpk-color-bg) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  font-family: var(--cpk-font-family) !important;
+  text-transform: uppercase !important;
+  font-weight: var(--cpk-font-weight-heading) !important;
+  letter-spacing: 0.06em !important;
+  font-size: 0.9rem !important;
+  padding: 1.1em 2em !important;
+  transition: box-shadow var(--cpk-transition-duration) var(--cpk-transition-easing),
+    filter var(--cpk-transition-duration) var(--cpk-transition-easing) !important;
+  clip-path: polygon(
+    0 12px,
+    12px 0,
+    100% 0,
+    100% calc(100% - 12px),
+    calc(100% - 12px) 100%,
+    0 100%
+  );
+
+  &:hover:not(:disabled) {
+    box-shadow: var(--cpk-glow-md);
+    filter: brightness(1.15);
+  }
+
+  &:disabled {
+    background-color: var(--cpk-color-bg-300) !important;
+    color: var(--cpk-color-muted) !important;
+    cursor: not-allowed;
+  }
+}
+
+// Descrição do Produto — heading ecoa o padrão dos headings do /shop
+// (uppercase espaçado com traço brand sob a régua divisória).
+.product__detail .product__single__description {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: var(--cpk-color-bg-100);
+  border-top: 1px solid var(--cpk-color-border);
+  color: var(--cpk-color-contrast-muted);
+  line-height: 1.8;
+
+  h3 {
+    font-size: 1rem;
+    font-weight: var(--cpk-font-weight-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--cpk-color-contrast);
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--cpk-color-border);
+    margin-bottom: 1.5rem;
+    position: relative;
+
+    // Traço brand quebrando a régua (mesma linguagem do heading de
+    // filtro da sidebar do /shop)
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      width: 60px;
+      height: 2px;
+      background: var(--cpk-color-brand);
+      box-shadow: var(--cpk-glow-sm);
+    }
+  }
+}
+
+// Breadcrumb (shadcn [data-slot="breadcrumb"]) — global: uppercase miúdo
+// espaçado, separadores brand. O /shop continua escondendo o seu
+// (BreadcrumbOverride na extensão catalog_shop).
+nav[data-slot='breadcrumb'] {
+  font-family: var(--cpk-font-family);
+
+  ol[data-slot='breadcrumb-list'] {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  a[data-slot='breadcrumb-link'] {
+    color: var(--cpk-color-muted);
+    transition: color var(--cpk-transition-duration) var(--cpk-transition-easing);
+
+    &:hover {
+      color: var(--cpk-color-brand);
+    }
+  }
+
+  .breadcrumb-page,
+  [aria-current='page'] {
+    color: var(--cpk-color-contrast-muted);
+  }
+
+  li[data-slot='breadcrumb-separator'] svg {
+    color: var(--cpk-color-brand);
+    opacity: 0.7;
   }
 }
 

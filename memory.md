@@ -91,7 +91,12 @@ do dist NÃO precisam ser commitados: o deploy regenera tudo.
       ver `extensions/catalog_shop/src/pages/frontStore/homepage/homeToShop.js`
       no fork `www`); ver pendência abaixo
 - [x] Login/Cadastro (override em `components.scss` + `LoginHero.tsx`)
-- [x] Página de produto (override em `components.scss`)
+- [x] Página de produto — revisada contra o piloto /shop em 2026-08-26
+      (override em `components.scss`; extraídos `.cpk-price-block`,
+      `.cpk-meta-list`, `.cpk-gallery`, breadcrumb
+      `[data-slot="breadcrumb"]` global). Atenção: a ficha só responde em
+      `/product/<uuid>` — `url_key` no lugar do uuid dá 404 (comportamento
+      do core 2.2.1, não bug do tema).
 - [x] Carrinho (2026-08-20)
 - [x] Checkout (2026-08-20)
 - [ ] Página estática/CMS (about)
@@ -130,6 +135,14 @@ workflow/testes — não implementar durante uma sessão de layout.
   renderiza 5 estrelas fixas (`RATING_COUNT`) no card do `/shop` — não há
   sistema de avaliações no EverShop deste fork. Quando existir, passar a
   média por prop (componente já isolado pra isso).
+- **Ficha: seletor de variantes sem como validar** (2026-08-26): o
+  catálogo só tem produtos `simple` — as regras `.variant-selector` do CSS
+  continuam do corte anterior, não vistas renderizadas. Criar produto
+  variável no admin quando for validar.
+- **Ficha: descrição e relacionados dependem de dado** (2026-08-26): o
+  vargr (produto de teste) tem descrição vazia e
+  `related_products_mode=inherit` não renderiza seção de relacionados —
+  layout dessas áreas revisado às cegas; revalidar com produto populado.
 
 ## Gotchas resolvidos (contexto / causa-raiz)
 

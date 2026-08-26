@@ -42,6 +42,18 @@ docker run --rm -v /tmp/scratchpad:/work zenika/alpine-chrome \
   "http://100.94.54.16:8090/pagina"
 ```
 
+⚠️ **Janela alta (≥~1600px) exige `--shm-size`** (2026-08-26): sem ele o
+chrome não imprime nada e o `docker run` pendura até o timeout — sintoma
+silencioso, só sai um "Terminado" quando morre. Usar
+`docker run --rm --shm-size=256m … --window-size=1440,2400 …`.
+
+⚠️ **Refs `~/refs/cyberpulse/cyberpulse/*.html` não renderizam cruas**:
+são espelhos wget de páginas WordPress com scripts/fonts externos que
+penduram o load. Renderizar via cópia higienizada: strip de
+`<script>`/`<iframe>`/`<link>`-externo, neutralizar `src|href="http…"`
+→ `data:,` (também `url()`/`@import` http dentro dos `*_arquivos/*.css`)
+e abrir por `file://`.
+
 ## Build de produção isolado
 
 Preview da build sem afetar produção (só compila a imagem):
