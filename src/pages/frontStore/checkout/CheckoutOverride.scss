@@ -1,37 +1,33 @@
-/* Formatação da área do checkout inspirada na referência Cyberpulse */
+/* Checkout — revisão contra o piloto (2026-08-26), refs
+   ~/refs/cyberpulse/cyberpulse/checkout.html (estrutura; classes `cpl-`
+   espelham a nomenclatura da ref, convenção do /cart). Identidade própria:
+   marca #bd00ff, nada de ciano. Família de formulário (.cpk-form-group) e
+   coluna de resumo (.cpk-order-summary) vivem em components.scss — os
+   .scss de página compilam soltos, não importam uns aos outros. */
 .cpl-checkout-wrap {
   margin-top: 40px;
   margin-bottom: 80px;
 
-  input[type="text"], input[type="email"], input[type="tel"], select {
-    background: transparent;
-    border: 1px solid var(--border-color, #333);
-    border-radius: 0;
-    padding: 12px 15px;
-    width: 100%;
-    color: #fff;
-    transition: border-color 0.3s ease;
-    
-    &:focus {
-      outline: none;
-      border-color: var(--primary, #00ffcc);
-      box-shadow: inset 0 0 5px rgba(0, 255, 204, 0.2);
+  // Steps do core: Card shadcn (.rounded-lg.border) com badge numérico —
+  // cantos retos, borda do tema, badge em brand
+  .checkout-step,
+  .checkout__shipment {
+    .rounded-lg {
+      border-radius: 0;
+      border-color: var(--cpk-color-border);
+      background-color: var(--cpk-color-bg-100);
     }
-  }
 
-  .cpk-checkout-steps {
-    .step {
-      margin-bottom: 2rem;
+    .bg-primary {
+      background-color: var(--cpk-color-brand);
+      border-radius: 0;
+      text-shadow: var(--cpk-glow-sm);
     }
-    .step-heading {
-      font-size: 1.5rem;
-      font-weight: 700;
+
+    .text-base.font-semibold {
+      font-family: var(--cpk-font-family);
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 1rem;
-      color: #fff;
-      border-bottom: 1px solid var(--border-color, #333);
-      padding-bottom: 0.5rem;
+      letter-spacing: 0.05em;
     }
   }
 
@@ -39,43 +35,23 @@
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 1px;
+
     span.separator {
       margin: 0 10px;
       opacity: 0.5;
     }
   }
 
-  .cpl-woocommerce-checkout-order-col {
-    background: rgba(0,0,0,0.4);
-    border: 1px solid var(--border-color, #333);
-    padding: 30px;
-    position: relative;
-    
-    &::before {
-      content: '';
-      position: absolute;
-      top: -1px;
-      left: -1px;
-      width: 30px;
-      height: 30px;
-      border-top: 2px solid var(--primary, #00ffcc);
-      border-left: 2px solid var(--primary, #00ffcc);
-    }
-    
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      right: -1px;
-      width: 30px;
-      height: 30px;
-      border-bottom: 2px solid var(--primary, #00ffcc);
-      border-right: 2px solid var(--primary, #00ffcc);
-    }
+  // Passo ativo do breadcrumb (classe do tema — ver Checkout.jsx)
+  .cpk-checkout-step-active {
+    color: var(--cpk-color-brand);
+    text-shadow: var(--cpk-glow-sm);
   }
 
+  // Passos já completados (preview colapsado)
   .cpk-checkout-completed-steps {
-    background: rgba(0,0,0,0.2);
-    border-color: var(--border-color, #333);
+    background: rgba(var(--cpk-color-bg-200), 0.4);
+    border-color: var(--cpk-color-border);
+    border-radius: 0;
   }
 }

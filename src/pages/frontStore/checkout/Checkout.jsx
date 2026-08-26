@@ -37,7 +37,7 @@ function Breadcrumb() {
           );
         } else {
           return (
-            <span key={step.id} className="text-interactive flex items-center font-bold" style={{ color: 'var(--primary)' }}>
+            <span key={step.id} className="text-interactive flex items-center font-bold cpk-checkout-step-active">
               <span>{step.title}</span> {separator}
             </span>
           );
@@ -127,7 +127,7 @@ export default function CheckoutPage({
               ]}
             />
           </div>
-          <div className="col-2 cpl-woocommerce-checkout-order-col">
+          <div className="col-2 cpl-woocommerce-checkout-order-col cpk-order-summary">
             <Area id="checkoutPageRight" />
           </div>
         </div>

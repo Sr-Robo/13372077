@@ -3,13 +3,14 @@ import React from 'react';
 import { Items } from '@components/frontStore/checkout/checkout/summary/Items';
 import { CartSummary } from '@components/frontStore/checkout/checkout/summary/Cart';
 import Area from '@components/common/Area';
+import { _ } from '@evershop/evershop/lib/locale/translate/_';
 import '@evershop/evershop/modules/checkout/pages/frontStore/checkout/Summary.scss';
 
 export default function Summary({ cart, setting: { priceIncludingTax } }) {
   return (
     <>
-      <h3 className="cpk-checkout-summary-title text-2xl uppercase font-bold mb-6 tracking-wide pb-2 border-b border-divider">
-        Order Review
+      <h3 className="cpk-h4 summary-title">
+        {_('Order Review')}
       </h3>
       <Area
         id="checkoutSummary"

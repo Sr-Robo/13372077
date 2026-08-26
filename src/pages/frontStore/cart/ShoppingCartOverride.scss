@@ -186,92 +186,15 @@
     }
   }
 
-  /* Summary */
+  /* Summary — receita migrada pra components.scss como `.cpk-order-summary`
+     (revisão do checkout, 2026-08-26): mesma aparência, agora compartilhada
+     com a coluna de resumo do checkout. O JSX carrega as duas classes. */
   .cpl-cart-summary {
-    background: transparent;
-    border: 1px solid var(--cpk-color-border, rgba(255, 255, 255, 0.1));
-    padding: 2.5rem 2rem;
-    position: relative;
-
-    /* Clipped Corners (cyberpunk style) */
-    clip-path: polygon(
-      0 15px,
-      15px 0,
-      100% 0,
-      100% calc(100% - 15px),
-      calc(100% - 15px) 100%,
-      0 100%
-    );
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: -1px;
-      left: 15px;
-      right: 0;
-      height: 2px;
-      background: var(--cpk-color-brand);
-      box-shadow: var(--cpk-glow-sm);
-    }
-
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      right: 15px;
-      left: 0;
-      height: 2px;
-      background: var(--cpk-color-brand);
-      box-shadow: var(--cpk-glow-sm);
-    }
-
-    .summary-title {
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-weight: 600;
-      margin-bottom: 2rem;
-      border-bottom: none;
-      padding-bottom: 0;
-      position: relative;
-
-      &::after {
-        content: '';
-        display: block;
-        width: 40px;
-        height: 2px;
-        background-color: var(--cpk-color-brand);
-        margin-top: 0.8rem;
-        box-shadow: var(--cpk-glow-sm);
-      }
-    }
 
     .summary-content {
-      color: var(--cpk-color-contrast);
-
-      .text-muted-foreground {
-        color: var(--cpk-color-contrast-muted);
-        opacity: 0.8;
-      }
-
       .py-1\.5 {
         padding-top: 0.75rem;
         padding-bottom: 0.75rem;
-      }
-      .summary-row {
-        border-bottom: 1px solid var(--cpk-color-border, rgba(255, 255, 255, 0.1));
-        padding-bottom: 1rem;
-        margin-bottom: 0.5rem;
-      }
-      .summary__row.grand-total {
-        border-color: var(--cpk-color-border, rgba(255, 255, 255, 0.1));
-        margin-top: 1.5rem;
-        padding-top: 1.5rem;
-      }
-      .grand-total {
-        color: var(--cpk-color-brand);
-      }
-      .grand-total-value {
-        font-size: 1.25rem;
       }
     }
 

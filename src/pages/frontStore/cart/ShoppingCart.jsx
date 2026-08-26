@@ -44,7 +44,7 @@ export default function ShoppingCart({ checkoutUrl }) {
               <Area id="shoppingCartAfterItems" noOuter />
             </div>
 
-            <div className="cart-summary cpl-cart-summary">
+            <div className="cart-summary cpl-cart-summary cpk-order-summary">
               <Area id="shoppingCartBeforeSummary" noOuter />
 
               <h2 className="cpk-h4 summary-title">{_('CART TOTALS')}</h2>

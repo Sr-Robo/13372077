@@ -171,6 +171,84 @@
   color: var(--cpk-color-contrast-muted);
 }
 
+// ─────────────────────────────────────────────────────────────────────
+// Família de formulário `.cpk-form-group` (revisão do checkout/login,
+// 2026-08-26). O core renderiza campos no padrão shadcn via data-slot —
+// field/field-label/input-group/input-group-control/field-error (ver
+// components/common/ui/Field.tsx no fork www; Input/Email/Password/Tel/
+// Select/TextareaField usam todos essa mesma estrutura). Fonte única em
+// três pontos de aplicação:
+//   1. classe opt-in `.cpk-form-group` — via `wrapperClassName` do campo,
+//      quando o JSX é do tema (ex.: CouponForm);
+//   2/3. escopos `.cpl-checkout-wrap` / `.login__page` — JSX do core,
+//      só dá pra estilizar por CSS (regra "sem mexer no repo www" do
+//      agents.md). Os .scss de página NÃO importam este arquivo (cada um
+//      compila solto), por isso o grupo de seletores vive aqui.
+// ─────────────────────────────────────────────────────────────────────
+.cpk-form-group,
+.cpl-checkout-wrap,
+.login__page {
+  [data-slot='field'] {
+    font-family: var(--cpk-font-family);
+
+    // Label: caixa alta curta — rótulo técnico, não frase
+    [data-slot='field-label'] {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.75rem;
+      color: var(--cpk-color-contrast-muted);
+    }
+
+    // O grupo carrega a "caixa" do campo (borda/fundo/raio) — é ele quem
+    // recebe o corte, não o input de dentro
+    [data-slot='input-group'],
+    [data-slot='select-trigger'],
+    textarea {
+      border-radius: 0;
+      border-color: var(--cpk-color-border);
+      background-color: var(--cpk-color-bg-200);
+      color: var(--cpk-color-contrast);
+      transition: border-color var(--cpk-transition-duration) var(--cpk-transition-easing),
+        box-shadow var(--cpk-transition-duration) var(--cpk-transition-easing);
+
+      &:focus-within,
+      &[data-state='open'],
+      &:focus-visible {
+        border-color: var(--cpk-color-brand);
+        box-shadow: inset 0 0 5px rgba(var(--cpk-color-brand-rgb), 0.2);
+        outline: none;
+      }
+    }
+
+    [data-slot='input-group-control'],
+    [data-slot='select-value'],
+    textarea {
+      color: var(--cpk-color-contrast);
+      font-family: var(--cpk-font-family);
+
+      &::placeholder {
+        color: var(--cpk-color-contrast-muted);
+      }
+    }
+
+    // Estado de erro: o Field raiz recebe data-invalid do campo do core
+    &[data-invalid='true'] {
+      [data-slot='field-label'] {
+        color: var(--cpk-color-danger);
+      }
+
+      [data-slot='input-group'] {
+        border-color: var(--cpk-color-danger);
+      }
+
+      [data-slot='field-error'] {
+        color: var(--cpk-color-danger);
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
 // Override agressivo no login do core (já que não podemos substituir o componente sem mexer no repo www)
 .login__page {
   font-family: var(--cpk-font-family);
@@ -1201,6 +1279,97 @@ select#shop-sort-by {
     height: 2px;
     background-color: var(--cpk-color-brand);
     box-shadow: var(--cpk-glow-sm);
+  }
+}
+
+// Coluna de resumo do funil (itens + totais) — receita aprovada na revisão
+// do /cart (2026-08-26), extraída pra compartilhar com o checkout: painel
+// transparente com borda, cantos cortados via clip-path e traços brand
+// nas bordas superior/inferior (mesma linguagem do .cpk-empty-state).
+// Título via .summary-title; linhas de total via .summary-content.
+.cpk-order-summary {
+  background: transparent;
+  border: 1px solid var(--cpk-color-border, rgba(255, 255, 255, 0.1));
+  padding: 2.5rem 2rem;
+  position: relative;
+  clip-path: polygon(
+    0 15px,
+    15px 0,
+    100% 0,
+    100% calc(100% - 15px),
+    calc(100% - 15px) 100%,
+    0 100%
+  );
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 15px;
+    right: 0;
+    height: 2px;
+    background: var(--cpk-color-brand);
+    box-shadow: var(--cpk-glow-sm);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    right: 15px;
+    left: 0;
+    height: 2px;
+    background: var(--cpk-color-brand);
+    box-shadow: var(--cpk-glow-sm);
+  }
+
+  .summary-title {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    border-bottom: none;
+    padding-bottom: 0;
+    position: relative;
+
+    &::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 2px;
+      background-color: var(--cpk-color-brand);
+      margin-top: 0.8rem;
+      box-shadow: var(--cpk-glow-sm);
+    }
+  }
+
+  .summary-content {
+    color: var(--cpk-color-contrast);
+
+    .text-muted-foreground {
+      color: var(--cpk-color-contrast-muted);
+      opacity: 0.8;
+    }
+
+    .summary-row {
+      border-bottom: 1px solid var(--cpk-color-border, rgba(255, 255, 255, 0.1));
+      padding-bottom: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .summary__row.grand-total {
+      border-color: var(--cpk-color-border, rgba(255, 255, 255, 0.1));
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+    }
+
+    .grand-total {
+      color: var(--cpk-color-brand);
+    }
+
+    .grand-total-value {
+      font-size: 1.25rem;
+    }
   }
 }
 
