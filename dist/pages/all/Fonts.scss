@@ -4,6 +4,15 @@
 // 2026-07-19) diz "Personal Use Only" — uso comercial da loja exige
 // comprar a licença de webfont comercial em suitcasetype.com ou myfonts.com
 // antes de operar a loja comercialmente (ver CLAUDE.md do servidor).
+//
+// Overrides de métricas verticais — a Purista comprada (Suitcase/Befonts)
+// tem métricas internas diferentes da purista-web do Adobe Typekit usada
+// na referência CyberPulse:
+//   Local:   hheaAsc=940  hheaDsc=-260  lineGap=0  sTypoLineGap=200
+//   Typekit:  hheaAsc=925  hheaDsc=-210  lineGap=0  sTypoLineGap=0
+// Sem os overrides, o browser reserva mais espaço vertical por linha,
+// fazendo o texto ficar "achatado" visualmente. Os valores abaixo
+// (92.5% / 21% / 0%) replicam as métricas da Typekit sobre 1000 UPM.
 
 @font-face {
   font-family: 'Purista';
@@ -11,6 +20,9 @@
   font-weight: 100;
   font-style: normal;
   font-display: swap;
+  ascent-override: 92.5%;
+  descent-override: 21%;
+  line-gap-override: 0%;
 }
 
 @font-face {
@@ -19,6 +31,9 @@
   font-weight: 100;
   font-style: italic;
   font-display: swap;
+  ascent-override: 92.5%;
+  descent-override: 21%;
+  line-gap-override: 0%;
 }
 
 @font-face {
@@ -27,6 +42,9 @@
   font-weight: 300;
   font-style: normal;
   font-display: swap;
+  ascent-override: 92.5%;
+  descent-override: 21%;
+  line-gap-override: 0%;
 }
 
 @font-face {
@@ -35,6 +53,9 @@
   font-weight: 300;
   font-style: italic;
   font-display: swap;
+  ascent-override: 92.5%;
+  descent-override: 21%;
+  line-gap-override: 0%;
 }
 
 @font-face {
@@ -43,6 +64,9 @@
   font-weight: 500;
   font-style: normal;
   font-display: swap;
+  ascent-override: 92.5%;
+  descent-override: 21%;
+  line-gap-override: 0%;
 }
 
 @font-face {
@@ -51,6 +75,9 @@
   font-weight: 500;
   font-style: italic;
   font-display: swap;
+  ascent-override: 92.5%;
+  descent-override: 21%;
+  line-gap-override: 0%;
 }
 
 @font-face {
@@ -59,6 +86,9 @@
   font-weight: 600;
   font-style: normal;
   font-display: swap;
+  ascent-override: 92.5%;
+  descent-override: 21%;
+  line-gap-override: 0%;
 }
 
 @font-face {
@@ -67,6 +97,9 @@
   font-weight: 600;
   font-style: italic;
   font-display: swap;
+  ascent-override: 92.5%;
+  descent-override: 21%;
+  line-gap-override: 0%;
 }
 
 @font-face {
@@ -75,6 +108,9 @@
   font-weight: 700;
   font-style: normal;
   font-display: swap;
+  ascent-override: 92.5%;
+  descent-override: 21%;
+  line-gap-override: 0%;
 }
 
 @font-face {
@@ -83,4 +119,7 @@
   font-weight: 700;
   font-style: italic;
   font-display: swap;
+  ascent-override: 92.5%;
+  descent-override: 21%;
+  line-gap-override: 0%;
 }
