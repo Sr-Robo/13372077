@@ -180,14 +180,19 @@
 // três pontos de aplicação:
 //   1. classe opt-in `.cpk-form-group` — via `wrapperClassName` do campo,
 //      quando o JSX é do tema (ex.: CouponForm);
-//   2/3. escopos `.cpl-checkout-wrap` / `.login__page` — JSX do core,
-//      só dá pra estilizar por CSS (regra "sem mexer no repo www" do
-//      agents.md). Os .scss de página NÃO importam este arquivo (cada um
-//      compila solto), por isso o grupo de seletores vive aqui.
+//   2. escopos de JSX do core — `.cpl-checkout-wrap` (checkout) e os
+//      wrappers das páginas de auth (`.login__page`, `.register__form`,
+//      `.reset__password__form`, `.update-password-form`) — só dá pra
+//      estilizar por CSS (regra "sem mexer no repo www" do agents.md).
+//      Os .scss de página NÃO importam este arquivo (cada um compila
+//      solto), por isso o grupo de seletores vive aqui.
 // ─────────────────────────────────────────────────────────────────────
 .cpk-form-group,
 .cpl-checkout-wrap,
-.login__page {
+.login__page,
+.register__form,
+.reset__password__form,
+.update-password-form {
   [data-slot='field'] {
     font-family: var(--cpk-font-family);
 
@@ -249,37 +254,139 @@
   }
 }
 
-// Override agressivo no login do core (já que não podemos substituir o componente sem mexer no repo www)
-.login__page {
+// ─────────────────────────────────────────────────────────────────────
+// Páginas de autenticação — login, criar conta, redefinir senha (pedir
+// link) e nova senha (com token) — revisão contra o piloto /shop
+// (2026-08-26). JSX do core, reskin CSS pelos wrappers que cada página
+// usa: .login__page / .register__form (wrapper externo; o card é o
+// .rounded-lg.border.py-8 do shadcn), .reset__password__form (aqui a
+// classe vem NO card, junto de utilitárias claras inline) e
+// .update-password-form (wrapper; o card é o -inner). Campos ficam na
+// família .cpk-form-group acima — aqui ficam card, títulos, CTA e links.
+// ─────────────────────────────────────────────────────────────────────
+.login__page,
+.register__form,
+.reset__password__form,
+.update-password-form,
+.reset__password__success {
   font-family: var(--cpk-font-family);
 
-  .login__form__title {
+  // Título — display da marca com glow; unificado à esquerda (o core
+  // centra título/sub no reset, destoando do login/criar conta)
+  .login__form__title,
+  .register__form__title,
+  .reset__password__form__title,
+  .update-password-form-inner h2 {
     font-family: var(--cpk-font-family);
     font-size: 2.5rem;
     font-weight: var(--cpk-font-weight-heading);
     text-transform: uppercase;
+    text-align: left;
     color: var(--cpk-color-brand);
     text-shadow: var(--cpk-glow-sm);
     margin-bottom: 0.5rem;
   }
 
-  .login__form__subtitle {
+  .login__form__subtitle,
+  .register__form__subtitle,
+  .reset__password__form__subtitle {
     color: var(--cpk-color-contrast-muted);
     font-weight: 300;
     letter-spacing: 0.02em;
+    text-align: left;
     margin-bottom: 2rem;
   }
 
-  // O card base do shadcn do evershop
+  // Sub-header técnico acima do título — mesmo papel do AuthHero do
+  // tema (login/criar conta), aqui em CSS nas páginas sem Área (reset)
+  .reset__password__form__title::before {
+    content: 'PASSWORD_RECOVERY_INIT';
+  }
+
+  .update-password-form-inner h2::before {
+    content: 'PASSWORD_UPDATE_INIT';
+  }
+
+  .reset__password__form__title::before,
+  .update-password-form-inner h2::before {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: var(--cpk-font-weight-base);
+    letter-spacing: 0.25em;
+    color: var(--cpk-color-muted);
+    text-transform: uppercase;
+    text-shadow: none; // anula o glow herdado do título
+    margin-bottom: 0.75rem;
+  }
+
+  // CTA — preenchido no padrão .cpk-btn do /shop. O corte de canto vai
+  // direto no botão (o span .cpk-btn-bg é a arquitetura dos botões do
+  // TEMA; aqui o JSX é do core) e o glow usa drop-shadow, que respeita
+  // o clip-path (box-shadow desenharia um retângulo atrás do chanfro).
+  button[data-slot='button'] {
+    width: 100%;
+    background-color: var(--cpk-color-brand);
+    color: var(--cpk-color-bg);
+    border: none;
+    border-radius: 0;
+    font-family: var(--cpk-font-family);
+    font-weight: var(--cpk-font-weight-heading);
+    font-size: 0.8125rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    clip-path: polygon(
+      0 var(--cpk-crop-md),
+      var(--cpk-crop-md) 0,
+      100% 0,
+      100% calc(100% - var(--cpk-crop-md)),
+      calc(100% - var(--cpk-crop-md)) 100%,
+      0 100%
+    );
+    transition: filter var(--cpk-transition-duration) var(--cpk-transition-easing),
+      transform var(--cpk-transition-duration) var(--cpk-transition-easing);
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--cpk-color-brand); // vence hover:bg-primary/80
+      filter: drop-shadow(0 0 6px rgba(var(--cpk-color-brand-rgb), 0.6))
+        drop-shadow(0 0 24px rgba(var(--cpk-color-brand-rgb), 0.35));
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  // Divisor acima do CTA (login/criar conta/nova senha)
+  .form-submit-button {
+    border-top-color: var(--cpk-color-border);
+  }
+
+  // Links (esqueceu a senha / criar conta / entrar)
+  a {
+    color: var(--cpk-color-contrast-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--cpk-color-brand);
+      text-shadow: var(--cpk-glow-sm);
+    }
+  }
+}
+
+// Card de auth — superfície escura, corte de canto BR e filete neon na
+// base (o ::after é aparado junto pelo clip-path, seguindo o chanfro).
+.login__page,
+.register__form {
   .rounded-lg.border.py-8 {
     background-color: var(--cpk-color-bg-100);
     border: 1px solid var(--cpk-color-border);
-    border-radius: 0 !important; // força canto reto
-    box-shadow: 0 0 15px rgba(189,0,255,0.05);
+    border-radius: 0 !important; // vence rounded-lg do shadcn
+    box-shadow: 0 0 15px rgba(var(--cpk-color-brand-rgb), 0.05);
     position: relative;
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
 
-    // Borda inferior neon "falsa"
     &::after {
       content: '';
       position: absolute;
@@ -292,58 +399,55 @@
       z-index: 2;
     }
   }
+}
 
-  // Inputs padrão do form (emulam o cpk-input já definido)
-  input[type="text"],
-  input[type="email"],
-  input[type="password"] {
-    background: var(--cpk-color-bg-200);
+// Redefinir senha (pedido de link): o card É o .reset__password__form —
+// o core manda utilitárias claras inline (bg-white rounded-3xl
+// shadow-lg border-divider), vencidas por !important pontual
+.reset__password__form {
+  background-color: var(--cpk-color-bg-100) !important;
+  border: 1px solid var(--cpk-color-border) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 0 15px rgba(var(--cpk-color-brand-rgb), 0.05) !important;
+  position: relative;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--cpk-color-brand);
+    box-shadow: var(--cpk-glow-sm);
+    z-index: 2;
+  }
+}
+
+// Nova senha (com token): card no container interno (o wrapper só
+// centraliza) — mesma cara dos outros, com respiro próprio
+.update-password-form {
+  .update-password-form-inner {
+    background-color: var(--cpk-color-bg-100);
     border: 1px solid var(--cpk-color-border);
-    color: var(--cpk-color-contrast);
-    border-radius: 0;
-    font-family: var(--cpk-font-family);
-    padding: 0.8em 1em;
+    box-shadow: 0 0 15px rgba(var(--cpk-color-brand-rgb), 0.05);
+    position: relative;
+    width: 100%;
+    max-width: 28rem;
+    padding: 2.5rem 2rem 2rem;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
 
-    &:focus {
-      outline: none;
-      border-color: var(--cpk-color-brand);
-      box-shadow: inset 0 0 5px rgba(189,0,255,0.2);
-    }
-  }
-
-  // Botão padrão do evershop
-  .form-submit-button {
-    border-top-color: var(--cpk-color-border); // separator
-
-    button {
-      background: transparent;
-      color: var(--cpk-color-brand);
-      border: 1px solid var(--cpk-color-brand);
-      border-radius: 0;
-      font-family: var(--cpk-font-family);
-      text-transform: uppercase;
-      font-weight: var(--cpk-font-weight-heading);
-      letter-spacing: 0.05em;
-      transition: all 0.2s;
-      position: relative;
-      overflow: hidden;
-
-      &:hover {
-        background: rgba(189,0,255,0.1);
-        box-shadow: var(--cpk-glow-md);
-      }
-    }
-  }
-
-  .login__page__options {
-    a {
-      color: var(--cpk-color-contrast-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-      &:hover {
-        color: var(--cpk-color-brand);
-        text-shadow: var(--cpk-glow-sm);
-      }
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--cpk-color-brand);
+      box-shadow: var(--cpk-glow-sm);
+      z-index: 2;
     }
   }
 }
