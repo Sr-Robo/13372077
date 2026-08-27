@@ -36,11 +36,16 @@ src/
 │   ├── homepage/
 │   │   └── OnlyHomePage.tsx ← hero com glitch + botões
 │   ├── login/
-│   │   └── LoginHero.tsx    ← sub-header glitch na página de login
+│   │   └── LoginHero.tsx    ← wrapper fino de AuthHero (AUTH_PROTOCOL_INIT)
+│   └── register/
+│       └── RegisterHero.tsx ← wrapper fino de AuthHero (USER_REGISTRATION_INIT)
 │   └── frontStore/checkout/
 │       ├── Checkout.jsx, Summary.jsx, CheckoutOverride.scss
 ├── components/
 │   ├── Logo.tsx              ← componente de logo reutilizável
+│   ├── AuthHero.tsx          ← sub-header glitch das páginas de auth
+│   │                           (cantoneira absoluta ancora NO CARD — não
+│   │                           pôr position:relative no wrapper)
 │   ├── PlaceholderNotice.jsx ← filler "Em breve" (.cpk-card/.cpk-placeholder)
 │   │                           pra área sem funcionalidade pronta (ver
 │   │                           § Pendências de funcionalidade)
@@ -90,7 +95,15 @@ do dist NÃO precisam ser commitados: o deploy regenera tudo.
       não é mais alcançada por navegação normal (`/` redireciona pra `/shop`,
       ver `extensions/catalog_shop/src/pages/frontStore/homepage/homeToShop.js`
       no fork `www`); ver pendência abaixo
-- [x] Login/Cadastro (override em `components.scss` + `LoginHero.tsx`)
+- [x] Login/Cadastro/Esqueceu senha/Nova senha — revisados contra o
+      piloto /shop em 2026-08-26: família de auth unificada em
+      `components.scss` (escopos `.login__page`, `.register__form`,
+      `.reset__password__form`, `.update-password-form`,
+      `.reset__password__success`; reset/update ganham sub-header técnico
+      via `::before` porque o JSX do core não tem Área); `AuthHero.tsx`
+      compartilhado injeta o sub-header no login/criar conta; CTA agora
+      PRENCHIDO no padrão `.cpk-btn` (clip-path direto no botão + glow
+      via drop-shadow, que respeita o corte)
 - [x] Página de produto — revisada contra o piloto /shop em 2026-08-26
       (override em `components.scss`; extraídos `.cpk-price-block`,
       `.cpk-meta-list`, `.cpk-gallery`, breadcrumb
@@ -142,6 +155,13 @@ workflow/testes — não implementar durante uma sessão de layout.
   catálogo só tem produtos `simple` — as regras `.variant-selector` do CSS
   continuam do corte anterior, não vistas renderizadas. Criar produto
   variável no admin quando for validar.
+- **Traduções trocadas no fluxo de auth (repo `www`, 2026-08-26)**:
+  `translations/pt-br/account.csv` linha 10 traduz "Sign In" como
+  "REGISTRAR" (botão da tela de ENTRAR manda "registrar"); o link
+  "Sign in" do rodapé do criar-conta e o título "Create account" ficam
+  em inglês (sem entrada no CSV). Fix é dado de tradução no fork `www`
+  (1 linha + push = deploy) — decidido deixar pro fxlip aprovar, não é
+  escopo do tema.
 - **Ficha: descrição e relacionados dependem de dado** (2026-08-26): o
   vargr (produto de teste) tem descrição vazia e
   `related_products_mode=inherit` não renderiza seção de relacionados —
@@ -167,7 +187,12 @@ visível. *(Procedimento de recuperação: ver `skills.md`.)*
 ### Race do watcher de dev com `.scss`
 Dois saves quase simultâneos de `.scss` fazem o watcher apagar `dist/styles/`
 (corrida no `compileSwc.ts`). Mitigação: salvar `.scss` um por vez com pausa
-entre saves. *(Fix rápido de recuperação: ver `skills.md`.)*
+entre saves. *(Fix rápido de recuperação: ver `skills.md`.)* Em 2026-08-26 a
+mesma race derrubou o compile com `ENOTEMPTY` em `dist/pages` quando o
+`dev-sync` rsyncou vários arquivos novos de uma vez — sintoma: dev serve a
+página SEM o tema (visual default do core, PNG de screenshot encolhe pra
+~1/4). O fix manual de copiar styles não cobre; recuperar com `docker restart
+evershop-dev`.
 
 ### Pushes rápidos / deploys concorrentes
 Serializado por `flock` desde 2026-07-30 — segundo disparo é descartado se o
