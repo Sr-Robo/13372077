@@ -108,8 +108,8 @@ do dist NÃO precisam ser commitados: o deploy regenera tudo.
       via drop-shadow, que respeita o corte)
 - [x] Página de produto — revisada contra o piloto /shop em 2026-08-26
       (override em `components.scss`; extraídos `.cpk-price-block`,
-      `.cpk-meta-list`, `.cpk-gallery`, breadcrumb
-      `[data-slot="breadcrumb"]` global). A ficha responde por
+      `.cpk-meta-list`, `.cpk-gallery`; breadcrumb global removido de
+      todas as páginas em 2026-08-27, Fase 3). A ficha responde por
       `/<categoria>/<url_key>` (formato de `p.url` usado nos links da
       listagem) — validado renderizando no dev em 2026-08-27; a observação
       anterior ("só `/product/<uuid>`, url_key dá 404") era do core 2.2.1
@@ -207,21 +207,21 @@ nossa vs. a ref — sobre renderizar refs cruas ver `skills.md`).
   - o **pop-up de novo endereço** (`[data-slot='dialog-content']`) ficou
     bom; pegar a referência **`lwa lwa-login lwa-default`** pra estilizar
     as **bordas** do pop-up.
-- **Global — remover a trilha de navegação (breadcrumb)** de TODAS as
-  páginas (hoje há override global `[data-slot="breadcrumb"]`; era o
-  breadcrumb da ficha de produto — decidir remover de vez).
-- **Footer colado no rodapé (sticky footer)**: hoje, em página de pouco
-  conteúdo, o footer sobe e deixa um vão morto embaixo — esse espaço
-  deveria ficar no `main`, acima do footer. Fazer o footer grudar no fundo
-  da viewport independente da altura do conteúdo (layout flex/min-height no
-  wrapper de página).
 
 **Organização em fases (combinada com o fxlip em 2026-08-27)**: Fase 1 funil
 (/checkout + /cart) → Fase 2 conta (/account/orders + /account) → Fase 3
 globais (breadcrumb off + sticky footer) → Fase 4 reativação (login, busca,
-links de produto). **Fase 4 concluída em 2026-08-27** (ad7e4f9+a873627):
-Name/Thumbnail voltam a `<a href={p.url}>`, remove `pointer-events:none` de
-busca/login no header e a classe `.cpk-link-disabled`; ordem restante 1→3.
+links de produto).
+- **Fase 4 concluída 2026-08-27** (ad7e4f9+a873627): Name/Thumbnail voltam
+  a `<a href={p.url}>`, remove `pointer-events:none` de busca/login no
+  header, classe `.cpk-link-disabled` extinta.
+- **Fase 3 concluída 2026-08-27** (f02bb27+fe714c9): breadcrumb escondido
+  globalmente (`display:none !important` em `components.scss`, mesmo par de
+  seletores que a extensão catalog_shop usava no /shop — Heading
+  `sr@robo:~/shop$` não afetado) e sticky footer (wrapper
+  `[data-evershop-area-id='body']` flex column com min-height 100vh/dvh,
+  `> main` com flex:1, em `effects.scss`).
+- Restam: **Fase 1 (funil)** e **Fase 2 (conta)**.
 
 ## Gotchas resolvidos (contexto / causa-raiz)
 
@@ -272,6 +272,22 @@ primeiro ainda roda. Sempre confirmar SHA no `deploy.log`.
 ### EverShop não é SPA
 Navegação é reload completo. `PageFade` simula transição com overlay +
 fade-out antes do unload — não é roteamento client-side.
+
+### CSS do tema em dev chega FORMATADO em <style> — grep minificado dá falso negativo
+O tema não gera `<link>` css: os 3 .scss são injetados via JS como `<style>`
+tags (~23 no DOM), **formatadas** (espaços/newlines, ex. `display: none
+!important`). Procurar por padrão minificado (`display:none!important`) num
+dump-dom retorna zero e leva a culpar o watcher/bundle à toa — 2026-08-27:
+restart desnecessário do `evershop-dev` por causa disso. Conferir regra com
+padrão espaçado ou listar as `<style>` por script antes de concluir que o
+bundle está stale.
+
+### Rotas de auth no fork novo + URL absoluta do header
+Login no fork `www` é **`/account/login`** (não `/customer/login` do
+EverShop clássico — esse dá 404 de verdade). O link "Sign in" do header usa
+URL **absoluta** montada do `siteUrl` (`https://sr.robo.net.br/...`): no dev
+o clique navega pra PRODUÇÃO, não pro localhost. Antes de concluir 404 de
+auth, conferir o href real no DOM renderizado.
 
 ### Cursor/Noise e performance
 Usam `style.setProperty` direto (não state do React) — evita re-render a cada
