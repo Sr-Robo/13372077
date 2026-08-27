@@ -186,6 +186,45 @@ workflow/testes — não implementar durante uma sessão de layout.
   `related_products_mode=inherit` não renderiza seção de relacionados —
   layout dessas áreas revisado às cegas; revalidar com produto populado.
 
+## Backlog de layout — próxima sessão (ditado pelo fxlip 2026-08-27)
+
+Lista de ajustes de **layout** pra atacar na próxima sessão de front. Cada
+página tem uma ref do CyberPulse pra comparar lado a lado (tirar print da
+nossa vs. a ref — sobre renderizar refs cruas ver `skills.md`).
+
+- **/checkout** — comparar com `https://wp.nkdev.info/cyberpulse/checkout/`:
+  - textareas devem ter o **mesmo efeito do `select` do /shop**;
+  - "order note", cupom e total vão pra **coluna da direita**;
+  - título "Checkout" **centralizado**.
+- **/cart** — comparar com `https://wp.nkdev.info/cyberpulse/cart/`:
+  - "Cart totals" vai pra **coluna da direita**;
+  - bordas das divs já estão parecidas, mas falta o
+    **`--cpl-table-dots--dot__width`** nas pontas (pegar da ref).
+- **/account/orders**:
+  - **remover o `CUSTOMER_TERMINAL_INIT`** (sub-header técnico do
+    `.account-header h1::before`);
+  - **centralizar o "Minha Conta"** igual o título do checkout.
+- **/account**:
+  - **algumas strings ainda em inglês** — investigar de onde vêm e traduzir
+    (provável dado de tradução no fork `www`, cruzar com a pendência de
+    traduções de auth acima);
+  - o **pop-up de novo endereço** (`[data-slot='dialog-content']`) ficou
+    bom; pegar a referência **`lwa lwa-login lwa-default`** pra estilizar
+    as **bordas** do pop-up.
+- **Global — remover a trilha de navegação (breadcrumb)** de TODAS as
+  páginas (hoje há override global `[data-slot="breadcrumb"]`; era o
+  breadcrumb da ficha de produto — decidir remover de vez).
+- **Footer colado no rodapé (sticky footer)**: hoje, em página de pouco
+  conteúdo, o footer sobe e deixa um vão morto embaixo — esse espaço
+  deveria ficar no `main`, acima do footer. Fazer o footer grudar no fundo
+  da viewport independente da altura do conteúdo (layout flex/min-height no
+  wrapper de página).
+- **Reverter desabilitações no header/listagem** — "trazer de volta" os
+  links de **login**, **pesquisa** e os **links de produto** na listagem.
+  Isso reverte duas pendências já documentadas acima ("Busca e login/conta
+  desabilitados no header" e "Link de produto removido na listagem") — o
+  fxlip decidiu reativá-los.
+
 ## Gotchas resolvidos (contexto / causa-raiz)
 
 ### Validar seletor de override contra o fork `www`, NUNCA contra o `node_modules` do tema
