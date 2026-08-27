@@ -180,19 +180,23 @@
 // três pontos de aplicação:
 //   1. classe opt-in `.cpk-form-group` — via `wrapperClassName` do campo,
 //      quando o JSX é do tema (ex.: CouponForm);
-//   2. escopos de JSX do core — `.cpl-checkout-wrap` (checkout) e os
+//   2. escopos de JSX do core — `.cpl-checkout-wrap` (checkout), os
 //      wrappers das páginas de auth (`.login__page`, `.register__form`,
-//      `.reset__password__form`, `.update-password-form`) — só dá pra
-//      estilizar por CSS (regra "sem mexer no repo www" do agents.md).
-//      Os .scss de página NÃO importam este arquivo (cada um compila
-//      solto), por isso o grupo de seletores vive aqui.
+//      `.reset__password__form`, `.update-password-form`), `.account`
+//      (dashboard do cliente) e `[data-slot='dialog-content']` (dialog
+//      de endereço, que portaliza pro body e escapa de qualquer
+//      wrapper) — só dá pra estilizar por CSS (regra "sem mexer no repo
+//      www" do agents.md). Os .scss de página NÃO importam este arquivo
+//      (cada um compila solto), por isso o grupo de seletores vive aqui.
 // ─────────────────────────────────────────────────────────────────────
 .cpk-form-group,
 .cpl-checkout-wrap,
 .login__page,
 .register__form,
 .reset__password__form,
-.update-password-form {
+.update-password-form,
+.account,
+[data-slot='dialog-content'] {
   [data-slot='field'] {
     font-family: var(--cpk-font-family);
 
@@ -448,6 +452,284 @@
       background: var(--cpk-color-brand);
       box-shadow: var(--cpk-glow-sm);
       z-index: 2;
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// Dashboard do cliente — /account e /account/orders (mesmo wrapper
+// .account, coluna max-w-2xl do core). Revisão contra o piloto /shop
+// (2026-08-26). JSX do core (AccountHeader/AccountNav/OrderHistory/
+// AccountInfo/MyAddresses), reskin CSS. Campos do form de perfil vêm da
+// família .cpk-form-group acima; o dialog de endereço é estilizado
+// à parte (portaliza pro body, escapa do .account).
+// ─────────────────────────────────────────────────────────────────────
+.account {
+  font-family: var(--cpk-font-family);
+
+  // Título + sub-header técnico (mesmo papel do AuthHero das páginas de auth)
+  .account-header h1 {
+    font-size: 2.5rem;
+    font-weight: var(--cpk-font-weight-heading);
+    text-transform: uppercase;
+    color: var(--cpk-color-brand);
+    text-shadow: var(--cpk-glow-sm);
+
+    &::before {
+      content: 'CUSTOMER_TERMINAL_INIT';
+      display: block;
+      font-size: 0.65rem;
+      font-weight: var(--cpk-font-weight-base);
+      letter-spacing: 0.25em;
+      color: var(--cpk-color-muted);
+      text-transform: uppercase;
+      text-shadow: none; // anula o glow herdado
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  // Tabs (Dashboard/Pedidos) — ativa em brand com glow; o fundo sólido
+  // do sticky acompanha o fundo da página
+  .account-nav {
+    background-color: var(--cpk-color-bg);
+    border-bottom-color: var(--cpk-color-border);
+
+    a {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.8rem;
+
+      &.border-foreground {
+        color: var(--cpk-color-brand);
+        border-bottom-color: var(--cpk-color-brand);
+        text-shadow: var(--cpk-glow-sm);
+      }
+
+      &:hover {
+        color: var(--cpk-color-contrast);
+      }
+    }
+  }
+
+  // Cabeçalhos de seção — rótulo técnico caixa alta
+  section h2 {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.85rem;
+    color: var(--cpk-color-contrast-muted);
+  }
+
+  // Divisórias entre seções e "View all"/links de linha
+  .divide-border,
+  .divide-y {
+    border-color: var(--cpk-color-border);
+  }
+
+  // Links de texto ("View all") — rows de pedido têm hover de fundo
+  // próprio abaixo, não pintam o texto inteiro
+  a:not(.flex) {
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--cpk-color-brand);
+    }
+  }
+
+  // Lista de pedidos (dashboard e /account/orders usam o mesmo desenho)
+  .order-history-list,
+  div.divide-y.border.rounded-lg {
+    background-color: var(--cpk-color-bg-100);
+    border-color: var(--cpk-color-border);
+    border-radius: 0;
+
+    > a:hover {
+      background-color: rgba(var(--cpk-color-brand-rgb), 0.06);
+    }
+
+    // Pills de status/entrega — badge do tema em vez de pill redonda
+    .rounded-full {
+      border-radius: 0;
+      text-transform: uppercase;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      border-color: rgba(var(--cpk-color-brand-rgb), 0.35);
+      color: var(--cpk-color-brand);
+    }
+  }
+
+  // Cartões de endereço (Item outline do core)
+  [data-slot='item'] {
+    background-color: var(--cpk-color-bg-100);
+    border-radius: 0;
+    border-color: var(--cpk-color-border);
+
+    // Endereço padrão ganha borda brand (border-2 border-primary do core)
+    &.border-primary {
+      border-color: var(--cpk-color-brand);
+      box-shadow: inset 0 0 8px rgba(var(--cpk-color-brand-rgb), 0.1);
+    }
+  }
+}
+
+// Botões do core nas páginas do cliente e nos dialogs — o Button shadcn
+// tem 3 caras aqui e nenhuma combina com o tema: default (Save, fundo
+// escuro chapado), outline (Logout/triggers de endereço, claro) e
+// destructive (Cancel/Delete). Anel brand como base, preenchido pro
+// submit, anel vermelho pro destructive.
+.account,
+[data-slot='dialog-content'] {
+  // Botão cru do core (Edit com lápis no AccountInfo)
+  button:not([data-slot='button']) {
+    color: var(--cpk-color-contrast-muted);
+
+    &:hover {
+      color: var(--cpk-color-brand);
+    }
+  }
+
+  // Base — anel brand (Logout, triggers Edit/Add new address)
+  button[data-slot='button'] {
+    background: transparent;
+    color: var(--cpk-color-brand);
+    border: 1px solid rgba(var(--cpk-color-brand-rgb), 0.5);
+    border-radius: 0;
+    font-family: var(--cpk-font-family);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: var(--cpk-font-weight-heading);
+    transition: border-color var(--cpk-transition-duration) var(--cpk-transition-easing),
+      color var(--cpk-transition-duration) var(--cpk-transition-easing);
+
+    &:hover {
+      border-color: var(--cpk-color-glitch-1);
+      color: var(--cpk-color-glitch-1);
+    }
+  }
+
+  // Submit principal (Save) — preenchido, corte de canto pequeno
+  button[data-slot='button'].bg-primary {
+    width: auto;
+    padding: 0 1.5em;
+    background-color: var(--cpk-color-brand);
+    color: var(--cpk-color-bg);
+    border: none;
+    clip-path: polygon(
+      0 var(--cpk-crop-sm),
+      var(--cpk-crop-sm) 0,
+      100% 0,
+      100% calc(100% - var(--cpk-crop-sm)),
+      calc(100% - var(--cpk-crop-sm)) 100%,
+      0 100%
+    );
+    transition: filter var(--cpk-transition-duration) var(--cpk-transition-easing);
+
+    &:hover {
+      background-color: var(--cpk-color-brand);
+      filter: drop-shadow(0 0 6px rgba(var(--cpk-color-brand-rgb), 0.6));
+    }
+  }
+
+  // Destructive (Cancel/Delete) — anel vermelho
+  button[data-slot='button'].bg-destructive\/10 {
+    color: var(--cpk-color-danger);
+    border-color: rgba(255, 77, 77, 0.5);
+
+    &:hover {
+      border-color: var(--cpk-color-danger);
+      color: var(--cpk-color-danger);
+    }
+  }
+}
+
+// Dialog de endereço — portaliza pro body (fora de .account), por isso
+// escopo próprio. Vence bg-background/rounded-xl do shadcn com
+// !important pontual.
+[data-slot='dialog-content'] {
+  font-family: var(--cpk-font-family);
+  background-color: var(--cpk-color-bg-100) !important;
+  border: 1px solid var(--cpk-color-border) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(var(--cpk-color-brand-rgb), 0.08);
+  color: var(--cpk-color-contrast);
+
+  [data-slot='dialog-title'] {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--cpk-color-brand);
+    text-shadow: var(--cpk-glow-sm);
+  }
+
+  // Botão de fechar (X) do canto
+  [data-slot='dialog-close'] {
+    color: var(--cpk-color-contrast-muted);
+
+    &:hover {
+      color: var(--cpk-color-brand);
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// Página 404 (NotFound do core, wrapper .notfound-page). Revisão contra
+// o piloto /shop (2026-08-26). O número gigante fantasma e o título em
+// brand seguem a referência das páginas de erro originais (erro/502.html
+// no histórico git — design autoritativo do tema); o JSX do core já
+// entrega a estrutura número/título/copy/CTA.
+// ─────────────────────────────────────────────────────────────────────
+.notfound-page {
+  font-family: var(--cpk-font-family);
+
+  // Número — marca d'água em display, fantasmas mas legível (o
+  // text-muted-foreground/30 do core sumia no fundo)
+  .text-7xl,
+  .text-8xl {
+    font-family: var(--cpk-font-family);
+    font-weight: var(--cpk-font-weight-heading);
+    color: rgba(255, 255, 255, 0.12);
+    letter-spacing: 0.06em;
+    line-height: var(--cpk-line-height-heading);
+    text-shadow: none;
+    -webkit-text-stroke: 1px rgba(var(--cpk-color-brand-rgb), 0.25);
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: var(--cpk-font-weight-heading);
+    text-transform: uppercase;
+    color: var(--cpk-color-brand);
+    text-shadow: var(--cpk-glow-sm);
+    margin-top: 1.5rem;
+  }
+
+  p {
+    color: var(--cpk-color-muted);
+  }
+
+  // CTA — preenchido no padrão .cpk-btn
+  button[data-slot='button'] {
+    background-color: var(--cpk-color-brand);
+    color: var(--cpk-color-bg);
+    border: none;
+    border-radius: 0;
+    font-family: var(--cpk-font-family);
+    font-weight: var(--cpk-font-weight-heading);
+    font-size: 0.8125rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    clip-path: polygon(
+      0 var(--cpk-crop-md),
+      var(--cpk-crop-md) 0,
+      100% 0,
+      100% calc(100% - var(--cpk-crop-md)),
+      calc(100% - var(--cpk-crop-md)) 100%,
+      0 100%
+    );
+    transition: filter var(--cpk-transition-duration) var(--cpk-transition-easing);
+
+    &:hover {
+      background-color: var(--cpk-color-brand);
+      filter: drop-shadow(0 0 6px rgba(var(--cpk-color-brand-rgb), 0.6))
+        drop-shadow(0 0 24px rgba(var(--cpk-color-brand-rgb), 0.35));
     }
   }
 }
