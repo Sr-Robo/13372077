@@ -115,9 +115,28 @@ do dist NÃO precisam ser commitados: o deploy regenera tudo.
       unitário em muted, thumb com corte de canto como o card do /shop;
       estado vazio extraído como `.cpk-empty-state` reutilizável)
 - [x] Checkout (2026-08-20)
+- [x] Dashboard do cliente (conta/pedidos) — revisado contra o piloto /shop
+      em 2026-08-26 (override em `components.scss`; JSX do fork www:
+      `MyAccount.tsx`/`OrderList.tsx` com wrapper `.account`, `AccountHeader`
+      → `.account-header h1` + sub-header `CUSTOMER_TERMINAL_INIT`,
+      `AccountNav` sticky com tab ativa `.border-foreground`, `OrderHistory`
+      → `.order-history-list`/`.rounded-full` pills, `MyAddresses` com
+      cartões `[data-slot='item']`/`&.border-primary` e dialog shadcn
+      `[data-slot='dialog-content']` (portaliza pro body, escopo próprio).
+      Botões shadcn `button[data-slot='button']` reskinados: base anel
+      brand, `.bg-primary` preenchido com clip-path, `.bg-destructive/10`
+      anel vermelho)
+- [x] Página 404 — revisada contra o piloto /shop em 2026-08-26 (`NotFound.tsx`
+      do fork www: wrapper `.notfound-page`, número gigante `.text-7xl`/
+      `.md:text-8xl` vira marca d'água com `-webkit-text-stroke` brand, `h1`
+      em brand+glow, CTA `button[data-slot='button']` preenchido no padrão
+      .cpk-btn)
 - [ ] Página estática/CMS (about)
-- [ ] Dashboard do cliente (conta/pedidos)
-- [ ] Páginas de erro 502/504
+- [ ] Páginas de erro 502/504 — **fora do escopo do tema**: são erros de
+      gateway servidos pela infra (Traefik/Cloudflare), não páginas do
+      EverShop. O "erro/502.html" no git antigo é só referência de design
+      (origem da paleta em `tokens.scss`/`effects.scss`); revisar o visual
+      real dessas páginas é trabalho de infra, não deste repo.
 
 Fases 3 (interação/scroll-reveal) e 4 (responsivo/acessibilidade/performance)
 ainda não iniciadas.
@@ -168,6 +187,21 @@ workflow/testes — não implementar durante uma sessão de layout.
   layout dessas áreas revisado às cegas; revalidar com produto populado.
 
 ## Gotchas resolvidos (contexto / causa-raiz)
+
+### Validar seletor de override contra o fork `www`, NUNCA contra o `node_modules` do tema
+Este repo tem seu próprio `node_modules/@evershop/evershop` (pra compilar/tipos),
+mas a loja em produção roda o **fork `www`** — que é uma versão MUITO mais nova
+do EverShop (TSX + shadcn + `data-slot`), enquanto o `node_modules` daqui é
+legado (JSX antigo, `.account-details`/`.order-history`, `Button` com
+`className="button primary outline"`, `Area` sem `className` no NotFound).
+Conferir um seletor de override contra o `node_modules` local dá conclusão
+ERRADA: em 2026-08-26 quase reprovei o CSS do dashboard/404 porque no legado
+`.notfound-page`/`.account`/`button[data-slot='button']` "não casavam" — mas no
+fork www casam exatamente (`NotFound.tsx` tem `<div className="notfound-page">`
++ `404` em `.text-7xl md:text-8xl` + `<Button variant="default">`;
+`MyAccount.tsx` tem `<div className="account">` + `AccountHeader`/`AccountNav`
+shadcn). Regra: pra saber que HTML/classe o core renderiza, ler
+`~/server/repos/www/packages/evershop/src/...`, não o `node_modules` deste repo.
 
 ### Preço promocional no card depende do backend do fork `www`
 O tema só APRESENTA promo: `List.jsx` passa `isSpecial` (compara
