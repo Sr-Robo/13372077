@@ -2,26 +2,25 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { ProductNoThumbnail } from '@components/common/ProductNoThumbnail';
 
-// Fase de layout: listagem ainda não linka pra ficha de produto (sem
-// backend wireado). Os 3 destinos que apontariam pra `url` viram <span>
-// com a classe `cpk-link-disabled` (pointer-events: none em effects.scss)
-// em vez de <a href>, mantendo o mesmo visual sem navegação morta.
-function Thumbnail({ imageUrl, alt, isSpecial }) {
+// Reativado (2026-08-27): os 3 destinos (imagem, fallback e botão
+// "Ver Produto") voltam a linkar pra ficha de produto.
+function Thumbnail({ imageUrl, alt, isSpecial, url }) {
   return (
     <div className="product-thumbnail-wrap">
       {/* Termo de campanha da loja (BR) — literal, sem translate. */}
       {isSpecial && <span className="cpk-badge-sale">Promoção!</span>}
       {imageUrl ? (
-        <span className="product-link cpk-link-disabled">
+        <a href={url} className="product-link">
           <img src={imageUrl} alt={alt} loading="lazy" />
-        </span>
+        </a>
       ) : (
-        <span className="product-link cpk-link-disabled">
+        <a href={url} className="product-link">
           <ProductNoThumbnail width={370} height={370} />
-        </span>
+        </a>
       )}
-      <span
-        className="button add-to-cart-button cpk-btn cpk-glitch cpk-link-disabled"
+      <a
+        href={url}
+        className="button add-to-cart-button cpk-btn cpk-glitch"
         data-text="Ver Produto"
       >
         Ver Produto
@@ -41,13 +40,14 @@ function Thumbnail({ imageUrl, alt, isSpecial }) {
             strokeLinejoin="round"
           />
         </svg>
-      </span>
+      </a>
     </div>
   );
 }
 
 Thumbnail.propTypes = {
   alt: PropTypes.string,
+  url: PropTypes.string.isRequired,
   imageUrl: PropTypes.string
 };
 

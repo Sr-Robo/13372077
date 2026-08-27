@@ -1,17 +1,17 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-// Fase de layout: sem link pra ficha de produto ainda (ver Thumbnail.jsx).
-function Name({ name, id }) {
+// Reativado (2026-08-27): nome volta a linkar pra ficha de produto.
+function Name({ name, url }) {
   return (
-    <span className="product-title-link cpk-link-disabled">
+    <a href={url} className="product-title-link">
       <h2 className="product-title">{name}</h2>
-    </span>
+    </a>
   );
 }
 
 Name.propTypes = {
-  id: PropTypes.number.isRequired,
+  url: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired
 };
 
