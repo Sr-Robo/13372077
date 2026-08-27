@@ -51,8 +51,10 @@ src/
 │   │                           § Pendências de funcionalidade)
 │   └── frontStore/catalog/product/list/
 │       ├── List.jsx/scss, item/{Name,Price,Thumbnail,Rating}.jsx
-│       │   (Name/Thumbnail sem link pra produto desde 2026-08-22, ver
-│       │   pendências; Rating decorativo desde 2026-08-23, ver pendências;
+│       │   (Name/Thumbnail linkam pra ficha via `p.url` (formato
+│       │   `/<categoria>/<url_key>`) — reativados 2026-08-27, Fase 4,
+│       │   após desabilitação de 2026-08-22; Rating decorativo desde
+│       │   2026-08-23, ver pendências;
 │       │   promo no card desde 2026-08-25: badge "Promoção!" no Thumbnail
 │       │   + Price com ins(promo, contraste) antes del(anterior riscado
 │       │   cinza `--cpk-color-muted`, negrito) — dado vem do resolver da
@@ -107,9 +109,11 @@ do dist NÃO precisam ser commitados: o deploy regenera tudo.
 - [x] Página de produto — revisada contra o piloto /shop em 2026-08-26
       (override em `components.scss`; extraídos `.cpk-price-block`,
       `.cpk-meta-list`, `.cpk-gallery`, breadcrumb
-      `[data-slot="breadcrumb"]` global). Atenção: a ficha só responde em
-      `/product/<uuid>` — `url_key` no lugar do uuid dá 404 (comportamento
-      do core 2.2.1, não bug do tema).
+      `[data-slot="breadcrumb"]` global). A ficha responde por
+      `/<categoria>/<url_key>` (formato de `p.url` usado nos links da
+      listagem) — validado renderizando no dev em 2026-08-27; a observação
+      anterior ("só `/product/<uuid>`, url_key dá 404") era do core 2.2.1
+      legado e não se aplica ao formato atual.
 - [x] Carrinho — revisado contra o piloto em 2026-08-26 (CTA de checkout
       agora PRENCHIDO no padrão .cpk-btn, valores: subtotal em contraste /
       unitário em muted, thumb com corte de canto como o card do /shop;
@@ -158,14 +162,6 @@ workflow/testes — não implementar durante uma sessão de layout.
   Catálogo") nunca mais renderiza pro usuário comum. Decidir: remover o
   componente, reaproveitar em outra rota (`/home`?), ou manter como está
   (código morto, sem custo real).
-- **Busca e login/conta desabilitados no header** (2026-08-22): CSS-only
-  (`pointer-events: none`), não semântico — sem `aria-disabled` (exigiria
-  editar `SearchBox.tsx`/`CustomerIcon.tsx` do core). Reavaliar quando essas
-  duas funcionalidades tiverem destino real.
-- **Link de produto removido na listagem** (2026-08-22): `Thumbnail.jsx` e
-  `Name.jsx` não linkam mais pra ficha de produto (viraram `<span
-  className="... cpk-link-disabled">`). Reverter quando a ficha de produto
-  tiver conteúdo real pronto pra receber tráfego da listagem.
 - **Estrelas de avaliação decorativas** (2026-08-23): `item/Rating.jsx`
   renderiza 5 estrelas fixas (`RATING_COUNT`) no card do `/shop` — não há
   sistema de avaliações no EverShop deste fork. Quando existir, passar a
@@ -219,11 +215,13 @@ nossa vs. a ref — sobre renderizar refs cruas ver `skills.md`).
   deveria ficar no `main`, acima do footer. Fazer o footer grudar no fundo
   da viewport independente da altura do conteúdo (layout flex/min-height no
   wrapper de página).
-- **Reverter desabilitações no header/listagem** — "trazer de volta" os
-  links de **login**, **pesquisa** e os **links de produto** na listagem.
-  Isso reverte duas pendências já documentadas acima ("Busca e login/conta
-  desabilitados no header" e "Link de produto removido na listagem") — o
-  fxlip decidiu reativá-los.
+
+**Organização em fases (combinada com o fxlip em 2026-08-27)**: Fase 1 funil
+(/checkout + /cart) → Fase 2 conta (/account/orders + /account) → Fase 3
+globais (breadcrumb off + sticky footer) → Fase 4 reativação (login, busca,
+links de produto). **Fase 4 concluída em 2026-08-27** (ad7e4f9+a873627):
+Name/Thumbnail voltam a `<a href={p.url}>`, remove `pointer-events:none` de
+busca/login no header e a classe `.cpk-link-disabled`; ordem restante 1→3.
 
 ## Gotchas resolvidos (contexto / causa-raiz)
 
