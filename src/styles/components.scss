@@ -1164,36 +1164,15 @@
   }
 }
 
-// Breadcrumb (shadcn [data-slot="breadcrumb"]) — global: uppercase miúdo
-// espaçado, separadores brand. O /shop continua escondendo o seu
-// (BreadcrumbOverride na extensão catalog_shop).
-nav[data-slot='breadcrumb'] {
-  font-family: var(--cpk-font-family);
-
-  ol[data-slot='breadcrumb-list'] {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-
-  a[data-slot='breadcrumb-link'] {
-    color: var(--cpk-color-muted);
-    transition: color var(--cpk-transition-duration) var(--cpk-transition-easing);
-
-    &:hover {
-      color: var(--cpk-color-brand);
-    }
-  }
-
-  .breadcrumb-page,
-  [aria-current='page'] {
-    color: var(--cpk-color-contrast-muted);
-  }
-
-  li[data-slot='breadcrumb-separator'] svg {
-    color: var(--cpk-color-brand);
-    opacity: 0.7;
-  }
+// Breadcrumb (shadcn [data-slot="breadcrumb"]) — removido de TODAS as
+// páginas (fxlip, 2026-08-27, Fase 3): a nav inteira some em vez de ser
+// estilizada. O /shop já escondia o seu via BreadcrumbOverride na extensão
+// catalog_shop — esta regra estende o mesmo tratamento pro resto do site.
+// Seletor duplo: data-slot (estrutural) + aria-label pt-br (reforço, mesmo
+// par usado pela extensão).
+nav[data-slot='breadcrumb'],
+nav[aria-label='trilha de navegação'] {
+  display: none !important;
 }
 
 // Estrutura geral do header (emula cpl-navbar-container cpl-navbar-collapse-md cpl-navbar-align-center).

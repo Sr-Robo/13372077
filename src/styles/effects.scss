@@ -694,6 +694,23 @@ header.header .header__middle__right button:hover {
   background: transparent !important;
 }
 
+// Sticky footer (2026-08-27, Fase 3): em página de pouco conteúdo (login,
+// 404…) o footer subia e deixava vão morto embaixo dele. O wrapper da área
+// body (único filho de #app; pai de header/main/footer) vira coluna flex
+// com altura mínima de viewport — o main absorve o espaço sobrando e o
+// footer gruda no fundo. `dvh` sobrepõe `vh` nos browsers modernos (trata
+// barra dinâmica do mobile); o par fica como fallback progressivo.
+div.wrapper[data-evershop-area-id='body'] {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  > main {
+    flex: 1 1 auto;
+  }
+}
+
 // Footer: footerTop e as 3 áreas de footerMiddle não têm widgets hoje (ficam
 // vazias), mas são áreas editáveis do core (data-evershop-editable-area) —
 // podem ganhar conteúdo pelo admin a qualquer momento. Por isso o fundo
