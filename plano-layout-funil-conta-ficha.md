@@ -1,8 +1,10 @@
-# Plano — Funil (ex-Fase 1) + Conta (ex-Fase 2)
+# Plano — Funil (ex-Fase 1) + Conta (ex-Fase 2) + Ficha de produto
 
-Unificado em 2026-08-28 a pedido do fxlip, pra execução posterior (uma
-sessão de layout dá conta de tudo; as partes são independentes — se faltar
-tempo, fechar o ciclo de uma parte e deixar o resto pra próxima).
+Unificado em 2026-08-28 a pedido do fxlip, pra execução posterior (as
+partes são independentes — fechar o ciclo de uma e deixar o resto pra
+próxima é ok; a Parte E/ficha é a mais pesada, provavelmente merece sessão
+própria). Ordem sugerida: **C/D (conta, só CSS, rápido) → A/B (funil) →
+E (ficha, a maior)**.
 
 Contexto: Fases 3 (globais: breadcrumb off + sticky footer) e 4 (reativação
 de links/busca/login) já concluídas em 2026-08-27. Regras de `agents.md`
@@ -116,6 +118,88 @@ Arquivos: override em `components.scss` (escopo `.account`, bloco
       deles; pegar o tratamento de BORDA (provavelmente os mesmos dots de
       B2 — grep `lwa-login` na ref). Aplicar como emulação `cpk-`.
 
+## Parte E — Ficha de produto (`/bones/g3ng4r` etc.)
+
+Ref real: `https://wp.nkdev.info/cyberpulse/product/band-t-shirt/`
+(baixada e dissecada em 2026-08-28 — não há espelho local de product; se
+precisar de novo: `curl -sL -A "Mozilla/5.0" <url>`, a URL viva renderiza).
+Produto da ref é **simples, sem variações** — igual aos nossos; o delta
+abaixo não depende de variantes.
+
+### Estrutura do fork (onde mexer)
+
+Página: `packages/evershop/src/modules/catalog/pages/frontStore/productView/ProductView.tsx`
+(ÁREAS: `productPageTop` · `productPageMiddleLeft` · `productPageMiddleRight`
+· `productSingleDescription` · `productPageBottom`). Componentes do core em
+`packages/evershop/src/components/frontStore/catalog/`: `Media.tsx` (galeria
+slick), `ProductSingleName.tsx`, `ProductSingleForm.tsx` (qty/add-to-cart +
+attrs/sku), `ProductSingleDescription.tsx`. **Override do tema = criar
+arquivo com mesmo path em `src/components/frontStore/catalog/`** (mesmo
+mecanismo do `product/list/List.jsx`). Componente NOVO (rating, related)
+entra por `export const layout = { areaId, sortOrder }` como o LoginHero.
+
+### O que a ref tem e a nossa não (delta levantado 2026-08-28)
+
+| Ref (band-t-shirt) | Nossa ficha hoje | Gap |
+|---|---|---|
+| Galeria multi-imagem + thumbs 180px + lightbox (pswp) | slick com 1 imagem (vargr só tem 1) | thumbs sem CSS próprio; lightbox não existe |
+| Rating: estrelas + "N customer reviews" + link p/ tab Reviews | nada (rating decorativo só no card do /shop) | sem estrelas na ficha |
+| Short description acima do botão | descrição é full-width abaixo do grid | ordem/posição difere |
+| Tabs abaixo: Description · Additional information · Reviews (1) | description full-width; attrs dentro do form | sem tabs/seções de conteúdo |
+| Related `.products.columns-4` (cards = mesmo padrão do loop /shop) | `productPageBottom` VAZIA — o fork tem engine (`Recommendation.resolvers.ts` + regras no admin) mas NENHUM componente frontStore renderiza | seção inteira a criar |
+| `product_meta` (SKU/categoria/tags) | `.cpk-meta-list` já cobre | ok |
+
+- [ ] **E1. Galeria com thumbs** — o `Media.tsx` do core é slick: primeiro
+      **popular o produto de teste com 3+ imagens** (dado de admin, ver
+      pendências) e ver o que o slick já entrega sozinho (slides + dots?).
+      O que faltar de visual (coluna de thumbs 180px ao lado/abaixo como a
+      ref) entra por CSS override no tema (`.product-slider` etc. em
+      `components.scss`, escopo `.cpk-gallery` já existente) ou override do
+      `Media.jsx`. **Lightbox/zoom = funcionalidade** → não implementar;
+      se a ref for seguida à risca, `<PlaceholderNotice />` no clique.
+- [ ] **E2. Rating decorativo** — componente novo do tema
+      (`src/components/frontStore/catalog/ProductSingleRating.jsx`),
+      `areaId: 'productPageMiddleRight'`, `sortOrder: 20` (entre Name=10 e
+      Form=30). Reutilizar `item/Rating.jsx` do /shop (já isolado pra
+      receber média por prop) + linha "(0 avaliações)" muted. **DECISÃO**:
+      decorativo agora (como o card) ou omitir até existir sistema.
+- [ ] **E3. Short description** — a ref traz um resumo curto entre rating e
+      botão. O EverShop só tem `description` (um campo): decidir entre (a)
+      manter como hoje (full-width abaixo, revisado às cegas) e só conferir
+      tipografia com dado populado, ou (b) mover `ProductSingleDescription`
+      pra dentro da coluna direita acima do form (override com layout
+      `areaId: 'productPageMiddleRight'`, sortOrder 25). Alinhar com o que
+      o fxlip preferir visualmente na comparação.
+- [ ] **E4. Seções de conteúdo abaixo do grid** — a ref usa TABS
+      (Description/Additional/Reviews). Tabs reais = interação JS =
+      funcionalidade → **fora da fase de layout**. Recomendação: seções
+      empilhadas full-width no padrão `cpk-` (heading uppercase miúdo +
+      régua brand, mesmo tratamento dos widgets do /shop): "DESCRIÇÃO"
+      (dados reais), "INFORMAÇÕES ADICIONAIS" (attrs que hoje moram no
+      form), "AVALIAÇÕES" (`<PlaceholderNotice />`). **DECISÃO**: seções
+      empilhadas vs tabs visuais estáticas (CSS puro não faz tabs bem).
+- [ ] **E5. Relacionados** — seção nova na área `productPageBottom`
+      (componente do tema com `layout.areaId: 'productPageBottom'`,
+      título "RELACIONADOS" no padrão do E4). Dois caminhos: (a) consumir
+      `recommendations` — a query existe no core
+      (`Recommendation.resolvers.ts`) mas **verificar se o schema frontStore
+      expõe e se há dado** (regras se configuram no admin:
+      `RelatedProductsRules` por categoria + `CatalogSetting`); (b)
+      `<PlaceholderNotice />` até popular. Cards no MESMO padrão do /shop
+      (reutilizar `product/list/` se o dado vier em shape compatível).
+- [ ] **E6. Meta/SKU** — já coberto por `.cpk-meta-list`; só conferir na
+      comparação se a ref mostra algo a mais (tags clicáveis = link morto
+      hoje → não linkar).
+
+### Dado de admin que travaria a validação (levantar ANTES de printar)
+
+1. Produto de teste com **descrição populada** (vargr está vazia).
+2. **3+ imagens na galeria** do mesmo produto.
+3. **Regras de related** no admin (categoria com produtos suficientes pra
+   recomendar) — senão E5 não renderiza dado nenhum.
+Sem isso, E1/E3/E5 são revisão às cegas de novo (ver pendência "Ficha:
+descrição e relacionados dependem de dado" no `memory.md`).
+
 ## Fechamento (cada parte, ou tudo no fim)
 
 1. `npm run compile` no repo do tema.
@@ -138,3 +222,10 @@ Arquivos: override em `components.scss` (escopo `.account`, bloco
 - **A3**: order note não existe no EverShop deste fork → PlaceholderNotice
   ou descartar do escopo?
 - **D1**: push de tradução no repo `www` (aprovação explícita).
+- **E2**: rating decorativo na ficha agora ou omitir até existir sistema?
+- **E3**: descrição full-width abaixo (como hoje) ou curta na coluna direita?
+- **E4**: seções empilhadas (recomendado) vs tabs visuais estáticas?
+- **E5**: relacionados consumindo `recommendations` agora (se o schema
+  expuser e houver dado) ou PlaceholderNotice até popular?
+- **Dado de admin** (trava E1/E3/E5): descrição + 3 imagens no produto de
+  teste + regras de related no admin — quem popula? (frente popular / fxlip)
