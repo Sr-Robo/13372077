@@ -1,0 +1,12 @@
+{
+  "metafieldDefinitions": [
+    {
+      "ownerType": "product",
+      "namespace": "cpk",
+      "key": "mini_desc",
+      "name": "Mini descrição",
+      "type": "short_text",
+      "visibleToCustomer": true
+    }
+  ]
+}

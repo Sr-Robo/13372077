@@ -1164,6 +1164,338 @@
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────
+// Tabs da ficha de produto (radio hack CSS-only) — E5/E6
+// ProductSingleTabs.jsx: 3 abas (Descrição, Informações adicionais,
+// Avaliações) controladas por <input type="radio"> sr-only.
+// ─────────────────────────────────────────────────────────────────────
+
+// Radios invisíveis (sr-only) — acessíveis mas fora do fluxo visual.
+.cpk-tab-radio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Barra de labels das abas
+.cpk-tab-labels {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--cpk-color-border);
+  margin-bottom: 0;
+}
+
+.cpk-tab-label {
+  padding: 0.9em 1.5em;
+  font-family: var(--cpk-font-family);
+  font-size: 13px;
+  font-weight: var(--cpk-font-weight-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--cpk-color-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color var(--cpk-transition-duration) var(--cpk-transition-easing),
+    border-color var(--cpk-transition-duration) var(--cpk-transition-easing);
+  user-select: none;
+
+  &:hover {
+    color: var(--cpk-color-contrast);
+  }
+}
+
+// Painéis: todos escondidos por padrão
+.cpk-tab-panel {
+  display: none;
+  padding: 2rem 0;
+  color: var(--cpk-color-contrast-muted);
+  line-height: 1.8;
+  font-family: var(--cpk-font-family);
+}
+
+// Mecânica :checked ~ label/painel — cada radio ativa a label e o painel
+// correspondentes. A ordem no DOM é: radio1, radio2, radio3, .cpk-tab-labels
+// (com as 3 labels), panel1, panel2, panel3.
+
+// Tab 1: Descrição
+#cpk-tab-desc:checked ~ .cpk-tab-labels label[for='cpk-tab-desc'] {
+  color: var(--cpk-color-brand);
+  border-bottom-color: var(--cpk-color-brand);
+  text-shadow: var(--cpk-glow-sm);
+}
+#cpk-tab-desc:checked ~ .cpk-tab-panel--desc {
+  display: block;
+}
+
+// Tab 2: Informações adicionais
+#cpk-tab-info:checked ~ .cpk-tab-labels label[for='cpk-tab-info'] {
+  color: var(--cpk-color-brand);
+  border-bottom-color: var(--cpk-color-brand);
+  text-shadow: var(--cpk-glow-sm);
+}
+#cpk-tab-info:checked ~ .cpk-tab-panel--info {
+  display: block;
+}
+
+// Tab 3: Avaliações
+#cpk-tab-reviews:checked ~ .cpk-tab-labels label[for='cpk-tab-reviews'] {
+  color: var(--cpk-color-brand);
+  border-bottom-color: var(--cpk-color-brand);
+  text-shadow: var(--cpk-glow-sm);
+}
+#cpk-tab-reviews:checked ~ .cpk-tab-panel--reviews {
+  display: block;
+}
+
+// Container das tabs (escopo)
+.cpk-tabs {
+  margin-top: 3rem;
+  background: var(--cpk-color-bg-100);
+  border: 1px solid var(--cpk-color-border);
+  padding: 0 2rem 2rem;
+
+  // Prose do Editor dentro da tab de descrição
+  .prose {
+    color: var(--cpk-color-contrast-muted);
+
+    h1, h2, h3, h4, h5, h6 {
+      color: var(--cpk-color-contrast);
+      font-family: var(--cpk-font-family);
+    }
+
+    a {
+      color: var(--cpk-color-brand);
+    }
+
+    strong {
+      color: var(--cpk-color-contrast);
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// Mini descrição (E3) — parágrafo curto abaixo do rating, acima do form.
+// ─────────────────────────────────────────────────────────────────────
+.cpk-mini-desc {
+  font-family: var(--cpk-font-family);
+  font-size: 14px;
+  color: var(--cpk-color-contrast-muted);
+  line-height: 1.7;
+  margin: 0.5rem 0 1rem;
+  max-width: 480px;
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// Rating na ficha (E4) — estrelas + link "(1 avaliação)" pra tab reviews.
+// ─────────────────────────────────────────────────────────────────────
+.cpk-product-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  margin-bottom: 0.5rem;
+
+  .cpk-rating {
+    display: flex;
+    gap: 2px;
+  }
+
+  .cpk-star {
+    width: 16px;
+    height: 16px;
+    color: var(--cpk-color-brand);
+    filter: drop-shadow(0 0 2px rgba(var(--cpk-color-brand-rgb), 0.4));
+  }
+}
+
+.cpk-product-rating__count {
+  font-family: var(--cpk-font-family);
+  font-size: 13px;
+  color: var(--cpk-color-muted);
+  cursor: pointer;
+  transition: color var(--cpk-transition-duration) var(--cpk-transition-easing);
+  text-decoration: none;
+  border: none;
+  background: none;
+  padding: 0;
+
+  &:hover {
+    color: var(--cpk-color-brand);
+    text-shadow: var(--cpk-glow-sm);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// Reviews (E5 tab 3) — post de avaliação + form visual.
+// ─────────────────────────────────────────────────────────────────────
+.cpk-review {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--cpk-color-border);
+}
+
+.cpk-review__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.cpk-review__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--cpk-color-bg-300);
+  border: 1px solid var(--cpk-color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--cpk-font-family);
+  font-weight: var(--cpk-font-weight-heading);
+  font-size: 14px;
+  color: var(--cpk-color-brand);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.cpk-review__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.cpk-review__author {
+  font-family: var(--cpk-font-family);
+  font-size: 14px;
+  font-weight: var(--cpk-font-weight-heading);
+  color: var(--cpk-color-contrast);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cpk-review__date {
+  font-family: var(--cpk-font-family);
+  font-size: 12px;
+  color: var(--cpk-color-muted);
+}
+
+.cpk-review__stars {
+  display: flex;
+  gap: 2px;
+
+  .cpk-star {
+    width: 14px;
+    height: 14px;
+    color: var(--cpk-color-brand);
+  }
+}
+
+.cpk-review__body {
+  font-family: var(--cpk-font-family);
+  font-size: 14px;
+  color: var(--cpk-color-contrast-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+// Form de avaliação (visual-only)
+.cpk-review-form {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--cpk-color-border);
+}
+
+.cpk-review-form__title {
+  font-family: var(--cpk-font-family);
+  font-size: 1rem;
+  font-weight: var(--cpk-font-weight-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--cpk-color-contrast);
+  margin-bottom: 1rem;
+}
+
+.cpk-review-form__stars {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  margin-bottom: 1rem;
+}
+
+.cpk-review-form__label {
+  font-family: var(--cpk-font-family);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--cpk-color-muted);
+}
+
+.cpk-review-form__textarea {
+  display: block;
+  width: 100%;
+  background: var(--cpk-color-bg-200);
+  border: 1px solid var(--cpk-color-border);
+  border-radius: 0;
+  color: var(--cpk-color-contrast);
+  font-family: var(--cpk-font-family);
+  font-size: 14px;
+  padding: 0.8em 1em;
+  resize: vertical;
+  margin-bottom: 1rem;
+  transition: border-color var(--cpk-transition-duration) var(--cpk-transition-easing);
+
+  &::placeholder {
+    color: var(--cpk-color-muted);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--cpk-color-brand);
+    box-shadow: var(--cpk-glow-sm);
+  }
+}
+
+.cpk-review-form__submit {
+  position: relative;
+  background-color: var(--cpk-color-brand) !important;
+  color: var(--cpk-color-bg) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  font-family: var(--cpk-font-family) !important;
+  text-transform: uppercase !important;
+  font-weight: var(--cpk-font-weight-heading) !important;
+  letter-spacing: 0.06em !important;
+  font-size: 0.85rem !important;
+  padding: 0.9em 1.8em !important;
+  cursor: pointer;
+  clip-path: polygon(
+    0 10px,
+    10px 0,
+    100% 0,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    0 100%
+  );
+
+  &:disabled {
+    background-color: var(--cpk-color-bg-300) !important;
+    color: var(--cpk-color-muted) !important;
+    cursor: not-allowed;
+  }
+}
+
+// PlaceholderNotice dentro do form de review
+.cpk-review-form .cpk-placeholder {
+  margin-top: 1rem;
+}
+
 // Breadcrumb (shadcn [data-slot="breadcrumb"]) — removido de TODAS as
 // páginas (fxlip, 2026-08-27, Fase 3): a nav inteira some em vez de ser
 // estilizada. O /shop já escondia o seu via BreadcrumbOverride na extensão

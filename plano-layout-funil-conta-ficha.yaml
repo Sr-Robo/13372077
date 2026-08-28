@@ -1,0 +1,201 @@
+# Plano executável — espelha plano-layout-funil-conta-ficha.md (plano original, referência de revisão)
+version: 1
+origem: plano-layout-funil-conta-ficha.md
+sequencia: P -> F1 -> F2 -> F3 -> REVIEW
+
+globals:
+  repo_tema: /home/fxlip/server/repos/13372077
+  repo_core: /home/fxlip/server/repos/www        # somente leitura (exceção: F3-04, com gate)
+  dev_url: http://100.94.54.16:8090
+  prod_url: https://sr.robo.net.br
+  produto_teste: /admin/products/edit/e9541d6d-1454-4b4d-a3a1-acec774d583a
+  refs:
+    checkout: ~/refs/cyberpulse/cyberpulse/checkout.html
+    cart: ~/refs/cyberpulse/cyberpulse/cart.html
+    produto: https://wp.nkdev.info/cyberpulse/product/band-t-shirt/
+  regras:
+    prefixo_css: cpk-
+    fase: layout-only
+    sem_funcionalidade: "src/components/PlaceholderNotice.jsx + registro em memory.md § Pendências de funcionalidade"
+    validade_mudanca: commitada-e-pushada
+    push_www: proibido (exceção F3-04, com gate)
+
+tasks:
+  # ---------- pré-requisitos ----------
+  - id: P-01
+    etapa_ref: "Pré-requisitos"
+    acao: subir dev
+    input: "server dev on"
+    output: "dev respondendo em http://100.94.54.16:8090"
+  - id: P-02
+    etapa_ref: "Pré-requisitos"
+    acao: higienizar refs locais
+    input: "~/refs/cyberpulse/cyberpulse/{checkout,cart}.html"
+    output: "cópias no scratchpad sem <script>/<iframe>/<link> externo, src|href|url()|@import http → data:, abríveis por file://"
+  - id: P-03
+    etapa_ref: "Pré-requisitos"
+    acao: baseline de prints
+    input: dev_url
+    output: "prints 'atual' de /checkout, /cart e ficha da caneca GTA (sempre do dev, nunca produção)"
+
+  # ---------- fase 1: ficha (parte E) ----------
+  - id: F1-01
+    etapa_ref: "Parte E / E1"
+    acao: validar schema do theme.json
+    input: "www/packages/evershop/src/lib/metafield/provision.ts (ManifestMetafieldDefinition)"
+    output: "campos obrigatórios/opcionais da definição confirmados"
+  - id: F1-02
+    etapa_ref: "Parte E / E1"
+    acao: criar theme.json
+    input: "schema validado em F1-01"
+    output: "theme.json na raiz do tema com metafieldDefinitions[0] = {ownerType: product, namespace: cpk, key: mini_desc, name: 'Mini descrição', type: short_text, visibleToCustomer: true}"
+  - id: F1-03
+    etapa_ref: "Parte E / E1"
+    acao: provisionar e confirmar no admin
+    input: "theme.json (restart do container dev se necessário)"
+    output: "campo 'Mini descrição' visível no card Custom fields do admin do produto de teste"
+  - id: F1-04
+    etapa_ref: "Parte E / E2"
+    acao: popular dado de admin
+    input: produto_teste
+    output: "mini_desc com valor + description não-vazia no produto de teste"
+    papel: admin
+  - id: F1-05
+    etapa_ref: "Parte E / E3"
+    acao: criar ProductMiniDesc.jsx
+    input: "metafields do useProduct() de @components/frontStore/catalog/ProductContext.js"
+    output: "src/components/frontStore/catalog/ProductMiniDesc.jsx; layout={areaId: productPageMiddleRight, sortOrder: 25}; renderiza metafields[mini_desc].value em .cpk-mini-desc; sem valor → null"
+  - id: F1-06
+    etapa_ref: "Parte E / E4"
+    acao: criar ProductSingleRating.jsx
+    input: "Rating de src/components/frontStore/catalog/product/list/item/Rating.jsx"
+    output: "src/components/frontStore/catalog/ProductSingleRating.jsx; layout={areaId: productPageMiddleRight, sortOrder: 15}; '(1 avaliação)' como <label for='cpk-tab-reviews'>"
+  - id: F1-07
+    etapa_ref: "Parte E / E5"
+    acao: override-null de ProductSingleDescription
+    input: "core: components/frontStore/catalog/ProductSingleDescription.tsx"
+    output: "src/components/frontStore/catalog/ProductSingleDescription.jsx retornando null + comentário de motivo"
+  - id: F1-08
+    etapa_ref: "Parte E / E5"
+    acao: override-null de ProductSingleAttributes
+    input: "core: components/frontStore/catalog/ProductSingleAttributes.tsx"
+    output: "src/components/frontStore/catalog/ProductSingleAttributes.jsx retornando null + comentário de motivo (specs migram pra tab)"
+  - id: F1-09
+    etapa_ref: "Parte E / E5"
+    acao: criar ProductSingleTabs.jsx
+    input: "useProduct(); <Editor> do core; .cpk-meta-list"
+    output: "src/components/frontStore/catalog/ProductSingleTabs.jsx; layout={areaId: productSingleDescription, sortOrder: 5}; radios sr-only name=cpk-product-tab (ids: cpk-tab-desc defaultChecked, cpk-tab-info, cpk-tab-reviews) + labels + painéis no mesmo container (:checked ~); tab Descrição = product.description via <Editor>; tab Informações adicionais = product.sku + product.attributes na markup .cpk-meta-list; tab Avaliações = 1 post fake (avatar/nome/data/comentário) + form visual (estrelas/textarea/botão) sem gravação + PlaceholderNotice"
+  - id: F1-10
+    etapa_ref: "Parte E / E6"
+    acao: CSS das novidades
+    input: "src/styles/components.scss bloco override produto (~:862-1165); tokens.scss; effects.scss"
+    output: "classes .cpk-tabs/.cpk-tab-panel/.cpk-mini-desc/.cpk-product-rating/.cpk-review/.cpk-review-form estilizadas; zero dependência nova"
+  - id: F1-11
+    etapa_ref: "Fechamento"
+    acao: compilar
+    input: "npm run compile"
+    output: "dist/ atualizado"
+  - id: F1-12
+    etapa_ref: "Fechamento"
+    acao: prints dev vs ref
+    input: "ficha da caneca GTA no dev + refs.produto"
+    output: "par de prints lado a lado (atual vs ref)"
+  - id: F1-13
+    etapa_ref: "Fechamento"
+    acao: atualizar memory.md
+    output: "pendências registradas (form de review não grava; rating decorativo na ficha; mini_desc pendente nos demais produtos) + estado da ficha re-revisado"
+  - id: F1-14
+    etapa_ref: "Fechamento"
+    acao: commit + push
+    output: "commits feat(...)+build(dist); push origin main; SHA confirmado em ~/server/stacks/deploy/deploy.log"
+  - id: F1-15
+    etapa_ref: "Fechamento"
+    acao: validar produção
+    input: "prod_url + ficha da caneca GTA + UA custom sr-robo-check/1.0"
+    output: "ficha de produção conferida (tabs sem JS; mini-desc; rating)"
+
+  # ---------- fase 2: funil (partes A+B) ----------
+  - id: F2-01
+    etapa_ref: "Parte A / A1"
+    acao: título do checkout
+    input: "padrão Title de ShoppingCart.jsx:12-23 (cpk-h1, text-center)"
+    output: "h1 centralizado no Checkout.jsx; texto 'CHECKOUT'"
+    gate: "confirmar texto com fxlip se divergente"
+  - id: F2-02
+    etapa_ref: "Parte A / A2"
+    acao: textareas com efeito do select do /shop
+    input: "components.scss:1204-1229 (select#shop-sort-by) e :213-241 (bloco shadcn)"
+    output: "bloco shadcn completado com borda/fundo/foco-hover-glow equivalentes ao select; sem seletor novo solto"
+  - id: F2-03
+    etapa_ref: "Parte A / A3"
+    acao: cupom / order note na coluna direita
+    input: "dump-dom do /checkout com carrinho (grep CouponForm/OrderNote)"
+    output: "cupom reposicionado na col-2 se existir; order note inexistente no fork → PlaceholderNotice na col-2 + registro em memory.md"
+  - id: F2-04
+    etapa_ref: "Parte B / B1"
+    acao: print do cart vs ref
+    input: "cart do dev + refs.cart"
+    output: "totals na direita confirmado (atenção ao breakpoint lg:); se mobile empilhar feio, ordem/dimensionamento alinhados à ref"
+  - id: F2-05
+    etapa_ref: "Parte B / B2"
+    acao: mecanismo de dots nas bordas
+    input: "grep cpl-table-dots em ~/refs/cyberpulse/cyberpulse/{cart,checkout}_arquivos/*.css"
+    output: "emulação cpk- (gradiente radial repetido nos cantos) aplicada nos cards do cart onde a ref aplica; sem copiar código"
+  - id: F2-06
+    etapa_ref: "Parte A / A4"
+    acao: dots no card de resumo do checkout
+    input: "mecanismo de F2-05"
+    output: "dots aplicados no card de resumo da coluna direita do checkout, se a ref tiver"
+  - id: F2-07
+    etapa_ref: "Fechamento"
+    acao: fechamento da fase 2
+    input: "idem F1-11..F1-15"
+    output: "compile + prints + memory.md + commits/push com SHA no deploy.log + validação de produção de /cart e /checkout"
+
+  # ---------- fase 3: conta (partes C+D) ----------
+  - id: F3-01
+    etapa_ref: "Parte C / C1"
+    acao: remover CUSTOMER_TERMINAL_INIT
+    input: "components.scss:478-488"
+    output: "bloco &::before content 'CUSTOMER_TERMINAL_INIT' removido"
+  - id: F3-02
+    etapa_ref: "Parte C / C2"
+    acao: centralizar Minha Conta
+    input: ".account-header em components.scss"
+    output: "text-align: center no .account-header (h1 mantém uppercase/brand/glow)"
+  - id: F3-03
+    etapa_ref: "Parte D / D1"
+    acao: levantar strings EN das páginas de conta
+    input: "TSX do fork (modules/customer/pages/…) + www/translations/pt-br/account.csv + sessão logada do fxlip"
+    output: "lista de strings em inglês + diagnóstico (string sem tradução vs tradução trocada, ex. account.csv:10 'Sign In'→'REGISTRAR')"
+  - id: F3-04
+    etapa_ref: "Parte D / D1"
+    acao: corrigir traduções
+    input: "lista de F3-03"
+    output: "diff no repo www (translations/pt-br/*.csv) preparado e aplicado"
+    gate: "aprovação explícita do fxlip antes de push no www (deploy separado)"
+  - id: F3-05
+    etapa_ref: "Parte D / D2"
+    acao: bordas do dialog de novo endereço
+    input: "grep lwa-login na ref; escopo [data-slot='dialog-content'] em components.scss"
+    output: "tratamento de borda emulado como cpk- (mesmo mecanismo de dots de F2-05, se for o caso)"
+  - id: F3-06
+    etapa_ref: "Fechamento"
+    acao: fechamento da fase 3
+    input: "idem F1-11..F1-15"
+    output: "compile + prints + memory.md + commits/push com SHA no deploy.log + validação de produção das páginas de conta"
+
+# ---------- comando de revisão (executar depois de TODOS os updates) ----------
+review:
+  quando: apos_ultima_task
+  por_task_executada:
+    iterar: "tasks na ordem, P-01..F3-06"
+    comando: |
+      Leia esse output do executor.
+      Compare com a etapa {etapa_ref} do plano original (plano-layout-funil-conta-ficha.md).
+      Retorne apenas os diffs e as correções necessárias em formato de patch.
+    formato_saida: "unified diff aplicável com git apply"
+  apos_patches:
+    - "aplicar patches aceitos"
+    - "reexecutar output da task corrigida"
+    - "revalidar dev (e produção, se a fase já foi pushada)"

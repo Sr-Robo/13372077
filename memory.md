@@ -114,6 +114,17 @@ do dist NÃO precisam ser commitados: o deploy regenera tudo.
       listagem) — validado renderizando no dev em 2026-08-27; a observação
       anterior ("só `/product/<uuid>`, url_key dá 404") era do core 2.2.1
       legado e não se aplica ao formato atual.
+      **2026-08-28 — Fase 1 (plano-layout-funil-conta-ficha)**:
+      - `theme.json` com metafieldDefinitions (`cpk.mini_desc`, short_text)
+      - `ProductMiniDesc.jsx` (areaId: productPageMiddleRight, sortOrder 25)
+      - `ProductSingleRating.jsx` (areaId: productPageMiddleRight, sortOrder 15)
+        — estrelas decorativas + label pra tab reviews via radio hack
+      - `ProductSingleTabs.jsx` (areaId: productSingleDescription, sortOrder 5)
+        — 3 tabs CSS-only: Descrição (Editor), Info adicional (SKU+attrs), Avaliações
+      - `ProductSingleDescription.jsx` — override-null (conteúdo migrou pra tab)
+      - `ProductSingleAttributes.jsx` — override-null (specs migraram pra tab)
+      - CSS em `components.scss`: .cpk-tabs, .cpk-tab-panel, .cpk-mini-desc,
+        .cpk-product-rating, .cpk-review, .cpk-review-form
 - [x] Carrinho — revisado contra o piloto em 2026-08-26 (CTA de checkout
       agora PRENCHIDO no padrão .cpk-btn, valores: subtotal em contraste /
       unitário em muted, thumb com corte de canto como o card do /shop;
@@ -181,6 +192,17 @@ workflow/testes — não implementar durante uma sessão de layout.
   vargr (produto de teste) tem descrição vazia e
   `related_products_mode=inherit` não renderiza seção de relacionados —
   layout dessas áreas revisado às cegas; revalidar com produto populado.
+- **Ficha: form de avaliação não grava** (2026-08-28): o form em
+  `ProductSingleTabs.jsx` (tab Avaliações) é visual-only — textarea
+  readOnly, botão disabled, `PlaceholderNotice` com "Sistema de avaliações
+  em breve". Quando o sistema de reviews existir, ligar ao backend.
+- **Ficha: rating decorativo na ficha** (2026-08-28):
+  `ProductSingleRating.jsx` renderiza 5 estrelas fixas (mesmo que o card
+  do /shop). Quando o sistema de reviews existir, receber média por prop.
+- **Ficha: mini_desc pendente nos demais produtos** (2026-08-28): o
+  metafield `cpk.mini_desc` foi provisionado via `theme.json`, mas só o
+  produto de teste (caneca GTA) deve ter valor preenchido no admin. Os
+  demais produtos ficam sem mini-desc (componente retorna null — OK).
 
 ## Backlog de layout — próxima sessão (ditado pelo fxlip 2026-08-27)
 
