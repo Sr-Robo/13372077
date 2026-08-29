@@ -12,7 +12,9 @@ fxlip fechou as decisões da ficha:
   **⚠️ 2026-08-29: executada (ba04470), REPROVADA na revisão, CORRIGIDA e
   APROVADA (62a67ba) — ver bloco "Fase 1 (Ficha)" acima. Fase fechada e
   validada em dev + produção.**
-- **Fase 2 — Funil** (Partes A/checkout + B/cart) — inalteradas.
+- **Fase 2 — Funil** (Partes A/checkout + B/cart) —
+  **2026-08-29: executada (8809b02 + b830e0a) e APROVADA na revisão — ver
+  bloco "Fase 2 (Funil) — APROVADA" abaixo.**
 - **Fase 3 — Conta** (Partes C/account/orders + D/account) — só CSS, rápido.
 
 Ordem de execução fica a critério do fxlip (as três são independentes).
@@ -106,6 +108,46 @@ degradado.
    por `file://`. Procedimento completo em `skills.md § Screenshot`.
 3. Prints "atual vs ref" lado a lado — print do nosso vem do dev, nunca de
    produção (o dev aceita dump-dom; produção exige UA custom).
+
+## ✅ Fase 2 (Funil) — APROVADA na revisão (2026-08-29)
+
+Executada em `8809b02` (feat) + `b830e0a` (remoção do `@heroicons`), ambos
+pushados e deployados. A revisão revalidou de forma independente (não por
+relatório) e **confirmou tudo**:
+
+- **Move estrutural correto**: `src/pages/frontStore/{cart,checkout}/` →
+  `src/pages/{cart,checkout}/` (route.id). Descoberta da revisão: os
+  componentes no path antigo `pages/frontStore/` **nunca tinham sido
+  escaneados** — eram código morto; /cart e /checkout rodavam com as páginas
+  do CORE do fork até o deploy `8809b02` (só estilizadas por CSS global). O
+  move é o mesmo remédio da Fase 1, agora pra páginas inteiras.
+- **/checkout**: título "CHECKOUT" centralizado (markup `checkout-header
+  text-center` + `cpk-h1`); grid 2 colunas `lg:grid-cols-[1fr_400px]`;
+  ShippingNote (order note real do core, não placeholder) + `.cpk-order-summary`
+  (itens + totais + cupom) na col-2, note acima do resumo (confirmado por
+  posição no DOM de produção); textareas com o efeito do select do /shop
+  (borda/fundo/hover brand/foco inset glow — bloco shadcn em `components.scss`
+  + ShippingNote em `CheckoutOverride.scss`).
+- **A4**: a ref **não tem** dots no card de resumo do checkout (só na tabela
+  do carrinho) — a condição "se a ref tiver" resolveu como não; o tema aplica
+  identidade própria (clip-path + linhas de acento com glow). Correto.
+- **/cart**: título "CARRINHO" centralizado + contagem; grid
+  `lg:grid-cols-[1fr_360px]` com CART TOTALS na direita; dots emulados
+  (`::before/::after` 3×3px brand + glow) no header da tabela e divisórias
+  dos itens; tabela renderizando com item real em produção (SSR).
+- **Sem regressões**: ficha (Fase 1) revalidada em produção pós-deploy da
+  Fase 2 (tabs + mini-desc ok); `Summary.jsx` deletado sem órfãos;
+  `package.json` sem dependências novas (chevron via SVG inline).
+- **Validação em dev confirmada**: o dump-dom via headless Chrome mostra a
+  página do tema ativa no dev (o ThemeWatcher integrou o move sem restart).
+
+Pendências que a revisão deixou anotadas (não bloqueiam a aprovação):
+- `~/server`: `deploy-ecommerce.sh` ganhou `--no-cache` (ativo nos deploys
+  da Fase 2, ~3,5min de build) **sem commit** no repo de infra — precisa ser
+  commitado ou revertido pela frente de infra (regra: infra mudada = commit).
+- Prints "atual vs ref" lado a lado não foram arquivados pelo executor; a
+  revisão validou por DOM+CSS em dev e produção (screenshots em
+  `/tmp/{cart,checkout}-dev.png`). Comparação visual fina fica pro fxlip.
 
 ## Parte A — /checkout
 

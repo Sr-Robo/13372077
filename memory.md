@@ -139,7 +139,7 @@ do dist NÃO precisam ser commitados: o deploy regenera tudo.
       (sem SSR) — dump-dom do dev exige headless Chrome `--dump-dom`
       (ver `skills.md`); curl serve só pra produção (SSR ativo).
 - [x] Carrinho (2026-08-29, Fase 2): migrado para `src/pages/cart/` (route.id `cart`), título "CARRINHO" centralizado com subtitle de itens, grid 2 colunas com totals na direita (`lg:grid-cols-[1fr_360px]`), CTA de checkout preenchido no padrão .cpk-btn, dots `--cpl-table-dots` emulados nas bordas dos itens e tabela.
-- [x] Checkout (2026-08-29, Fase 2): migrado para `src/pages/checkout/` (route.id `checkout`), título "CHECKOUT" centralizado (.cpk-h1), layout 2 colunas com resumo do pedido (.cpk-order-summary com dots) e shipping note na coluna direita, textareas e campos shadcn integrados com hover glow e foco do tema.
+- [x] Checkout (2026-08-29, Fase 2): migrado para `src/pages/checkout/` (route.id `checkout`), título "CHECKOUT" centralizado (.cpk-h1), layout 2 colunas com resumo do pedido (.cpk-order-summary — clip-path + linhas de acento com glow; a ref NÃO usa dots no resumo do checkout, só na tabela do carrinho) e shipping note na coluna direita, textareas e campos shadcn integrados com hover glow e foco do tema. Aprovado na revisão de 2026-08-29 (revalidado de forma independente em dev+produção).
 - [x] Dashboard do cliente (conta/pedidos) — revisado contra o piloto /shop
       em 2026-08-26 (override em `components.scss`; JSX do fork www:
       `MyAccount.tsx`/`OrderList.tsx` com wrapper `.account`, `AccountHeader`
@@ -186,6 +186,14 @@ e o backlog do fxlip pro estado desse checklist.
   removeram o core sem o substituto renderizar). Route ids conhecidos:
   ficha=`productView`, login=`login`, carrinho=`cart`, checkout=`checkout`,
   home=`homepage`, registro=`register`; `src/pages/all/` vale pra todas.
+  **Variante 2026-08-29 (Fase 2)**: o mesmo vale pra página inteira — os
+  overrides de página em `src/pages/frontStore/{cart,checkout}/` eram
+  **código morto** desde a criação (o scanner nunca leu `pages/frontStore/`;
+  /cart e /checkout rodavam com a página do CORE, só estilizada por CSS
+  global). O move pra `src/pages/{cart,checkout}/` na Fase 2 é o que ativou
+  os overrides de página de verdade. Lição: **qualquer coisa em
+  `src/pages/frontStore/` não existe pro EverShop** — se precisar de override
+  de página, é `src/pages/<route.id>/`.
 
 Lista viva do que foi visto e adiado durante trabalho de **layout** (fase
 atual). Cada item aqui é um lembrete pra uma sessão futura de
@@ -253,20 +261,21 @@ nossa vs. a ref — sobre renderizar refs cruas ver `skills.md`).
     bom; pegar a referência **`lwa lwa-login lwa-default`** pra estilizar
     as **bordas** do pop-up.
 
-**Organização em fases (combinada com o fxlip em 2026-08-27)**: Fase 1 funil
-(/checkout + /cart) → Fase 2 conta (/account/orders + /account) → Fase 3
-globais (breadcrumb off + sticky footer) → Fase 4 reativação (login, busca,
-links de produto).
-- **Fase 4 concluída 2026-08-27** (ad7e4f9+a873627): Name/Thumbnail voltam
-  a `<a href={p.url}>`, remove `pointer-events:none` de busca/login no
-  header, classe `.cpk-link-disabled` extinta.
-- **Fase 3 concluída 2026-08-27** (f02bb27+fe714c9): breadcrumb escondido
-  globalmente (`display:none !important` em `components.scss`, mesmo par de
-  seletores que a extensão catalog_shop usava no /shop — Heading
-  `sr@robo:~/shop$` não afetado) e sticky footer (wrapper
+**Organização de fases**: a numeração VIGENTE é a do
+`plano-layout-funil-conta-ficha.md` (2026-08-28): **Fase 1 ficha** ✓ ·
+**Fase 2 funil** ✓ · **Fase 3 conta** (pendente). A numeração antiga abaixo
+(combinada em 2026-08-27: funil=1, conta=2, globais=3, reativação=4) fica
+só como histórico — **não usar**:
+- **Antiga Fase 4 concluída 2026-08-27** (ad7e4f9+a873627): Name/Thumbnail
+  voltam a `<a href={p.url}>`, remove `pointer-events:none` de busca/login
+  no header, classe `.cpk-link-disabled` extinta.
+- **Antiga Fase 3 concluída 2026-08-27** (f02bb27+fe714c9): breadcrumb
+  escondido globalmente (`display:none !important` em `components.scss`,
+  mesmo par de seletores que a extensão catalog_shop usava no /shop —
+  Heading `sr@robo:~/shop$` não afetado) e sticky footer (wrapper
   `[data-evershop-area-id='body']` flex column com min-height 100vh/dvh,
   `> main` com flex:1, em `effects.scss`).
-- Restam: **Fase 1 (funil)** e **Fase 2 (conta)**.
+- Restam (numeração do plano): **Fase 3 — Conta** (Partes C/D, só CSS).
 
 ## Gotchas resolvidos (contexto / causa-raiz)
 
