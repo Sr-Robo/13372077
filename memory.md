@@ -39,6 +39,10 @@ src/
 │   │   └── LoginHero.tsx    ← wrapper fino de AuthHero (AUTH_PROTOCOL_INIT)
 │   └── register/
 │       └── RegisterHero.tsx ← wrapper fino de AuthHero (USER_REGISTRATION_INIT)
+│   ├── productView/
+│   │   ├── ProductMiniDesc.jsx      ← E3: mini-desc via metafield cpk.mini_desc
+│   │   ├── ProductSingleRating.jsx  ← E4: rating decorativo + label→tab reviews
+│   │   └── ProductSingleTabs.jsx    ← E5: tabs CSS-only (desc/specs/reviews)
 │   └── frontStore/checkout/
 │       ├── Checkout.jsx, Summary.jsx, CheckoutOverride.scss
 ├── components/
@@ -49,7 +53,10 @@ src/
 │   ├── PlaceholderNotice.jsx ← filler "Em breve" (.cpk-card/.cpk-placeholder)
 │   │                           pra área sem funcionalidade pronta (ver
 │   │                           § Pendências de funcionalidade)
-│   └── frontStore/catalog/product/list/
+│   ├── frontStore/catalog/
+│   │   ├── ProductSingleDescription.jsx ← null-override (desc → tabs)
+│   │   ├── ProductSingleAttributes.jsx  ← null-override (specs → tabs)
+│   │   └── product/list/
 │       ├── List.jsx/scss, item/{Name,Price,Thumbnail,Rating}.jsx
 │       │   (Name/Thumbnail linkam pra ficha via `p.url` (formato
 │       │   `/<categoria>/<url_key>`) — reativados 2026-08-27, Fase 4,
@@ -115,20 +122,14 @@ do dist NÃO precisam ser commitados: o deploy regenera tudo.
       anterior ("só `/product/<uuid>`, url_key dá 404") era do core 2.2.1
       legado e não se aplica ao formato atual.
       **2026-08-28 — Fase 1 (plano-layout-funil-conta-ficha): ba04470,
-      REPROVADA na revisão de 2026-08-29 — NÃO renderiza + regressão viva.**
-      Arquivos criados (mas os de área no path errado):
-      - `theme.json` com metafieldDefinitions (`cpk.mini_desc`, short_text) —
-        provisionamento no admin não confirmado
-      - `ProductMiniDesc.jsx` / `ProductSingleRating.jsx` / `ProductSingleTabs.jsx`
-        — criados em `src/components/frontStore/catalog/` (⛔ path errado, ver
-        gotcha do scanner abaixo) → **nenhum renderiza** no dev nem em prod
-      - `ProductSingleDescription.jsx` / `ProductSingleAttributes.jsx` —
-        override-null por path (mecanismo diferente); **funcionaram** e por
-        isso **esvaziaram descrição+specs da ficha em produção** (regressão)
-      - CSS em `components.scss` (.cpk-tabs/.cpk-tab-panel/.cpk-mini-desc/
-        .cpk-product-rating/.cpk-review/.cpk-review-form) — ok, no ar
-      Correção e detalhe: plano-layout-funil-conta-ficha.md § "Fase 1 (Ficha)
-      — REPROVADA". Gotcha da causa-raiz em § Pendências/gotchas abaixo.
+      REPROVADA na revisão de 2026-08-29 — causa: componentes de área em
+      path errado (`src/components/` em vez de `src/pages/productView/`).
+      **2026-08-29 — CORRIGIDA**: 3 componentes movidos para
+      `src/pages/productView/` (ProductMiniDesc, ProductSingleRating,
+      ProductSingleTabs). Null-overrides mantidos em `src/components/`
+      (corretos para override por path via import alias). Pendente:
+      rebuild (`server build`) + validação em dev (F1-12) e produção
+      (F1-15).
 - [x] Carrinho — revisado contra o piloto em 2026-08-26 (CTA de checkout
       agora PRENCHIDO no padrão .cpk-btn, valores: subtotal em contraste /
       unitário em muted, thumb com corte de canto como o card do /shop;
