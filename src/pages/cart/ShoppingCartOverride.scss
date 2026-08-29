@@ -2,7 +2,7 @@
 .cpl-cart-wrap {
   .shopping-cart-header {
     margin-bottom: 2rem;
-    text-align: left; /* CyberPulse aligns headers to the left by default in their page structure */
+    text-align: center;
 
     .shopping-cart-title {
       text-transform: uppercase;
@@ -10,12 +10,14 @@
       margin-bottom: 0.5rem;
       position: relative;
       padding-bottom: 0.5rem;
+      display: inline-block;
 
       &::after {
         content: '';
         position: absolute;
         bottom: 0;
-        left: 0;
+        left: 50%;
+        transform: translateX(-50%);
         width: 60px;
         height: 2px;
         background-color: var(--cpk-color-brand);
@@ -24,7 +26,7 @@
     }
   }
 
-  /* Cabeçalho da tabela de itens (adicionado) */
+  /* Cabeçalho da tabela de itens */
   .cpl-cart-table-header {
     border-bottom: 1px solid var(--cpk-color-border, rgba(255, 255, 255, 0.1));
     padding-bottom: 1rem;
@@ -35,6 +37,27 @@
     font-weight: 600;
     font-size: 0.85rem;
     color: var(--cpk-color-contrast-muted);
+    position: relative;
+
+    // Dots nas pontas das bordas (emulação cpk- de cpl-table-dots)
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      width: 3px;
+      height: 3px;
+      background: var(--cpk-color-brand);
+      box-shadow: var(--cpk-glow-sm);
+    }
+
+    &::before {
+      left: 0;
+    }
+
+    &::after {
+      right: 0;
+    }
   }
 
   /* Lista de items */
@@ -54,9 +77,30 @@
       padding-top: 1.5rem;
       padding-bottom: 1.5rem;
       align-items: center; /* Alinha o conteudo verticalmente no centro */
+      position: relative;
 
       &:first-child {
         border-top: 1px solid var(--cpk-color-border, rgba(255, 255, 255, 0.1));
+      }
+
+      // Dots nas extremidades das linhas divisórias
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        width: 3px;
+        height: 3px;
+        background: var(--cpk-color-brand);
+        box-shadow: var(--cpk-glow-sm);
+      }
+
+      &::before {
+        left: 0;
+      }
+
+      &::after {
+        right: 0;
       }
 
       /* Ajuste da borda da imagem do produto — mesma linguagem do thumb do
@@ -198,15 +242,6 @@
       }
     }
 
-    /* Botão de checkout: PRENCHIDO no padrão .cpk-btn (fundo brand, texto
-       escuro, glow no hover) — desde a revisão da ficha (2026-08-26) o CTA
-       primário do funil é preenchido, coerente com a ref e o "Ver Produto"
-       do card. Antes era outline transparente aqui; sem override o default
-       preenchido do .cpk-btn/.cpk-btn-bg já aplica. */
-    .shopping-cart-checkout-btn {
-      // Sem regras: herda o .cpk-btn preenchido.
-    }
-
     .continue-shopping-link {
       color: var(--cpk-color-contrast);
       text-transform: uppercase;
@@ -232,10 +267,6 @@
 }
 
 /* Empty cart state */
-/* Estado vazio do carrinho — a receita visual do cartão cortado migrou pra
-   components.scss como componente reutilizável `.cpk-empty-state` (revisão
-   do /cart, 2026-08-26): mesma aparência, agora também disponível pra
-   "sem pedidos" do dashboard e páginas de erro. O JSX usa a classe nova. */
 .empty-shopping-cart {
   .cpk-empty-state {
     // receita em components.scss

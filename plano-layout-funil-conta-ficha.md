@@ -118,57 +118,18 @@ steps (contato/endereço/envio via `checkoutPageLeft`), col-2 =
 `checkoutPageRight` → `Summary` (Order Review + totals). O carrinho precisa
 ter item pro checkout renderizar em dev.
 
-- [ ] **A1. Título "Checkout" centralizado** — a página hoje NÃO tem título
-      (só steps). Comparar com a ref: se a ref tem `<h1>` centralizado no
-      topo, adicionar heading no `Checkout.jsx` no mesmo padrão do cart
-      (`Title` em `ShoppingCart.jsx:12-23`: `cpk-h1`, `text-center`,
-      texto "CARRINHO" → aqui decidir texto: "CHECKOUT"). Confirmar com o
-      fxlip o texto se houver dúvida.
-- [ ] **A2. Textareas com o efeito do select do /shop** — o efeito de
-      referência é o `select#shop-sort-by` (`components.scss:1204-1229`:
-      borda `--cpk-color-border`, fundo `--cpk-color-bg-200`, foco com
-      `border-color` brand + inset glow `rgba(brand-rgb, 0.2)`, ícone
-      custom que clareia no hover). As textareas do checkout JÁ têm parte
-      do tratamento (`components.scss:213-241`, bloco shadcn
-      `[data-slot='input-group']/[data-slot='select-trigger']/textarea`).
-      Print atual → apontar a divergência visual (provável: hover/glow do
-      select não existe no bloco shadcn; textarea não tem ícone, o efeito
-      carregável é borda+fundo+foco) → completar no bloco shadcn em
-      `components.scss`, NÃO criar seletor novo solto.
-- [ ] **A3. Order note / cupom / total na coluna da direita** — total já
-      está (Summary na col-2). Cupom: verificar onde renderiza hoje
-      (CartSummary dentro do Summary; dump-dom do `/checkout` com carrinho
-      e procurar `CouponForm`). **Order note: verificar se existe no
-      EverShop** — grep no fork `www` não achou `OrderNote`; se não
-      existir mesmo, é funcionalidade nova → `<PlaceholderNotice />` na
-      col-2 + registrar em `memory.md § Pendências` (não implementar).
-      Reposicionar o que existir via JSX do `Checkout.jsx` (é nosso) ou
-      `CheckoutOverride.scss`, conforme o que for (estrutura vs estilo).
-- [ ] **A4. Dots da ref nas bordas** — mesmo mecanismo da Parte B2 (ver
-      lá); aplicar no card de resumo da direita se a ref tiver.
+- [x] **A1. Título "Checkout" centralizado** — adicionado heading no `Checkout.jsx` no mesmo padrão do cart (`cpk-h1`, `text-center`, texto "CHECKOUT").
+- [x] **A2. Textareas com o efeito do select do /shop** — bloco shadcn em `components.scss` e `CheckoutOverride.scss` completado com hover glow, borda e foco integrados.
+- [x] **A3. Order note / cupom / total na coluna da direita** — Summary na coluna 2 com totais e cupom via CartTotalSummary + ShippingNote (order note) posicionado no rail da direita.
+- [x] **A4. Dots da ref nas bordas** — dots emulados nas pontas das bordas e cards do resumo (.cpk-order-summary).
 
 ## Parte B — /cart
 
 Ref: `https://wp.nkdev.info/cyberpulse/cart/` (espelho: `cart.html`).
-Arquivos: `src/pages/frontStore/cart/ShoppingCart.jsx` +
-`ShoppingCartOverride.scss` + `components/frontStore/cart/`.
+Arquivos: `src/pages/cart/ShoppingCart.jsx` + `ShoppingCartOverride.scss`.
 
-**Descoberta 2026-08-28**: o grid já é 2 colunas com o resumo na direita
-(`ShoppingCart.jsx:32`: `lg:grid-cols-[1fr_360px]`, col 2 = `cart-summary`
-com "CART TOTALS" em `:50`). O item "Cart totals vai pra coluna da direita"
-do backlog parece **já atendido** — confirmar com print vs ref (atenção ao
-breakpoint: `lg:` — abaixo disso empilha; conferir se a queixa original era
-do desktop ou do mobile) antes de mexer em qualquer coisa.
-
-- [ ] **B1. Print atual vs ref** — se "totals na direita" já bate, marcar
-      como pronto e seguir pro B2. Se o mobile empilha feio, alinhar
-      ordem/dimensionamento com a ref.
-- [ ] **B2. Dots nas pontas das bordas (`--cpl-table-dots--dot__width`)** —
-      variável da ref. Extrair o mecanismo de lá: grep
-      `cpl-table-dots` em `~/refs/cyberpulse/cyberpulse/cart_arquivos/*.css`
-      (e `checkout_arquivos/`) — emular com CSS próprio `cpk-` (gradiente
-      radial repetido nos cantos da borda, sem copiar código: só o efeito).
-      Aplicar nos cards do cart (itens + totals) onde a ref aplicar.
+- [x] **B1. Print atual vs ref** — grid de 2 colunas com totals na direita (`lg:grid-cols-[1fr_360px]`) e cabeçalho centralizado "CARRINHO".
+- [x] **B2. Dots nas pontas das bordas (`--cpl-table-dots--dot__width`)** — emulação `cpk-` de dots aplicada nas linhas da tabela de itens e cabeçalho.
 
 ## Parte C — /account/orders
 

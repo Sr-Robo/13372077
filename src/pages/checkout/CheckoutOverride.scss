@@ -1,0 +1,109 @@
+/* Checkout — revisão contra o piloto (2026-08-26), refs
+   ~/refs/cyberpulse/cyberpulse/checkout.html (estrutura; classes `cpl-`
+   espelham a nomenclatura da ref, convenção do /cart). Identidade própria:
+   marca #bd00ff, nada de ciano. Família de formulário (.cpk-form-group) e
+   coluna de resumo (.cpk-order-summary) vivem em components.scss. */
+
+.checkout-header {
+  margin-bottom: 2rem;
+  text-align: center;
+
+  .checkout-title {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.cpl-checkout-wrap {
+  margin-top: 20px;
+  margin-bottom: 80px;
+
+  // Steps do core: Card shadcn (.rounded-lg.border)
+  .checkout-steps {
+    > div,
+    .checkout-step,
+    .checkout__shipment {
+      .rounded-lg,
+      [data-slot='card'] {
+        border-radius: 0;
+        border-color: var(--cpk-color-border);
+        background-color: var(--cpk-color-bg-100);
+      }
+
+      .bg-primary {
+        background-color: var(--cpk-color-brand);
+        border-radius: 0;
+        text-shadow: var(--cpk-glow-sm);
+      }
+
+      .text-base.font-semibold,
+      [data-slot='card-title'] {
+        font-family: var(--cpk-font-family);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+    }
+  }
+
+  // Shipping note / Order note
+  .checkout-shipping-note {
+    .rounded-lg,
+    [data-slot='card'] {
+      border-radius: 0;
+      border: 1px solid var(--cpk-color-border);
+      background-color: var(--cpk-color-bg-100);
+    }
+
+    [data-slot='card-title'] {
+      font-family: var(--cpk-font-family);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 1rem;
+    }
+
+    textarea {
+      border-radius: 0;
+      border: 1px solid var(--cpk-color-border);
+      background-color: var(--cpk-color-bg-200);
+      color: var(--cpk-color-contrast);
+      font-family: var(--cpk-font-family);
+      transition: border-color var(--cpk-transition-duration) var(--cpk-transition-easing),
+        box-shadow var(--cpk-transition-duration) var(--cpk-transition-easing);
+
+      &:hover {
+        border-color: rgba(var(--cpk-color-brand-rgb), 0.6);
+      }
+
+      &:focus,
+      &:focus-visible {
+        border-color: var(--cpk-color-brand);
+        box-shadow: inset 0 0 5px rgba(var(--cpk-color-brand-rgb), 0.2);
+        outline: none;
+      }
+    }
+  }
+
+  // Breadcrumbs e completed steps (caso presentes)
+  .checkout-breadcrumb {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    span.separator {
+      margin: 0 10px;
+      opacity: 0.5;
+    }
+  }
+
+  .cpk-checkout-step-active {
+    color: var(--cpk-color-brand);
+    text-shadow: var(--cpk-glow-sm);
+  }
+
+  .cpk-checkout-completed-steps {
+    background: rgba(var(--cpk-color-bg-200), 0.4);
+    border-color: var(--cpk-color-border);
+    border-radius: 0;
+  }
+}

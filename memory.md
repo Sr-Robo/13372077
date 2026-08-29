@@ -43,8 +43,10 @@ src/
 │   │   ├── ProductMiniDesc.jsx      ← E3: mini-desc via metafield cpk.mini_desc
 │   │   ├── ProductSingleRating.jsx  ← E4: rating decorativo + label→tab reviews
 │   │   └── ProductSingleTabs.jsx    ← E5: tabs CSS-only (desc/specs/reviews)
-│   └── frontStore/checkout/
-│       ├── Checkout.jsx, Summary.jsx, CheckoutOverride.scss
+│   ├── cart/
+│   │   └── ShoppingCart.jsx, ShoppingCartOverride.scss
+│   └── checkout/
+│       └── Checkout.jsx, CheckoutOverride.scss
 ├── components/
 │   ├── Logo.tsx              ← componente de logo reutilizável
 │   ├── AuthHero.tsx          ← sub-header glitch das páginas de auth
@@ -136,11 +138,8 @@ do dist NÃO precisam ser commitados: o deploy regenera tudo.
       ⚠️ Gotcha de validação: `curl` no dev só devolve o shell React
       (sem SSR) — dump-dom do dev exige headless Chrome `--dump-dom`
       (ver `skills.md`); curl serve só pra produção (SSR ativo).
-- [x] Carrinho — revisado contra o piloto em 2026-08-26 (CTA de checkout
-      agora PRENCHIDO no padrão .cpk-btn, valores: subtotal em contraste /
-      unitário em muted, thumb com corte de canto como o card do /shop;
-      estado vazio extraído como `.cpk-empty-state` reutilizável)
-- [x] Checkout (2026-08-20)
+- [x] Carrinho (2026-08-29, Fase 2): migrado para `src/pages/cart/` (route.id `cart`), título "CARRINHO" centralizado com subtitle de itens, grid 2 colunas com totals na direita (`lg:grid-cols-[1fr_360px]`), CTA de checkout preenchido no padrão .cpk-btn, dots `--cpl-table-dots` emulados nas bordas dos itens e tabela.
+- [x] Checkout (2026-08-29, Fase 2): migrado para `src/pages/checkout/` (route.id `checkout`), título "CHECKOUT" centralizado (.cpk-h1), layout 2 colunas com resumo do pedido (.cpk-order-summary com dots) e shipping note na coluna direita, textareas e campos shadcn integrados com hover glow e foco do tema.
 - [x] Dashboard do cliente (conta/pedidos) — revisado contra o piloto /shop
       em 2026-08-26 (override em `components.scss`; JSX do fork www:
       `MyAccount.tsx`/`OrderList.tsx` com wrapper `.account`, `AccountHeader`
