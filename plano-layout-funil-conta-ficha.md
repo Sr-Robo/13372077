@@ -9,6 +9,8 @@ fxlip fechou as decisões da ficha:
   nesta data, provavelmente merece sessão própria. Escopo desta rodada de
   decisão: mini-desc + tabs + rating + reviews fake. Galeria (E1) e
   relacionados (E5) ficam pra rodada própria.
+  **⚠️ 2026-08-29: executada (ba04470) e REPROVADA na revisão — ver bloco
+  "Fase 1 (Ficha) — REPROVADA" acima. Fase reaberta; próximos passos lá.**
 - **Fase 2 — Funil** (Partes A/checkout + B/cart) — inalteradas.
 - **Fase 3 — Conta** (Partes C/account/orders + D/account) — só CSS, rápido.
 
@@ -24,6 +26,71 @@ de links/busca/login) já concluídas em 2026-08-27 — **numeração antiga,
 não confundir com as Fases 1/2/3 deste doc**. Regras de `agents.md` valem
 pra tudo aqui: fase de **layout** apenas, `PlaceholderNotice` no que
 depender de funcionalidade, prefixo `cpk-`, mudança só vale pushada.
+
+---
+
+## ⛔ Fase 1 (Ficha) — REPROVADA na revisão (2026-08-29)
+
+Commit `ba04470` foi pushado e deployado (`13372077@ba04470` no
+`deploy.log`), mas a revisão pós-execução constatou que **a ficha não
+renderiza nada da Fase 1 em produção nem no dev** e ainda **introduziu uma
+regressão viva na loja**. Fase 1 **permanece aberta**; a correção abaixo é o
+trabalho da próxima sessão.
+
+### Causa-raiz (confirmada no fonte do fork)
+
+Os componentes de área (E3/E4/E5-tabs) injetam via `export const layout`,
+mas foram criados em `src/components/frontStore/catalog/` → compilam pra
+`dist/components/…`. **O scanner de componentes do tema
+(`www/packages/evershop/src/lib/componee/scanForComponents.ts`) só varre
+`dist/pages/<route.id>/` e `dist/pages/all/`, de forma não-recursiva** — nunca
+`dist/components/`. O `route.id` da ficha é **`productView`** (pasta
+`pages/frontStore/productView/` do core). Como `dist/pages/productView/` não
+existe no tema, **nenhum** componente novo é injetado nas áreas
+`productPageMiddleRight`/`productSingleDescription`.
+
+Prova: todo componente com `export const layout` que FUNCIONA no tema
+(LoginHero, RegisterHero, Checkout, ShoppingCart, Noise…) vive em
+`src/pages/<rota>/`; os três da ficha eram os únicos em `src/components/`.
+Dump-dom de `https://sr.robo.net.br/canecas/caneca-gta` (UA `sr-robo-check/1.0`)
+e do dev: zero markup de "Maria S.", labels de aba, `cpk-mini-desc`,
+`(1 avaliação)` — só as regras CSS no `<style>` (E6 subiu ok).
+
+### Regressão em produção (tratar com prioridade)
+
+Os **null-overrides** (`ProductSingleDescription.jsx` / `ProductSingleAttributes.jsx`)
+usam um mecanismo DIFERENTE — override por path de `@components/…`
+(resolução do webpack, mesmo do `List.jsx`) — e **esses funcionaram**:
+removeram a descrição e os specs do core. Mas as tabs que deveriam
+reintroduzi-los nunca carregaram → a área `productSingleDescription` está
+**vazia na loja no ar** (`<div data-evershop-area-id="productSingleDescription"></div>`
+sem filhos). A ficha da caneca GTA **perdeu descrição + specs**. Corrigir a
+causa-raiz restaura tudo; se precisar de alívio imediato antes disso,
+reverter os dois null-overrides (ou o deploy) tira a página do estado
+degradado.
+
+### Correção (próxima sessão)
+
+1. **Mover** `ProductMiniDesc.jsx`, `ProductSingleRating.jsx` e
+   `ProductSingleTabs.jsx` de `src/components/frontStore/catalog/` para
+   **`src/pages/productView/`** (mantendo `export const layout` com os mesmos
+   `areaId`/`sortOrder`). Recompilar → devem aparecer em
+   `dist/pages/productView/`. Confirmar que o scanner casa o nome da pasta
+   com `route.id = productView`.
+2. **Manter** os dois null-overrides onde estão (`src/components/frontStore/catalog/`)
+   — a localização por path está certa; só validar que voltam a fazer par
+   com as tabs (descrição/specs reaparecem DENTRO das abas, não no lugar
+   antigo).
+3. **Reexecutar o fechamento que foi pulado**: F1-12 (dump-dom no dev) e
+   F1-15 (validação de produção) — a não-renderização total só passou porque
+   essas etapas não rodaram. Cuidado: o container `evershop-dev` estava no ar
+   apontando pro banco real, mas **sem `dev-sync`** e sem servir o tema —
+   revisar o setup de dev (`skills.md § Container de dev`) antes de validar.
+4. **Reconfirmar E1/E2** (metafield `cpk.mini_desc` provisionado + valor na
+   caneca GTA) só depois que o `ProductMiniDesc` renderizar — não deu pra
+   verificar agora (leitura direta do banco de produção barrada pelo
+   permission mode; e o componente não renderiza pra confirmar pela página).
+   A `description` da caneca está populada (318 chars) ✓.
 
 ## Pré-requisitos (fazer antes de abrir os browsers)
 
@@ -189,6 +256,18 @@ sortOrder }` como o LoginHero. Dados do produto nos componentes: hook
 descrição real renderiza com o `<Editor>` do core (dado é JSON de block
 editor).
 
+> **⚠️ Onde o componente NOVO tem que viver (descoberto na revisão de
+> 2026-08-29 — a omissão desta regra reprovou a Fase 1)**: o scanner de
+> componentes do tema
+> (`www/packages/evershop/src/lib/componee/scanForComponents.ts`) só varre
+> **`dist/pages/<route.id>/`** e **`dist/pages/all/`**, não-recursivo. Para a
+> ficha, `route.id = productView` → componente novo com `export const layout`
+> tem que ficar em **`src/pages/productView/`** (compila pra
+> `dist/pages/productView/`), NUNCA em `src/components/…` (esse dir é
+> reconhecido só como alvo de override por path). É por isso que LoginHero
+> (`src/pages/login/`), Checkout (`src/pages/frontStore/checkout/`) etc.
+> funcionam.
+
 ### O que a ref tem e a nossa não (delta levantado 2026-08-28)
 
 | Ref (band-t-shirt) | Nossa ficha hoje | Quem cobre |
@@ -201,6 +280,21 @@ editor).
 | `product_meta` (SKU/categoria/tags) | `.cpk-meta-list` já cobre | E6 (SKU migra pra tab; tags não linkar) |
 
 ### Itens desta fase
+
+> **Estado após revisão de 2026-08-29** (legenda: ✅ ok · ⚠️ feito mas não
+> valida · ⛔ quebrado). O detalhe/correção está no bloco "Fase 1 (Ficha) —
+> REPROVADA" no topo do doc.
+> - E1 ⚠️ `theme.json` criado com schema certo, mas provisionamento no admin
+>   **não confirmado**.
+> - E2 ⚠️ `description` populada (318 chars); valor de `mini_desc` **não
+>   confirmado**.
+> - E3 ⛔ criado em `src/components/…` (path errado) → **não renderiza**.
+>   Mover pra `src/pages/productView/`.
+> - E4 ⛔ mesmo problema de path do E3.
+> - E5 ⛔ tabs não renderizam (path errado); null-overrides **funcionaram** e
+>   por isso **esvaziaram a descrição/specs em produção** (regressão).
+> - E6 ✅ CSS compilado e no ar (só não dá pra ver enquanto os componentes
+>   não renderizam).
 
 - [ ] **E1. `theme.json` + definição do metafield mini_desc** — criar
       `theme.json` na raiz do tema (não existe) com `metafieldDefinitions`:
@@ -215,14 +309,17 @@ editor).
       conferir que a `description` está populada (senão a tab fica às
       cegas, como aconteceu com a vargr).
 - [ ] **E3. Mini-desc acima do botão** — componente novo
-      `src/components/frontStore/catalog/ProductMiniDesc.jsx`, `areaId:
-      'productPageMiddleRight'`, `sortOrder: 25` (entre nome=10 e form=30).
+      **`src/pages/productView/ProductMiniDesc.jsx`** (⚠️ 2026-08-29: foi
+      criado errado em `src/components/…` e não renderizou; ver bloco
+      REPROVADA), `areaId: 'productPageMiddleRight'`, `sortOrder: 25` (entre
+      nome=10 e form=30).
       Lê `useProduct()`, acha `metafields.find(m => m.key === 'mini_desc')`
       e renderiza `value` em `.cpk-mini-desc` (parágrafo curto, tipografia
       muted, conferir ref). Sem valor → não renderiza nada (degrada limpo).
 - [ ] **E4. Rating decorativo na ficha** — componente novo
-      `src/components/frontStore/catalog/ProductSingleRating.jsx`,
-      `areaId: 'productPageMiddleRight'`, `sortOrder: 15` (entre nome e
+      **`src/pages/productView/ProductSingleRating.jsx`** (⚠️ idem E3 — mover
+      de `src/components/…`), `areaId: 'productPageMiddleRight'`,
+      `sortOrder: 15` (entre nome e
       mini-desc). Reusa `Rating` de `product/list/item/Rating.jsx` + linha
       "(1 avaliação)" muted; a linha inteira é `<label for>` do radio da
       tab Avaliações (label-for funciona de qualquer ponto do DOM → "link"
@@ -233,7 +330,10 @@ editor).
         retornando `null` — `src/components/frontStore/catalog/ProductSingleDescription.jsx`
         (descrição full-width) e `.../ProductSingleAttributes.jsx` (specs
         dentro do form). Comentário curto em cada um explicando o pra quê.
-      - Componente novo `src/components/frontStore/catalog/ProductSingleTabs.jsx`,
+      - Componente novo **`src/pages/productView/ProductSingleTabs.jsx`**
+        (⚠️ 2026-08-29: criado errado em `src/components/…` → não renderiza;
+        e como os null-overrides acima FUNCIONAM, a descrição/specs sumiram
+        da loja — regressão. Ver bloco REPROVADA),
         injetado em `areaId: 'productSingleDescription'`, `sortOrder: 5`
         (assume o lugar da descrição). Radio hack: inputs `radio` `sr-only`
         (`name="cpk-product-tab"`, ids `cpk-tab-desc` — `defaultChecked` —

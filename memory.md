@@ -114,17 +114,21 @@ do dist NÃO precisam ser commitados: o deploy regenera tudo.
       listagem) — validado renderizando no dev em 2026-08-27; a observação
       anterior ("só `/product/<uuid>`, url_key dá 404") era do core 2.2.1
       legado e não se aplica ao formato atual.
-      **2026-08-28 — Fase 1 (plano-layout-funil-conta-ficha)**:
-      - `theme.json` com metafieldDefinitions (`cpk.mini_desc`, short_text)
-      - `ProductMiniDesc.jsx` (areaId: productPageMiddleRight, sortOrder 25)
-      - `ProductSingleRating.jsx` (areaId: productPageMiddleRight, sortOrder 15)
-        — estrelas decorativas + label pra tab reviews via radio hack
-      - `ProductSingleTabs.jsx` (areaId: productSingleDescription, sortOrder 5)
-        — 3 tabs CSS-only: Descrição (Editor), Info adicional (SKU+attrs), Avaliações
-      - `ProductSingleDescription.jsx` — override-null (conteúdo migrou pra tab)
-      - `ProductSingleAttributes.jsx` — override-null (specs migraram pra tab)
-      - CSS em `components.scss`: .cpk-tabs, .cpk-tab-panel, .cpk-mini-desc,
-        .cpk-product-rating, .cpk-review, .cpk-review-form
+      **2026-08-28 — Fase 1 (plano-layout-funil-conta-ficha): ba04470,
+      REPROVADA na revisão de 2026-08-29 — NÃO renderiza + regressão viva.**
+      Arquivos criados (mas os de área no path errado):
+      - `theme.json` com metafieldDefinitions (`cpk.mini_desc`, short_text) —
+        provisionamento no admin não confirmado
+      - `ProductMiniDesc.jsx` / `ProductSingleRating.jsx` / `ProductSingleTabs.jsx`
+        — criados em `src/components/frontStore/catalog/` (⛔ path errado, ver
+        gotcha do scanner abaixo) → **nenhum renderiza** no dev nem em prod
+      - `ProductSingleDescription.jsx` / `ProductSingleAttributes.jsx` —
+        override-null por path (mecanismo diferente); **funcionaram** e por
+        isso **esvaziaram descrição+specs da ficha em produção** (regressão)
+      - CSS em `components.scss` (.cpk-tabs/.cpk-tab-panel/.cpk-mini-desc/
+        .cpk-product-rating/.cpk-review/.cpk-review-form) — ok, no ar
+      Correção e detalhe: plano-layout-funil-conta-ficha.md § "Fase 1 (Ficha)
+      — REPROVADA". Gotcha da causa-raiz em § Pendências/gotchas abaixo.
 - [x] Carrinho — revisado contra o piloto em 2026-08-26 (CTA de checkout
       agora PRENCHIDO no padrão .cpk-btn, valores: subtotal em contraste /
       unitário em muted, thumb com corte de canto como o card do /shop;
@@ -163,6 +167,19 @@ esse padrão (mesmo os já `[x]` acima) — ver `~/server/docs/tema-cyberpunk.md
 e o backlog do fxlip pro estado desse checklist.
 
 ## Pendências de funcionalidade
+
+- **GOTCHA do scanner de componentes (2026-08-29, reprovou a Fase 1)**:
+  componente NOVO com `export const layout` tem que viver em
+  **`src/pages/<route.id>/`** (compila pra `dist/pages/<route.id>/`) — o
+  scanner do tema (`www/packages/evershop/src/lib/componee/scanForComponents.ts`)
+  só varre `dist/pages/<route.id>/` e `dist/pages/all/`, **não-recursivo**, e
+  NUNCA `dist/components/`. `src/components/…` só serve pra **override por
+  path** (mesmo caminho do core, ex. `List.jsx`, null-overrides) — não pra
+  injeção por área. Sintoma do erro: componente compilado, CSS no ar, zero
+  markup na página (e null-overrides irmãos funcionando sozinhos = regressão:
+  removeram o core sem o substituto renderizar). Route ids conhecidos:
+  ficha=`productView`, login=`login`, carrinho=`cart`, checkout=`checkout`,
+  home=`homepage`, registro=`register`; `src/pages/all/` vale pra todas.
 
 Lista viva do que foi visto e adiado durante trabalho de **layout** (fase
 atual). Cada item aqui é um lembrete pra uma sessão futura de

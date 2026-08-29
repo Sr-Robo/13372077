@@ -3,6 +3,21 @@ version: 1
 origem: plano-layout-funil-conta-ficha.md
 sequencia: P -> F1 -> F2 -> F3 -> REVIEW
 
+# ERRATA 2026-08-29 — Fase 1 (F1-*) REPROVADA na revisão. Detalhe completo no
+# .md, bloco "Fase 1 (Ficha) — REPROVADA". Resumo p/ reexecução:
+#   - Causa-raiz: F1-05/06/09 criaram os componentes de área em
+#     src/components/frontStore/catalog/ (compila p/ dist/components/), que o
+#     scanner do tema NUNCA varre. Alvo correto: src/pages/productView/
+#     (route.id da ficha = productView), que compila p/ dist/pages/productView/.
+#   - F1-07/08 (null-overrides por path) FUNCIONARAM e esvaziaram descrição+specs
+#     da ficha em produção → regressão viva. Some quando as tabs voltarem a
+#     renderizar; se precisar alívio antes, reverter os dois null-overrides.
+#   - F1-12 (dump-dom dev) e F1-15 (validação prod) NÃO rodaram — por isso a
+#     não-renderização passou batido. Reexecutar. Dev estava sem dev-sync.
+#   - F1-03/04 (provisionamento do metafield + valor mini_desc na caneca) NÃO
+#     confirmados; description da caneca OK (318 chars).
+#   - F1-10 (CSS) OK, no ar.
+
 globals:
   repo_tema: /home/fxlip/server/repos/13372077
   repo_core: /home/fxlip/server/repos/www        # somente leitura (exceção: F3-04, com gate)
