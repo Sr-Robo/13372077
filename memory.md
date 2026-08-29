@@ -124,12 +124,18 @@ do dist NÃO precisam ser commitados: o deploy regenera tudo.
       **2026-08-28 — Fase 1 (plano-layout-funil-conta-ficha): ba04470,
       REPROVADA na revisão de 2026-08-29 — causa: componentes de área em
       path errado (`src/components/` em vez de `src/pages/productView/`).
-      **2026-08-29 — CORRIGIDA**: 3 componentes movidos para
-      `src/pages/productView/` (ProductMiniDesc, ProductSingleRating,
-      ProductSingleTabs). Null-overrides mantidos em `src/components/`
-      (corretos para override por path via import alias). Pendente:
-      rebuild (`server build`) + validação em dev (F1-12) e produção
-      (F1-15).
+      **2026-08-29 — CORRIGIDA e VALIDADA** (62a67ba): 3 componentes
+      movidos para `src/pages/productView/` (ProductMiniDesc,
+      ProductSingleRating, ProductSingleTabs). Null-overrides mantidos em
+      `src/components/` (corretos para override por path via import
+      alias). Validação: dev (F1-12) e produção (F1-15) OK — mini-desc
+      com valor, tabs renderizando (descrição via `Editor` + SKU +
+      review fake), sem duplicação, regressão da área
+      `productSingleDescription` curada. E1/E2 confirmados de quebra
+      (metafield `cpk.mini_desc` provisionado e preenchido na caneca GTA).
+      ⚠️ Gotcha de validação: `curl` no dev só devolve o shell React
+      (sem SSR) — dump-dom do dev exige headless Chrome `--dump-dom`
+      (ver `skills.md`); curl serve só pra produção (SSR ativo).
 - [x] Carrinho — revisado contra o piloto em 2026-08-26 (CTA de checkout
       agora PRENCHIDO no padrão .cpk-btn, valores: subtotal em contraste /
       unitário em muted, thumb com corte de canto como o card do /shop;

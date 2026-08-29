@@ -9,8 +9,9 @@ fxlip fechou as decisões da ficha:
   nesta data, provavelmente merece sessão própria. Escopo desta rodada de
   decisão: mini-desc + tabs + rating + reviews fake. Galeria (E1) e
   relacionados (E5) ficam pra rodada própria.
-  **⚠️ 2026-08-29: executada (ba04470) e REPROVADA na revisão — ver bloco
-  "Fase 1 (Ficha) — REPROVADA" acima. Fase reaberta; próximos passos lá.**
+  **⚠️ 2026-08-29: executada (ba04470), REPROVADA na revisão, CORRIGIDA e
+  APROVADA (62a67ba) — ver bloco "Fase 1 (Ficha)" acima. Fase fechada e
+  validada em dev + produção.**
 - **Fase 2 — Funil** (Partes A/checkout + B/cart) — inalteradas.
 - **Fase 3 — Conta** (Partes C/account/orders + D/account) — só CSS, rápido.
 
@@ -29,13 +30,15 @@ depender de funcionalidade, prefixo `cpk-`, mudança só vale pushada.
 
 ---
 
-## ⛔ Fase 1 (Ficha) — REPROVADA na revisão (2026-08-29)
+## ✅ Fase 1 (Ficha) — CORRIGIDA e APROVADA (2026-08-29)
 
-Commit `ba04470` foi pushado e deployado (`13372077@ba04470` no
-`deploy.log`), mas a revisão pós-execução constatou que **a ficha não
-renderiza nada da Fase 1 em produção nem no dev** e ainda **introduziu uma
-regressão viva na loja**. Fase 1 **permanece aberta**; a correção abaixo é o
-trabalho da próxima sessão.
+> Histórico: `ba04470` foi reprovado na revisão (componentes de área em
+> path errado + regressão na loja); a correção abaixo (`62a67ba`) foi
+> executada, pushada, deployada e **validada em dev (F1-12) e produção
+> (F1-15)** — todos os markers renderizam, sem duplicação, regressão
+> curada, E1/E2 confirmados (metafield provisionado + valor na caneca).
+> O bloco de causa-raiz fica como registro; a seção de correção abaixo
+> está concluída por completo.
 
 ### Causa-raiz (confirmada no fonte do fork)
 
