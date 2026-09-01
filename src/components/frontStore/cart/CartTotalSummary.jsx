@@ -7,7 +7,6 @@ import {
   CouponState,
   CouponActions
 } from '@components/frontStore/Coupon.js';
-import { CouponForm } from '@components/frontStore/CouponForm.js';
 import { _ } from '@evershop/evershop/lib/locale/translate/_';
 import { CircleX } from 'lucide-react';
 import React from 'react';
@@ -81,11 +80,7 @@ const Subtotal = ({ subTotal, loading = false }) => {
 
 const Discount = ({ discountAmount, coupon, loading = false }) => {
   if (!coupon) {
-    return (
-      <div className="gap-7 py-2 summary-row">
-        <CouponForm />
-      </div>
-    );
+    return null;
   }
 
   return (
@@ -199,10 +194,6 @@ const DefaultCartSummary = ({
       loading={loading}
     />
     <Area id="cartSummaryAfterTotal" noOuter />
-
-    <div className="cpl-coupon-form">
-      <Area id="cartCouponForm" noOuter />
-    </div>
   </div>
 );
 

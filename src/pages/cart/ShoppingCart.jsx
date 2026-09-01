@@ -1,23 +1,20 @@
 import Area from '@components/common/Area.js';
-import { Button } from '@components/common/ui/Button.js';
 import { useCartState } from '@components/frontStore/cart/CartContext.js';
 import { CartItems } from '@components/frontStore/cart/CartItems.js';
 import { CartTotalSummary } from '@components/frontStore/cart/CartTotalSummary.js';
+import { CouponForm } from '@components/frontStore/CouponForm.js';
 import { DefaultCartItemList } from '@components/frontStore/cart/DefaultCartItemList.js';
 import { ShoppingCartEmpty } from '@components/frontStore/cart/ShoppingCartEmpty.js';
 import { _ } from '@evershop/evershop/lib/locale/translate/_';
 import React from 'react';
 import './ShoppingCartOverride.scss';
 
-const Title = ({ count }) => {
+const Title = () => {
   return (
     <div className="shopping-cart-header mb-8 text-center">
       <h1 className="shopping-cart-title cpk-h1 tracking-tight" style={{ color: 'var(--cpk-color-contrast)' }}>
         {_('CARRINHO')}
       </h1>
-      <p className="mt-1 text-sm" style={{ color: 'var(--cpk-color-contrast-muted)' }}>
-        {_('${count} itens no seu carrinho', { count: count.toString() })}
-      </p>
     </div>
   );
 };
@@ -28,7 +25,7 @@ export default function ShoppingCart({ checkoutUrl }) {
     <div className="cart cpl-cart-wrap page-width mt-10 mb-20">
       {cart.items.length > 0 ? (
         <>
-          <Title count={cart.items.length} />
+          <Title />
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_360px] items-start">
             <div className="cpl-cart-items-wrap">
               <CartItems>
@@ -41,15 +38,16 @@ export default function ShoppingCart({ checkoutUrl }) {
                   />
                 )}
               </CartItems>
+              <div className="cpl-coupon-form">
+                <CouponForm />
+              </div>
               <Area id="shoppingCartAfterItems" noOuter />
             </div>
 
             <div className="cart-summary cpl-cart-summary cpk-order-summary">
               <Area id="shoppingCartBeforeSummary" noOuter />
 
-              <h2 className="cpk-h4 summary-title">{_('CART TOTALS')}</h2>
-
-              <div className="mt-4 summary-content">
+              <div className="summary-content">
                 <CartTotalSummary />
               </div>
 

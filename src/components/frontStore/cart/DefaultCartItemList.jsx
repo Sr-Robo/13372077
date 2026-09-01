@@ -6,7 +6,7 @@ import { CartItem } from '@components/frontStore/cart/CartContext.js';
 import { ItemQuantity } from '@components/frontStore/cart/ItemQuantity.js';
 import { _ } from '@evershop/evershop/lib/locale/translate/_';
 import { deriveProductImageSize } from '@evershop/evershop/lib/util/deriveProductImageSize.js';
-import { Minus, Plus, Trash2 } from 'lucide-react';
+import { Minus, Plus, X } from 'lucide-react';
 import React from 'react';
 
 /**
@@ -27,15 +27,6 @@ export const DefaultCartItemList = ({
     <>
       <Area id="cartItemListBefore" noOuter />
 
-      <div className="cpl-cart-table-header hidden md:flex justify-between px-2">
-        <div className="w-[60%]">{_('Produto')}</div>
-        <div className="w-[40%] flex justify-between text-right">
-          <div className="w-1/3">{_('Preço')}</div>
-          <div className="w-1/3 text-center">{_('Qtd')}</div>
-          <div className="w-1/3">{_('Subtotal')}</div>
-        </div>
-      </div>
-
       <div className="cart__items divide-y">
         {items.map((row) => {
           const totalValue = showPriceIncludingTax
@@ -46,8 +37,11 @@ export const DefaultCartItemList = ({
             : row.sellPrice?.text;
 
           return (
-            <div key={row.cartItemId} className="cart__item flex flex-col md:flex-row gap-6 py-6 items-start md:items-center">
-              <div className="flex gap-4 w-full md:w-[60%]">
+            <div
+              key={row.cartItemId}
+              className="cart__item flex flex-col md:flex-row gap-6 py-6 items-start md:items-center justify-between"
+            >
+              <div className="flex gap-4 items-center flex-1 min-w-0 w-full md:w-auto">
                 <div className="shrink-0">
                   {row.thumbnail ? (
                     <Image
@@ -92,12 +86,12 @@ export const DefaultCartItemList = ({
                 </div>
               </div>
 
-              <div className="flex w-full md:w-[40%] justify-between items-center text-right mt-4 md:mt-0">
-                <div className="w-1/3 hidden md:block cpl-item-price">
+              <div className="flex w-full md:w-auto justify-between md:justify-end items-center gap-4 md:gap-6 shrink-0 mt-4 md:mt-0">
+                <div className="hidden md:block cpl-item-price tabular-nums">
                   {priceValue || totalValue}
                 </div>
 
-                <div className="w-auto md:w-1/3 flex justify-center">
+                <div className="flex justify-center">
                   <ItemQuantity
                     initialValue={row.qty}
                     cartItemId={row.cartItemId}
@@ -128,22 +122,22 @@ export const DefaultCartItemList = ({
                   </ItemQuantity>
                 </div>
 
-                <div className="w-auto md:w-1/3 flex flex-col items-end gap-2">
-                  <div className="cpl-item-subtotal tabular-nums">
-                    {totalValue}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      onRemoveItem?.(row.cartItemId);
-                    }}
-                    className="inline-flex items-center gap-1 mt-1 text-destructive"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                    <span>{_('Remover')}</span>
-                  </button>
+                <div className="cpl-item-subtotal tabular-nums">
+                  {totalValue}
                 </div>
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onRemoveItem?.(row.cartItemId);
+                  }}
+                  className="cpl-item-remove text-destructive hover:opacity-80 transition-opacity p-1"
+                  aria-label={_('Remover')}
+                  title={_('Remover')}
+                >
+                  <X className="h-4 w-4" />
+                </button>
               </div>
             </div>
           );
