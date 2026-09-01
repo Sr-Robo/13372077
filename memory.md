@@ -139,6 +139,17 @@ do dist NÃO precisam ser commitados: o deploy regenera tudo.
       (sem SSR) — dump-dom do dev exige headless Chrome `--dump-dom`
       (ver `skills.md`); curl serve só pra produção (SSR ativo).
 - [x] Carrinho (2026-08-29, Fase 2): migrado para `src/pages/cart/` (route.id `cart`), título "CARRINHO" centralizado com subtitle de itens, grid 2 colunas com totals na direita (`lg:grid-cols-[1fr_360px]`), CTA de checkout preenchido no padrão .cpk-btn, dots `--cpl-table-dots` emulados nas bordas dos itens e tabela.
+      **2026-08-31 — refino contra a ref cyberpulse (5c8af49)**: lista de
+      itens sem cabeçalho de colunas; "remover" vira só ícone X ao fim da
+      linha (sem texto); cupom sai do resumo e vai pra **abaixo dos itens**
+      (`<CouponForm/>` em `.cpl-coupon-form` na coluna esquerda; `Discount`
+      do `CartTotalSummary` retorna null sem cupom); resumo direito enxuto
+      (Subtotal/Descontos/Frete/Total, sem h2 "CART TOTALS"); subtítulo de
+      contagem removido; **dots recuados das pontas** via tokens
+      `--cpk-table-gap-v/-h`/`--cpk-table-dot-w` (antes colados em 0/100%).
+      **Title da aba `sr@robo:~/cart$`**: middleware no fork www
+      (`extensions/catalog_shop/src/pages/frontStore/cart/cartTitle.js`,
+      d97c24ace) — ver gotcha do id de middleware abaixo.
 - [x] Checkout (2026-08-29, Fase 2): migrado para `src/pages/checkout/` (route.id `checkout`), título "CHECKOUT" centralizado (.cpk-h1), layout 2 colunas com resumo do pedido (.cpk-order-summary — clip-path + linhas de acento com glow; a ref NÃO usa dots no resumo do checkout, só na tabela do carrinho) e shipping note na coluna direita, textareas e campos shadcn integrados com hover glow e foco do tema. Aprovado na revisão de 2026-08-29 (revalidado de forma independente em dev+produção).
 - [x] Dashboard do cliente (conta/pedidos) — revisado contra o piloto /shop
       em 2026-08-26 (override em `components.scss`; JSX do fork www:
@@ -279,6 +290,17 @@ só como histórico — **não usar**:
 
 ## Gotchas resolvidos (contexto / causa-raiz)
 
+### Middleware de extensão em rota core NUNCA pode se chamar `index.js` (id = basename)
+Middleware novo em `extensions/catalog_shop/src/pages/frontStore/<rota>/` se
+anexa a uma rota core pelo **nome da pasta** (= routeId), sem route.json. Mas
+o `id` do middleware é o **basename sem extensão** — um `index.js` colide com
+o `index.ts` do core na MESMA rota e `addMiddleware` lança `"Found two
+middleware with the same id"` **no boot, derrubando a loja inteira**
+(validado empiricamente em dev 2026-08-31: container morreu na hora com o
+cart/index.js; renomear pra `cartTitle.js` curou). Sempre nome único
+(mesma armadilha já documentada em `homepage/homeToShop.js`). Detalhe:
+`dist/` da extensão é gitignored — o Dockerfile do fork recompila
+(`npm run compile -w catalog_shop`), commit é só o `src/`.
 ### Validar seletor de override contra o fork `www`, NUNCA contra o `node_modules` do tema
 Este repo tem seu próprio `node_modules/@evershop/evershop` (pra compilar/tipos),
 mas a loja em produção roda o **fork `www`** — que é uma versão MUITO mais nova
