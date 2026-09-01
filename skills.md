@@ -47,6 +47,48 @@ chrome não imprime nada e o `docker run` pendura até o timeout — sintoma
 silencioso, só sai um "Terminado" quando morre. Usar
 `docker run --rm --shm-size=256m … --window-size=1440,2400 …`.
 
+⚠️ **Este chrome cru NÃO serve pra /cart nem /checkout** — essas páginas
+renderizam a partir do carrinho da SESSÃO (cookie `sid` → coluna `cart.sid`
+no Postgres). Sem cookie, sempre caem no `ShoppingCartEmpty` ("Seu carrinho
+está vazio"). Pra printar essas páginas CHEIAS, use `server dev shot` abaixo.
+
+## Screenshot COM carrinho cheio — `server dev shot` (2026-09-01)
+
+Pra printar `/cart`, `/checkout` (ou qualquer rota) com um carrinho populado,
+reproduzível e sem deixar rastro no banco:
+
+```bash
+server dev shot            # default: /cart
+server dev shot /checkout  # outra rota
+```
+
+Saída em `/tmp/scratchpad/shot-<rota>.png`. Requer `server dev on` no ar.
+O script (`~/server/scripts/dev-shot.js`, roda dentro de
+`ghcr.io/puppeteer/puppeteer`, rede `ecommerce`): ganha uma sessão → semeia
+itens via `POST /api/cart/mine/items` (fetch **relativo**, cookie same-origin)
+→ printa → **zera o carrinho no fim** (remove via `DELETE`, o `saveCart`
+deleta a linha do `cart` ao zerar). Env: `SHOT_SEED="SKU:qty,SKU:qty"`,
+`SHOT_W`, `SHOT_H` (janela fixa; ausente = full-page), `SHOT_FORCE=1`
+(re-semeia), `SHOT_KEEP_CART=1` (não apaga no fim). SKUs de teste válidos:
+`C-0008` (Camisa Umbreon), `CAP-0001` (Boné), `B-0002` (Bag), `D-0001`
+(Cyberdeck). Detalhe do mecanismo e gotchas: `memory.md § Carrinho por sessão`.
+
+## Encher o carrinho da SUA sessão no browser (ajuste fino ao vivo)
+
+Pra iterar CSS de `/cart` ao vivo (editar `.scss` em `src/` → F5), o carrinho
+precisa estar cheio na SUA sessão. **Não dá pra clicar "adicionar" na UI do
+dev** — os botões apontam pra URL absoluta `beta.robo.net.br` (ver `memory.md
+§ Carrinho por sessão`). Cole no console (F12) da aba do dev — caminho
+relativo, bate no próprio dev, e o carrinho fica persistido (sobrevive a F5 e
+restart do container):
+
+```js
+(async()=>{for(const[sku,qty]of[['C-0008',1],['CAP-0001',1],['B-0002',1]])await fetch('/api/cart/mine/items',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sku,qty})});location.reload()})();
+```
+
+(IIFE async — `await` solto no console dá `SyntaxError: await is only valid
+in async functions`.)
+
 ⚠️ **Refs `~/refs/cyberpulse/cyberpulse/*.html` não renderizam cruas**:
 são espelhos wget de páginas WordPress com scripts/fonts externos que
 penduram o load. Renderizar via cópia higienizada: strip de

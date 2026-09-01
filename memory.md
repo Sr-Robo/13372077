@@ -290,6 +290,34 @@ só como histórico — **não usar**:
 
 ## Gotchas resolvidos (contexto / causa-raiz)
 
+### Carrinho por sessão: print "cru" sempre vazio, add-to-cart da UI do dev não bate no dev (2026-09-01)
+`/cart` e `/checkout` renderizam a partir do carrinho da **sessão**: cookie
+`sid` (express-session, store no Postgres, assinado) → coluna `cart.sid` →
+`getMyCart` filtra `status=1 AND sid=<sid>`; o GraphQL `myCart` (que alimenta
+`useCartState` da página) resolve pela MESMA sessão. Consequências:
+- **Headless chrome cru (skills.md § screenshot) sempre printa carrinho
+  vazio** — não tem cookie. Os `dev-cart.png`/`prod-cart.png` vazios de
+  2026-08-31 eram isso, não bug de layout. Pra printar cheio: `server dev
+  shot` (skills.md) — puppeteer ganha sessão, semeia via `POST
+  /api/cart/mine/items` (fetch RELATIVO na página, cookie same-origin), printa
+  e zera o carrinho no fim.
+- **Clicar "adicionar" na UI do dev NÃO enche o carrinho do dev**: as URLs de
+  API saem absolutas do `siteUrl` (`EVERSHOP_HOME_URL` do container dev =
+  `https://beta.robo.net.br`) — o POST vai pro beta, não pro dev. Mesmo
+  mecanismo do gotcha do "Sign in" do header. Pra encher a sessão DO BROWSER:
+  snippet IIFE async de console (skills.md — `await` top-level dá SyntaxError
+  no console do Firefox; colar a versão de UMA linha na aba do
+  `100.94.54.16:8090`, nunca na do beta).
+- **Remove de item é `DELETE`, não POST** (`route.json` de
+  `removeCartItem`/`removeMineCartItem`): POST dá 404 silencioso. O
+  `removeApi` retornado pelo GraphQL já vem relativo (`/api/cart/…`).
+- Carrinho semeado grava um cart anônimo no Postgres **compartilhado com
+  produção** (o dev usa o mesmo `database`); ao zerar, o `saveCart` DELETA a
+  linha do `cart` — o `server dev shot` se auto-limpa, não acumula órfãos.
+- SKUs de teste sem estoque dão `{"error":{"message":"We do not have enough
+  stock"}}` (500): `CCC-0001` Caneca GTA está sem estoque; usar `C-0008`,
+  `CAP-0001`, `B-0002`, `D-0001` (confirmados com estoque em 2026-09-01).
+
 ### Middleware de extensão em rota core NUNCA pode se chamar `index.js` (id = basename)
 Middleware novo em `extensions/catalog_shop/src/pages/frontStore/<rota>/` se
 anexa a uma rota core pelo **nome da pasta** (= routeId), sem route.json. Mas
