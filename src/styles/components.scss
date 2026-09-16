@@ -135,6 +135,27 @@
 .cpk-badge--danger { color: var(--cpk-color-danger); border-color: var(--cpk-color-danger); background-color: rgba(255, 77, 77, 0.12); }
 .cpk-badge--warning { color: var(--cpk-color-warning); border-color: var(--cpk-color-warning); background-color: rgba(255, 204, 0, 0.12); }
 
+// Selos editoriais dos cards nativos do Page Builder/Collection Products.
+.cpk-product-badge-stack {
+  position: absolute;
+  top: 1rem;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  z-index: 5;
+}
+
+.cpk-product-badge-stack .cpk-badge-sale {
+  padding: 3.5px 25px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cpk-color-contrast);
+  text-transform: uppercase;
+  background-color: var(--cpk-color-brand);
+}
+
 .cpk-card {
   background-color: var(--cpk-color-bg-100);
   border: 1px solid var(--cpk-color-border);

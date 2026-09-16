@@ -26,6 +26,17 @@ export default function ProductList({ products = [], countPerRow = 3 }) {
     <ul className={colClass}>
       {products.map((p) => (
         <li key={p.productId} className="product-item">
+          {(() => {
+            const badge = p.metafields?.find(
+              (field) => field.namespace === 'storefront' && field.key === 'badge'
+            )?.value;
+            const badges = Array.isArray(badge)
+              ? badge.filter((value) => typeof value === 'string')
+              : typeof badge === 'string'
+                ? [badge]
+                : [];
+
+            return (
           <Area
             id="productListingItem"
             className="product-item-inner"
@@ -33,7 +44,7 @@ export default function ProductList({ products = [], countPerRow = 3 }) {
             coreComponents={[
               {
                 component: { default: Thumbnail },
-                props: { url: p.url, imageUrl: get(p, 'image.url'), alt: p.name, isSpecial: p.price?.special?.value < p.price?.regular?.value },
+                props: { url: p.url, imageUrl: get(p, 'image.url'), alt: p.name, isSpecial: p.price?.special?.value < p.price?.regular?.value, badges },
                 sortOrder: 10,
                 id: 'thumbnail'
               },
@@ -57,6 +68,8 @@ export default function ProductList({ products = [], countPerRow = 3 }) {
               }
             ]}
           />
+            );
+          })()}
         </li>
       ))}
     </ul>
@@ -83,7 +96,14 @@ ProductList.propTypes = {
       image: PropTypes.shape({
         alt: PropTypes.string,
         listing: PropTypes.string
-      })
+      }),
+      metafields: PropTypes.arrayOf(
+        PropTypes.shape({
+          namespace: PropTypes.string,
+          key: PropTypes.string,
+          value: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
+        })
+      )
     })
   ).isRequired,
   countPerRow: PropTypes.number.isRequired

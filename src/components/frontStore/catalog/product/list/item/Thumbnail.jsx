@@ -4,11 +4,23 @@ import { ProductNoThumbnail } from '@components/common/ProductNoThumbnail';
 
 // Reativado (2026-08-27): os 3 destinos (imagem, fallback e botão
 // "Ver Produto") voltam a linkar pra ficha de produto.
-function Thumbnail({ imageUrl, alt, isSpecial, url }) {
+function Thumbnail({ imageUrl, alt, isSpecial, badges = [], url }) {
+  const visibleBadges = [
+    ...badges,
+    ...(isSpecial ? ['Promoção!'] : [])
+  ].filter((badge, index, all) => badge && all.indexOf(badge) === index);
+
   return (
     <div className="product-thumbnail-wrap">
-      {/* Termo de campanha da loja (BR) — literal, sem translate. */}
-      {isSpecial && <span className="cpk-badge-sale">Promoção!</span>}
+      {visibleBadges.length > 0 && (
+        <div className="cpk-badge-stack">
+          {visibleBadges.map((badge) => (
+            <span key={badge} className="cpk-badge-sale">
+              {badge}
+            </span>
+          ))}
+        </div>
+      )}
       {imageUrl ? (
         <a href={url} className="product-link">
           <img src={imageUrl} alt={alt} loading="lazy" />
@@ -47,12 +59,16 @@ function Thumbnail({ imageUrl, alt, isSpecial, url }) {
 
 Thumbnail.propTypes = {
   alt: PropTypes.string,
+  badges: PropTypes.arrayOf(PropTypes.string),
+  isSpecial: PropTypes.bool,
   url: PropTypes.string.isRequired,
   imageUrl: PropTypes.string
 };
 
 Thumbnail.defaultProps = {
   alt: '',
+  badges: [],
+  isSpecial: false,
   imageUrl: ''
 };
 
