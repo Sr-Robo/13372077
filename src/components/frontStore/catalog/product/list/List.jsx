@@ -28,7 +28,9 @@ export default function ProductList({ products = [], countPerRow = 3 }) {
         <li key={p.productId} className="product-item">
           {(() => {
             const badge = p.metafields?.find(
-              (field) => field.namespace === 'storefront' && field.key === 'badge'
+              (field) =>
+                field.key === 'badge' &&
+                (field.namespace === 'storefront' || field.namespace === 'custom')
             )?.value;
             const badges = Array.isArray(badge)
               ? badge.filter((value) => typeof value === 'string')
