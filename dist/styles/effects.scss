@@ -235,74 +235,25 @@
 }
 
 // ---------------------------------------------------------------------
-// Cursor "mira" (crosshair) — ponto + linhas full-width/height. Posição
-// vem de --cpk-cursor-x/-y, atualizadas via JS com style.setProperty
-// (sem re-render React a cada mousemove).
+// Quantum: canvas decorativo, com os parâmetros da referência.
 // ---------------------------------------------------------------------
-html.cpk-cursor-active,
-html.cpk-cursor-active * {
-  cursor: auto !important;
-}
-
-.cpk-cursor {
+.cpk-quantum-cursor {
   position: fixed;
-  top: -3px;
-  left: -3px;
-  z-index: 99999;
-  width: 6px;
-  height: 6px;
-  background-color: var(--cpk-color-brand);
-  box-shadow: var(--cpk-glow-sm);
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2147483000;
   pointer-events: none;
-  will-change: translate;
-  // `translate`/`scale` como propriedades próprias (não o `transform`
-  // shorthand) pra poder animar uma sem a outra: posição segue o mouse 1:1,
-  // sem nenhuma suavização por cima (fxlip pediu — a `transition` antiga no
-  // `transform` era uma "máscara" artificial de velocidade, o ponto sempre
-  // ficava correndo atrás do cursor real em vez de estar exatamente nele).
-  // Só o "crescer" no hover tem transição — é um estado, não velocidade.
-  translate: var(--cpk-cursor-x, -100px) var(--cpk-cursor-y, -100px);
-  transition: scale 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color var(--cpk-transition-duration), box-shadow var(--cpk-transition-duration);
-}
-
-.cpk-cursor.is-hover {
-  // mix-blend-mode: exclusion trocado por glow-lg — blend mode força o
-  // navegador a recompor a camada com tudo por baixo a cada frame (caro,
-  // um dos suspeitos do "delay" reportado); glow dá destaque parecido sem
-  // esse custo.
-  scale: 3;
-  background-color: var(--cpk-color-contrast);
-  box-shadow: var(--cpk-glow-lg);
-}
-
-.cpk-cursor-line {
-  position: fixed;
-  z-index: 99998;
-  opacity: 0.12;
-  background-color: var(--cpk-color-brand);
-  pointer-events: none;
-  will-change: transform;
-}
-
-.cpk-cursor-line--h {
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  transform: translateY(var(--cpk-cursor-y, -100px));
-}
-
-.cpk-cursor-line--v {
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 1px;
-  transform: translateX(var(--cpk-cursor-x, -100px));
+  background: transparent;
+  contain: strict;
 }
 
 @media (hover: none), (pointer: coarse) {
-  .cpk-cursor, .cpk-cursor-line { display: none; }
-  html.cpk-cursor-active, html.cpk-cursor-active * { cursor: auto !important; }
+  .cpk-quantum-cursor { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cpk-quantum-cursor { display: none; }
 }
 
 // ---------------------------------------------------------------------
@@ -840,7 +791,7 @@ footer.footer .copyright,
 footer.footer .copyright span {
   color: var(--cpk-color-contrast-muted) !important;
   font-family: 'Purista', sans-serif !important;
-  font-size: 13px !important;
+  font-size: 16px !important;
   -webkit-font-smoothing: antialiased; // Corrige o visual pixelizado da ref
 }
 
@@ -900,4 +851,3 @@ footer.footer .copyright .cpk-copyleft-mark {
 .cpk-social-links-text a {
   font-size: inherit;
 }
-
